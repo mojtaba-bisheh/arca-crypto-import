@@ -1,0 +1,98 @@
+# ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
+#
+# To review what changed upstream since this import:
+#   git -C <caliptra-rtl> log --oneline 9d6585080a35f7819ffc05be12b71a128c85ead1..origin/main -- src/ecc/rtl 
+#
+block: ecc
+prefix: "arca_"
+macro_prefix: "ARCA_"
+imported_at: "2026-09-30T19:43:36Z"
+
+upstream:
+  repo: "https://github.com/chipsalliance/caliptra-rtl.git"
+  branch: "main"
+  commit: "9d6585080a35f7819ffc05be12b71a128c85ead1"
+  commit_date: "2026-09-29T12:11:24-07:00"
+  commit_subject: "[VAL] Fix es_csrng_tb read sampling race (#1418)"
+  working_tree_dirty: false
+  subtrees:
+    - src/ecc/rtl
+  compile_order_from: src/ecc/config/ecc_top.vf
+
+importer:
+  script: tools/scripts/rename/rename_ecc.sh
+  library_version: "1.1.0"
+  toolchain_fingerprint: "b1a34ffef3bc6c70ae334813738b040e532cbccf556d3ad8a83c16edf3063b68"
+  bash: "4.4.20(1)-release"
+  perl: "v5.26.3"
+
+policy:
+  excluded_globs:
+    - "*_reg_uvm.sv"
+    - "*.rdl"
+  cross_block_identifiers:
+    - "module:hmac_drbg"
+  environment_config_macros:
+    []
+  keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed
+    - "kv_defines_pkg"
+    - "kv_read_t"
+    - "kv_write_t"
+    - "kv_error_code_e"
+    - "uvm_pkg"
+
+artifacts:
+  rtl_dir: rtl/ecc
+  filelist: rtl/ecc/arca_ecc.f
+  rename_map: revinfo/ecc.map
+
+source_manifest:  # sha256 of the upstream files as imported
+  - { sha256: "6993fa19662fbf06f951d3799c11c7c846b1901d12dc10bb136253996678a87b", path: "src/ecc/rtl/ecc_adder.sv" }
+  - { sha256: "8830935c3c1eebe583a9c63f913514a2d609561b0d88c74ecd17dbcd7be50cd7", path: "src/ecc/rtl/ecc_add_sub_mod_alter.sv" }
+  - { sha256: "de092ffa378f67907c86a537caedb124613b2d55f0c8a359d64de229aa7187c4", path: "src/ecc/rtl/ecc_arith_unit.sv" }
+  - { sha256: "02a2a8041d0ff37d4d7f6907f650730bebc4b1b4984aedf48a6523641e184f63", path: "src/ecc/rtl/ecc_defines_pkg.sv" }
+  - { sha256: "4bdcacacf5f2ca0e0d6775c797a4663a08b518f79de494f4ac61c9663ca4c400", path: "src/ecc/rtl/ecc_dsa_ctrl.sv" }
+  - { sha256: "5149b937d7e93057bb013cd6cd26fcf2e50e9801998aa6a85b8a5093d6782c29", path: "src/ecc/rtl/ecc_dsa_sequencer.sv" }
+  - { sha256: "dd90a78fdfe20f61e8f9af45e51339f7ddeaccb87efbaec9d691b1a2ec6670a2", path: "src/ecc/rtl/ecc_dsa_uop_pkg.sv" }
+  - { sha256: "4b6f235f6126e854f80a0e64d6d1261c10598eff24406748383b56b945485a25", path: "src/ecc/rtl/ecc_fau.sv" }
+  - { sha256: "ae387f44ebaa421eeb252532a54dc21a827a25b6d2098e37974c4e578ce2917a", path: "src/ecc/rtl/ecc_hmac_drbg_interface.sv" }
+  - { sha256: "d2a23e5298e3ca148ed8fe72459a64cbbf6658123648fc04040dd9b1db1b0e67", path: "src/ecc/rtl/ecc_montgomerymultiplier.sv" }
+  - { sha256: "a3ba8bddf137f445ac0587197877f87daf326c2d5e8dc4421659996bdb824911", path: "src/ecc/rtl/ecc_mult_dsp.sv" }
+  - { sha256: "392c2fb72fc42634cf06c687652f28c95e26fea6c836aee0e0924b2ed706acfb", path: "src/ecc/rtl/ecc_params_pkg.sv" }
+  - { sha256: "41cfe8d203af6a6cf237aa2a314a41f8e7e604db05bd84ff9f8467cb41ea0ad5", path: "src/ecc/rtl/ecc_pe_final.sv" }
+  - { sha256: "ec2774608abe673b63bfa8da8f77ac237941f20e85bd29b7d4b3f26a484f17a4", path: "src/ecc/rtl/ecc_pe_first.sv" }
+  - { sha256: "5d95fcaacc6993ed448503332b5c32e7c3808a8934432563398d67214600ad97", path: "src/ecc/rtl/ecc_pe.sv" }
+  - { sha256: "b45eb186dbb79706e4396739663289795daa9fde5e44ad0abacf607be48e2902", path: "src/ecc/rtl/ecc_pm_ctrl.sv" }
+  - { sha256: "fb7699d60acc9ef756db8564d37c192c6ff16d5e64a3774c2b650256fb579ca2", path: "src/ecc/rtl/ecc_pm_sequencer.sv" }
+  - { sha256: "3713274b2aa9ba6ebd5c83ac9d1c35140f8de459ff7e921199db1a3d4be49112", path: "src/ecc/rtl/ecc_pm_uop_pkg.sv" }
+  - { sha256: "81930130b0a041091b1e83193f329a8948873ed890fb9380cecf5ef85e855329", path: "src/ecc/rtl/ecc_ram_tdp_file.sv" }
+  - { sha256: "7154fea12f61a03b8d5be522d54b1f22a3a28a85af03c1f0ffbaa5d223a9cbf0", path: "src/ecc/rtl/ecc_reg_pkg.sv" }
+  - { sha256: "9164faa6f2bcd13508d757c271b3205c204f465f4cfef34c4f551e915bce7005", path: "src/ecc/rtl/ecc_reg.sv" }
+  - { sha256: "a5838a6711e247cc47bfd16eaaa5be5ac458227aa9ed1c3a3b2a7a88fefbf868", path: "src/ecc/rtl/ecc_scalar_blinding.sv" }
+  - { sha256: "5b727a2f05dace84b262b61a0c5b303b32268b08bf57d0463fbf7589c0241a1c", path: "src/ecc/rtl/ecc_top.sv" }
+
+renamed_manifest:  # sha256 of the committed, renamed files
+  - { sha256: "b61abeae97d1ec0eca5d41d52d0eb47b5739ba9d17948cda4442ccc99bcbec51", path: "rtl/ecc/arca_ecc_adder.sv" }
+  - { sha256: "33c1ce076bd39c62f509cc95c6f6b5520d4f4dddfad279bee48869f2ce09c269", path: "rtl/ecc/arca_ecc_add_sub_mod_alter.sv" }
+  - { sha256: "a2ee45252664915f3438ead9a981f18b95b30a3399d0593e6e1fdab90600ecda", path: "rtl/ecc/arca_ecc_arith_unit.sv" }
+  - { sha256: "13d402a528bd106e324b1c80c8e6cc2349a9090dd135125b177f3e1137757826", path: "rtl/ecc/arca_ecc_defines_pkg.sv" }
+  - { sha256: "6de035271869c7e339cfb8fade4ca037ade2a34a36a370673cd8f2c17062c459", path: "rtl/ecc/arca_ecc_dsa_ctrl.sv" }
+  - { sha256: "6b49c9d0831bf7f85cc2df70d5e86c945fdc6adefb05dcfdee3a5d2fc6990dca", path: "rtl/ecc/arca_ecc_dsa_sequencer.sv" }
+  - { sha256: "36867376b901a5946b35e88b79ff390752f7e95346d13dd7e90262d4bb4af37b", path: "rtl/ecc/arca_ecc_dsa_uop_pkg.sv" }
+  - { sha256: "8991bca093879fd7164165dc3b1afabf0a63a0e182770d6f62f4d7a6f16c6e39", path: "rtl/ecc/arca_ecc.f" }
+  - { sha256: "d02c58822420165d89c8f26b82361acfe5ec36efe8db543082b29315b4a421be", path: "rtl/ecc/arca_ecc_fau.sv" }
+  - { sha256: "7972df2cd134c9cd77cc1f992da5269ddb312fc7cd346851af513b5ed38ee834", path: "rtl/ecc/arca_ecc_hmac_drbg_interface.sv" }
+  - { sha256: "53373c949d18c18f57c45ea80acafb09ed1458080a23547c5cf88e5aedd36be4", path: "rtl/ecc/arca_ecc_montgomerymultiplier.sv" }
+  - { sha256: "a55b8d69020d7a318d8e7198989718b077b2d4c81bcb47f0e2e0f12f9522dd6a", path: "rtl/ecc/arca_ecc_mult_dsp.sv" }
+  - { sha256: "2277891770122995468099baa360bdd52d855746bec3425f00a4d85bd96a226c", path: "rtl/ecc/arca_ecc_params_pkg.sv" }
+  - { sha256: "3049a19f55fe69dc0b318cf4d58c193212e82b149d397ecc91928c538858a9ae", path: "rtl/ecc/arca_ecc_pe_final.sv" }
+  - { sha256: "08b8d615d1a8c10f5dcf59701bb419fceddb8bceec6444da8bfdb5db0910c097", path: "rtl/ecc/arca_ecc_pe_first.sv" }
+  - { sha256: "b9d758220910c2209701b343f47f8f0c3c5196ee28cfe6ee4c0967e3dfcc932d", path: "rtl/ecc/arca_ecc_pe.sv" }
+  - { sha256: "1a9578ae61e1f5529e3384cab1ddf11b4062b1bc6edb77d7e284c965be5f7e5a", path: "rtl/ecc/arca_ecc_pm_ctrl.sv" }
+  - { sha256: "d839b774027b91da90d4969022ce76d52f3851126039da845e1829a43eca4a8c", path: "rtl/ecc/arca_ecc_pm_sequencer.sv" }
+  - { sha256: "f57973ca1b1b951cfe0652451e6a7d82279052235991f7e4994afbdadd31639c", path: "rtl/ecc/arca_ecc_pm_uop_pkg.sv" }
+  - { sha256: "50365df417c98d15fe916cc55595e9f9e3ab8eb203655803e38196de4d6bdc3f", path: "rtl/ecc/arca_ecc_ram_tdp_file.sv" }
+  - { sha256: "8da1ecee2e32e7d21aa9befedd59b0984d2185e30a5ed8ef14fc2594a01684e9", path: "rtl/ecc/arca_ecc_reg_pkg.sv" }
+  - { sha256: "82cf39f2a3f2d4166d6132312785f49f3dcdc44f5e085a8353cde5e694398df1", path: "rtl/ecc/arca_ecc_reg.sv" }
+  - { sha256: "0a8c95d85b77fec1d472248518270ac8e7f10b47df2c128d6ef458fa82064ce0", path: "rtl/ecc/arca_ecc_scalar_blinding.sv" }
+  - { sha256: "fec671de65634fb3708a02cc22280d340bb87e4f0457577ac7e9783135cbca4f", path: "rtl/ecc/arca_ecc_top.sv" }

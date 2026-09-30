@@ -1,0 +1,79 @@
+name: vendored-block-checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    name: structural verification
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify imported filesets
+        run: ./tools/scripts/rename/verify_import.sh
+
+  roundtrip:
+    name: rename is naming-only
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clone upstream caliptra-rtl
+        run: git clone --filter=blob:none https://github.com/chipsalliance/caliptra-rtl.git .upstream-cache/caliptra-rtl
+      - name: Strip prefixes and diff against the recorded upstream commit
+        run: ./tools/scripts/rename/roundtrip_check.sh
+
+  reimport:
+    name: import is reproducible
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Clone upstream caliptra-rtl
+        run: git clone --filter=blob:none https://github.com/chipsalliance/caliptra-rtl.git .upstream-cache/caliptra-rtl
+      - name: Re-run the import at the recorded commit and diff
+        run: |
+          set -e
+          for r in revinfo/*.revinfo.yml; do
+            b=$(basename "$r" .revinfo.yml)
+            sha=$(sed -nE 's/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/\1/p' "$r" | head -1)
+            git -C .upstream-cache/caliptra-rtl checkout --quiet --detach "$sha"
+            ./tools/scripts/rename/rename_$b.sh --upstream .upstream-cache/caliptra-rtl --dest .
+          done
+          # Only the "imported_at" timestamp is allowed to move.
+          git diff --stat -- rtl/ | tee /tmp/rtl.diff
+          test ! -s /tmp/rtl.diff || { echo "re-import produced different RTL"; git diff -- rtl/; exit 1; }
+
+  lint:
+    name: SystemVerilog lint (best effort)
+    runs-on: ubuntu-latest
+    # The vendored blocks depend on the shared ARCA platform library
+    # (kv_macros.svh, kv_defines_pkg, caliptra_prim_assert.sv). In this example
+    # repo that library is not vendored, so we pull it from upstream just to get
+    # a parse. Informational only.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install slang
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y cmake g++ ninja-build python3
+          git clone --depth 1 https://github.com/MikePopoloski/slang.git /tmp/slang
+          cmake -S /tmp/slang -B /tmp/slang/build -G Ninja -DCMAKE_BUILD_TYPE=Release -DSLANG_INCLUDE_TESTS=OFF
+          cmake --build /tmp/slang/build -j"$(nproc)"
+          sudo cmake --install /tmp/slang/build
+      - name: Clone upstream for the shared platform library
+        run: git clone --filter=blob:none https://github.com/chipsalliance/caliptra-rtl.git .upstream-cache/caliptra-rtl
+      - name: Parse each block
+        run: |
+          export ARCA_ROOT="$PWD"
+          UP=.upstream-cache/caliptra-rtl/src
+          for b in ecc hmac; do
+            echo "== $b =="
+            mapfile -t files < <(grep -vE '^\s*(//|\+|$)' "rtl/$b/arca_$b.f" | envsubst)
+            slang --lint-only --single-unit \
+              -I "rtl/$b" -I "$UP/keyvault/rtl" -I "$UP/libs/rtl" -I "$UP/caliptra_prim/rtl" \
+              "$UP/libs/rtl/caliptra_sva.svh" \
+              "$UP/keyvault/rtl/kv_defines_pkg.sv" \
+              "${files[@]}" || true
+          done

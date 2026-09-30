@@ -1,0 +1,68 @@
+# ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
+#
+# To review what changed upstream since this import:
+#   git -C <caliptra-rtl> log --oneline 9d6585080a35f7819ffc05be12b71a128c85ead1..origin/main -- src/hmac/rtl src/hmac_drbg/rtl 
+#
+block: hmac
+prefix: "arca_"
+macro_prefix: "ARCA_"
+imported_at: "2026-09-30T19:43:39Z"
+
+upstream:
+  repo: "https://github.com/chipsalliance/caliptra-rtl.git"
+  branch: "main"
+  commit: "9d6585080a35f7819ffc05be12b71a128c85ead1"
+  commit_date: "2026-09-29T12:11:24-07:00"
+  commit_subject: "[VAL] Fix es_csrng_tb read sampling race (#1418)"
+  working_tree_dirty: false
+  subtrees:
+    - src/hmac/rtl
+    - src/hmac_drbg/rtl
+  compile_order_from: src/hmac/config/hmac_ctrl.vf
+
+importer:
+  script: tools/scripts/rename/rename_hmac.sh
+  library_version: "1.1.0"
+  toolchain_fingerprint: "238ebf3e0cf1586de5553bbb551e3f68c7645aaba2760f2777e5b2602fbab591"
+  bash: "4.4.20(1)-release"
+  perl: "v5.26.3"
+
+policy:
+  excluded_globs:
+    - "*_reg_uvm.sv"
+    - "*.rdl"
+  cross_block_identifiers:
+    []
+  environment_config_macros:
+    - "CLP_CSR_HMAC_KEY_DWORDS@src/libs/rtl/caliptra_macros.svh"
+  keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed
+    - "kv_defines_pkg"
+    - "kv_read_t"
+    - "kv_write_t"
+    - "kv_error_code_e"
+    - "uvm_pkg"
+
+artifacts:
+  rtl_dir: rtl/hmac
+  filelist: rtl/hmac/arca_hmac.f
+  rename_map: revinfo/hmac.map
+
+source_manifest:  # sha256 of the upstream files as imported
+  - { sha256: "17eb38f4f70d75d50142bf60e2782737b896bc4375e3d75d18f3f60e5fb0f5c3", path: "src/hmac/rtl/hmac_core.sv" }
+  - { sha256: "8bc7429303d83660b17af3eab4cbcab56deffdb6e66de069f60e78db2f9f6b7f", path: "src/hmac/rtl/hmac_ctrl.sv" }
+  - { sha256: "e5838ce85d98928f1c159ce18081be6be36107f12b4109a94addb4d6cbc185a5", path: "src/hmac/rtl/hmac_param_pkg.sv" }
+  - { sha256: "90fc828ee3cabb988153ca45fe03a680205383faac7bfb3e579d763ee8cdf93a", path: "src/hmac/rtl/hmac_reg_pkg.sv" }
+  - { sha256: "8b4140e0964072fa546ada339d456b9c92915137d4329fdbc13489a983a4c24c", path: "src/hmac/rtl/hmac_reg.sv" }
+  - { sha256: "5e8d427d4d52de23ff84a0f18e4266f577f92d6a0579efb85c8729b8187c508f", path: "src/hmac/rtl/hmac.sv" }
+  - { sha256: "dcded5cbecb101528cd5204c3c81cd10adab1ccf179013e0948a508de7d8a4ba", path: "src/hmac_drbg/rtl/hmac_drbg.sv" }
+
+renamed_manifest:  # sha256 of the committed, renamed files
+  - { sha256: "269d103fc85d1b8aafc7b0cb468ca7354243d8f083c8dd1e8d445e43f38a2943", path: "rtl/hmac/arca_hmac_config.svh" }
+  - { sha256: "96cbd74a77911cff2f2b7f38ea0b2741386294b7d62b1f33a88f34073531bf4f", path: "rtl/hmac/arca_hmac_core.sv" }
+  - { sha256: "577968b864362413c3344665feece512aec8db90814f749fe6a46272c2bc8bba", path: "rtl/hmac/arca_hmac_ctrl.sv" }
+  - { sha256: "028594557a793ab268694309919c7c8bc060a54946bc651b9cc0c1239e4e0c68", path: "rtl/hmac/arca_hmac_drbg.sv" }
+  - { sha256: "d9e8e714426d9fb0fe3969034159b231dad94f3a01b317fc74024925baa120e0", path: "rtl/hmac/arca_hmac.f" }
+  - { sha256: "079dc53706bf82e0502620f34a10422a67af2dabb57cc8817d7c8bd3fba0876e", path: "rtl/hmac/arca_hmac_param_pkg.sv" }
+  - { sha256: "6d2b320952c69aff3fec7544679b51004851bb2cf5bd65258274b866b697e2fd", path: "rtl/hmac/arca_hmac_reg_pkg.sv" }
+  - { sha256: "6c8b12f217505fe1f46ecd94fe09136bf7a68bd069e12457d4dc5a3c982c549c", path: "rtl/hmac/arca_hmac_reg.sv" }
+  - { sha256: "1d377849de38b8379a492df6eb7478e8ad8093841e8b65892595aa059ab44826", path: "rtl/hmac/arca_hmac.sv" }

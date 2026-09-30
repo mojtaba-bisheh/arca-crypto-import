@@ -1,0 +1,18 @@
+# ARCA identifier rename map for block 'hmac' (prefix: arca_)
+macro	CLP_CSR_HMAC_KEY_DWORDS	ARCA_CLP_CSR_HMAC_KEY_DWORDS
+macro	HMAC_PARAM_PKG	ARCA_HMAC_PARAM_PKG
+module	hmac	arca_hmac
+module	hmac_core	arca_hmac_core
+module	hmac_ctrl	arca_hmac_ctrl
+module	hmac_drbg	arca_hmac_drbg
+module	hmac_reg	arca_hmac_reg
+package	hmac_param_pkg	arca_hmac_param_pkg
+package	hmac_reg_pkg	arca_hmac_reg_pkg
+file	hmac_core.sv	arca_hmac_core.sv
+file	hmac_ctrl.sv	arca_hmac_ctrl.sv
+file	hmac_param_pkg.sv	arca_hmac_param_pkg.sv
+file	hmac_reg_pkg.sv	arca_hmac_reg_pkg.sv
+file	hmac_reg.sv	arca_hmac_reg.sv
+file	hmac.sv	arca_hmac.sv
+file	hmac_drbg.sv	arca_hmac_drbg.sv
+file	(generated)	arca_hmac_config.svh

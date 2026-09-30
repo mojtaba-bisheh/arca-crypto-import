@@ -1,0 +1,8 @@
+# Local clone of caliptra-rtl used by tools/scripts/rename/import_block.sh
+.upstream-cache/
+
+# Simulator / lint droppings
+obj_dir/
+*.log
+*.vcd
+*.fst
