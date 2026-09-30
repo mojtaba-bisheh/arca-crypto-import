@@ -45,13 +45,12 @@ jobs:
           test ! -s /tmp/rtl.diff || { echo "re-import produced different RTL"; git diff -- rtl/; exit 1; }
 
   lint:
-    name: SystemVerilog lint (best effort)
+    name: SystemVerilog elaboration
     runs-on: ubuntu-latest
     # The vendored blocks depend on the shared ARCA platform library
     # (kv_macros.svh, kv_defines_pkg, caliptra_prim_assert.sv). In this example
     # repo that library is not vendored, so we pull it from upstream just to get
-    # a parse. Informational only.
-    continue-on-error: true
+    # a parse. Both blocks elaborate with 0 errors, 0 warnings.
     steps:
       - uses: actions/checkout@v4
       - name: Install slang

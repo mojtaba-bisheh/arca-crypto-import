@@ -133,10 +133,11 @@ CI (`.github/workflows/checks.yml`) adds:
 
 * **reimport** — re-runs the import at the recorded commit and fails if the
   result differs from what is committed. Reproducibility.
-* **lint** — builds `slang` and parses each generated filelist, pulling the
-  shared platform library from upstream. Marked `continue-on-error` in this
-  example repo because the shared library is not vendored here; in the real
-  ARCA tree it should be a hard gate.
+* **elaboration** — builds `slang` and elaborates each generated filelist. Both
+  blocks come up clean (`0 errors, 0 warnings`), which is the real proof that
+  the generated compile order and the prefixed package/module names are
+  consistent. The shared platform library is borrowed from upstream for the
+  parse, since this example repo does not vendor it.
 
 ---
 
@@ -190,7 +191,9 @@ the property that makes this maintainable over multiple upstream releases.
 * **No semantic verification locally.** Structural checks plus the round-trip
   proof catch substitution errors, but only a real front end catches, say, a
   package compile-order problem in the generated filelist. The `slang` CI job
-  should become a hard gate once the shared platform library is vendored.
+  does elaborate both blocks (0 errors, 0 warnings) and is a hard gate, but it
+  borrows the shared platform library from upstream rather than from a
+  version-pinned ARCA copy.
 * **Comments and string literals are rewritten** along with code. This is
   intentional (a comment referring to `hmac_drbg` should refer to
   `arca_hmac_drbg`), but it means `$display` output text changes too. No

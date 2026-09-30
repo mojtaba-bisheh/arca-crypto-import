@@ -190,3 +190,16 @@ rather than special-casing the shared library.
 
 This is an example repository used to agree on the methodology before applying
 it to the real ARCA tree. It is not a product deliverable.
+
+Current state of the two imported blocks, all enforced in CI
+(`.github/workflows/checks.yml`):
+
+| Check | ECC | HMAC |
+|---|---|---|
+| structural verification (9 checks) | pass | pass |
+| round-trip vs upstream blobs | pass, 23 files | pass, 7 files |
+| re-import reproducibility | pass | pass |
+| `slang` elaboration | 0 errors, 0 warnings | 0 errors, 0 warnings |
+
+See [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) for the design rationale,
+the ownership policy, and the known gaps.
