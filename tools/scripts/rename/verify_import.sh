@@ -48,14 +48,12 @@ ok()   { printf '  ok    %s\n' "$*"; }
 
 verify_block() {
     local block="$1"
-    local rtl="$DEST/rtl/$block"
     local revinfo="$DEST/revinfo/$block.revinfo.yml"
     local map="$DEST/revinfo/$block.map"
     local prefix="$PREFIX" macro_prefix filelist
 
     printf '\n== %s ==\n' "$block"
 
-    [ -d "$rtl" ]      || { fail "rtl/$block missing"; return; }
     [ -f "$revinfo" ]  || { fail "revinfo/$block.revinfo.yml missing"; return; }
     [ -f "$map" ]      || { fail "revinfo/$block.map missing"; return; }
 
@@ -65,16 +63,42 @@ verify_block() {
     [ -n "$prefix" ] || { fail "could not determine prefix"; return; }
     macro_prefix="$(printf '%s' "$prefix" | tr '[:lower:]' '[:upper:]')"
 
+    filelist="$(sed -nE 's/^[[:space:]]*filelist:[[:space:]]*(.*)$/\1/p' "$revinfo" | head -1)"
+
+    # The block's source directories, mirroring the caliptra-rtl hierarchy.
+    local dirs
+    mapfile -t dirs < <(sed -nE '/^[[:space:]]*source_dirs:/,/^[[:space:]]*filelist:/ s/^[[:space:]]*-[[:space:]]*(src\/.*)$/\1/p' "$revinfo")
+    [ "${#dirs[@]}" -gt 0 ] || { fail "revinfo lists no source_dirs"; return; }
+    local d
+    for d in "${dirs[@]}"; do
+        [ -d "$DEST/$d" ] || { fail "source dir missing: $d"; return; }
+    done
+
+    # Every imported source, as a repo-relative path.
     local files
-    mapfile -t files < <(cd "$rtl" && ls *.sv *.svh *.v 2>/dev/null | sort || true)
-    [ "${#files[@]}" -gt 0 ] || { fail "no sources in rtl/$block"; return; }
+    mapfile -t files < <(cd "$DEST" && find "${dirs[@]}" -maxdepth 1 -type f \
+                          \( -name '*.sv' -o -name '*.svh' -o -name '*.v' \) | sort)
+    [ "${#files[@]}" -gt 0 ] || { fail "no sources under ${dirs[*]}"; return; }
 
     # 1. every file name carries the prefix
-    local f bad=0
+    local f b bad=0
     for f in "${files[@]}"; do
-        case "$f" in "$prefix"*) ;; *) fail "unprefixed file name: $f"; bad=1 ;; esac
+        b="$(basename "$f")"
+        case "$b" in "$prefix"*) ;; *) fail "unprefixed file name: $f"; bad=1 ;; esac
     done
     [ "$bad" -eq 0 ] && ok "all ${#files[@]} file names carry '$prefix'"
+
+    # 1b. the ARCA layout mirrors the upstream layout
+    bad=0
+    local up ar
+    while IFS=' ' read -r up ar; do
+        [ -n "${ar:-}" ] || continue
+        if [ "$up" != "$ar" ]; then
+            printf '  note  layout override: upstream %s -> arca %s\n' "$up" "$ar"
+        fi
+        case " ${dirs[*]} " in *" $ar "*) ;; *) fail "revinfo subtree '$ar' not in source_dirs"; bad=1 ;; esac
+    done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*\{[[:space:]]*upstream:[[:space:]]*"([^"]+)",[[:space:]]*arca:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
+    [ "$bad" -eq 0 ] && ok "ARCA layout mirrors the caliptra-rtl hierarchy"
 
     # 2. every declaration carries the prefix
     bad=0
@@ -82,7 +106,7 @@ verify_block() {
         [ -n "$decl" ] || continue
         local name="${decl##* }"
         case "$name" in "$prefix"*) ;; *) fail "unprefixed declaration: $decl"; bad=1 ;; esac
-    done < <(cd "$rtl" && grep -hoE '^[[:space:]]*(module|package|interface)[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${files[@]}" \
+    done < <(cd "$DEST" && grep -hoE '^[[:space:]]*(module|package|interface)[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${files[@]}" \
              | sed -E 's/^[[:space:]]*//; s/[[:space:]]+/ /')
     [ "$bad" -eq 0 ] && ok "all module/package/interface declarations carry '$prefix'"
 
@@ -91,13 +115,13 @@ verify_block() {
     while IFS= read -r name; do
         [ -n "$name" ] || continue
         case "$name" in "$macro_prefix"*) ;; *) fail "unprefixed \`define: $name"; bad=1 ;; esac
-    done < <(cd "$rtl" && grep -hoE '^[[:space:]]*`define[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${files[@]}" \
+    done < <(cd "$DEST" && grep -hoE '^[[:space:]]*`define[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${files[@]}" \
              | sed -E 's/.*`define[[:space:]]+//')
     [ "$bad" -eq 0 ] && ok "all \`define macros carry '$macro_prefix'"
 
     # 4. no double prefixing (idempotency of the rename engine)
-    if (cd "$rtl" && grep -qE "(${prefix}){2}|(${macro_prefix}){2}" "${files[@]}"); then
-        (cd "$rtl" && grep -nE "(${prefix}){2}|(${macro_prefix}){2}" "${files[@]}" | head -5)
+    if (cd "$DEST" && grep -qE "(${prefix}){2}|(${macro_prefix}){2}" "${files[@]}"); then
+        (cd "$DEST" && grep -nE "(${prefix}){2}|(${macro_prefix}){2}" "${files[@]}" | head -5)
         fail "double-prefixed identifiers present"
     else
         ok "no double-prefixed identifiers"
@@ -109,7 +133,7 @@ verify_block() {
     while IFS=$'\t' read -r kind orig new; do
         [ -n "${new:-}" ] || continue
         [ "$kind" = "file" ] && continue
-        if (cd "$rtl" && perl -ne 'exit 0 if /(?<![A-Za-z0-9_\$\\])\Q'"$orig"'\E(?![A-Za-z0-9_\$])/; END{exit 1}' "${files[@]}"); then
+        if (cd "$DEST" && perl -ne 'exit 0 if /(?<![A-Za-z0-9_\$\\])\Q'"$orig"'\E(?![A-Za-z0-9_\$])/; END{exit 1}' "${files[@]}"); then
             fail "original identifier still present: $orig"
             bad=1
         fi
@@ -124,40 +148,51 @@ verify_block() {
         ok "rename map is injective"
     fi
 
-    # 7. every `include target resolves
+    # 7. every `include target resolves, from the including file's own directory
+    #    or from one of the block's include directories
     bad=0
-    local inc
-    while IFS= read -r inc; do
-        [ -n "$inc" ] || continue
-        [ -f "$rtl/$inc" ] && continue
-        local allowed=0 p
+    local inc src incdirs=() platform_seen=()
+    mapfile -t incdirs < <(sed -nE 's#^\+incdir\+\$\{ARCA_ROOT\}/(.*)$#\1#p' "$DEST/$filelist" 2>/dev/null || true)
+    while IFS='|' read -r src inc; do
+        [ -n "${inc:-}" ] || continue
+        local found=0 p
+        [ -f "$DEST/$(dirname "$src")/$inc" ] && found=1
+        for p in "${incdirs[@]}"; do [ -f "$DEST/$p/$inc" ] && found=1; done
+        [ "$found" -eq 1 ] && continue
+        local allowed=0
         for p in "${PLATFORM_HEADERS[@]}"; do [ "$inc" = "$p" ] && allowed=1; done
         if [ "$allowed" -eq 1 ]; then
-            printf '  note  `include "%s" resolved from the shared ARCA platform library\n' "$inc"
+            # Report each platform header once, not once per including file.
+            case " ${platform_seen[*]-} " in
+                *" $inc "*) ;;
+                *) platform_seen+=("$inc")
+                   printf '  note  `include "%s" resolved from the shared ARCA platform library\n' "$inc" ;;
+            esac
         else
-            fail "unresolved \`include target: $inc"
+            fail "unresolved \`include target: $inc (from $src)"
             bad=1
         fi
-    done < <(cd "$rtl" && grep -hoE '^[[:space:]]*`include[[:space:]]+"[^"]+"' "${files[@]}" \
-             | sed -E 's/.*"([^"]+)".*/\1/' | sort -u)
+    done < <(cd "$DEST" && grep -HoE '^[[:space:]]*`include[[:space:]]+"[^"]+"' "${files[@]}" \
+             | sed -E 's/^([^:]+):.*"([^"]+)".*/\1|\2/' | sort -u)
     [ "$bad" -eq 0 ] && ok "all \`include targets resolve"
 
-    # 8. filelist is complete and points at real files
-    filelist="$(sed -nE 's#^[[:space:]]*filelist:[[:space:]]*rtl/[^/]+/(.*)$#\1#p' "$revinfo" | head -1)"
-    if [ -z "$filelist" ] || [ ! -f "$rtl/$filelist" ]; then
+    # 8. filelist is complete, lives in the block's config/ dir, and resolves
+    if [ -z "$filelist" ] || [ ! -f "$DEST/$filelist" ]; then
         fail "filelist missing"
     else
+        case "$filelist" in
+            */config/*) ok "filelist mirrors upstream config/ location: $filelist" ;;
+            *) fail "filelist is not under a config/ directory: $filelist" ;;
+        esac
         bad=0
-        local n=0
+        local n=0 line
         while IFS= read -r line; do
-            line="${line##*/}"
-            [ -f "$rtl/$line" ] || { fail "filelist entry not found: $line"; bad=1; }
+            line="${line#\$\{ARCA_ROOT\}/}"
+            [ -f "$DEST/$line" ] || { fail "filelist entry not found: $line"; bad=1; }
             n=$((n + 1))
-        done < <(grep -vE '^\s*(//|\+|$)' "$rtl/$filelist")
-        # every source must be referenced by the filelist
+        done < <(grep -vE '^\s*(//|\+|$)' "$DEST/$filelist")
         for f in "${files[@]}"; do
-            [ "$f" = "$filelist" ] && continue
-            grep -q "/$f\$" "$rtl/$filelist" || { fail "source not in filelist: $f"; bad=1; }
+            grep -q "/$f\$" "$DEST/$filelist" || { fail "source not in filelist: $f"; bad=1; }
         done
         [ "$bad" -eq 0 ] && ok "filelist covers $n file(s), all resolve"
     fi
@@ -173,7 +208,7 @@ verify_block() {
         if [ "$(sha256sum "$DEST/$path" | cut -d' ' -f1)" != "$sha" ]; then
             fail "file modified since import: $path"; bad=1
         fi
-    done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"(rtl\/[^"]+)".*/\1 \2/p' "$revinfo")
+    done < <(sed -nE '/^renamed_manifest:/,$ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
     [ "$bad" -eq 0 ] && ok "renamed manifest matches working tree"
 }
 

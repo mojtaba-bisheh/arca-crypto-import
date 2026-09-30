@@ -41,8 +41,8 @@ jobs:
             ./tools/scripts/rename/rename_$b.sh --upstream .upstream-cache/caliptra-rtl --dest .
           done
           # Only the "imported_at" timestamp is allowed to move.
-          git diff --stat -- rtl/ | tee /tmp/rtl.diff
-          test ! -s /tmp/rtl.diff || { echo "re-import produced different RTL"; git diff -- rtl/; exit 1; }
+          git diff --stat -- src/ | tee /tmp/rtl.diff
+          test ! -s /tmp/rtl.diff || { echo "re-import produced different RTL"; git diff -- src/; exit 1; }
 
   lint:
     name: SystemVerilog elaboration
@@ -65,14 +65,18 @@ jobs:
         run: git clone --filter=blob:none https://github.com/chipsalliance/caliptra-rtl.git .upstream-cache/caliptra-rtl
       - name: Parse each block
         run: |
+          set -e
           export ARCA_ROOT="$PWD"
-          UP=.upstream-cache/caliptra-rtl/src
-          for b in ecc hmac; do
-            echo "== $b =="
-            mapfile -t files < <(grep -vE '^\s*(//|\+|$)' "rtl/$b/arca_$b.f" | envsubst)
+          UP="$PWD/.upstream-cache/caliptra-rtl/src"
+          # The generated filelist lives where caliptra-rtl keeps it: src/<block>/config/.
+          # It carries its own +incdir+ lines, so slang can consume it directly as a
+          # command file once ${ARCA_ROOT} has been substituted.
+          for vf in src/*/config/arca_*.vf; do
+            echo "== $vf =="
+            envsubst < "$vf" > /tmp/block.f
             slang --lint-only --single-unit \
-              -I "rtl/$b" -I "$UP/keyvault/rtl" -I "$UP/libs/rtl" -I "$UP/caliptra_prim/rtl" \
+              -I "$UP/keyvault/rtl" -I "$UP/libs/rtl" -I "$UP/caliptra_prim/rtl" \
               "$UP/libs/rtl/caliptra_sva.svh" \
               "$UP/keyvault/rtl/kv_defines_pkg.sv" \
-              "${files[@]}" || true
+              -f /tmp/block.f
           done

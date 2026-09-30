@@ -24,7 +24,7 @@ Mapping to this repo:
 
 | Requirement | Where |
 |---|---|
-| 1 | `rename_common.sh:rc_stage`, output under `rtl/<block>/` |
+| 1 | `rename_common.sh:rc_stage`, output mirrored at the upstream paths (`src/<block>/{rtl,coverage}`, filelist at `src/<block>/config/`) |
 | 2 | `rename_common.sh:rc_build_map` + `lib/apply_map.pl` + `rc_env_macros` |
 | 3 | `rename_common.sh:rc_emit_revinfo` → `revinfo/<block>.revinfo.yml`; consumed by `upstream_diff.sh` |
 | 4 | `import_block.sh --commit` |
@@ -45,7 +45,31 @@ a security IP import:
 | `\b` / ad-hoc `[^A-Za-z0-9_]` boundaries | `(?<![A-Za-z0-9_$\\]) … (?![A-Za-z0-9_$])` | `$` is a legal SV identifier character and escaped identifiers start with `\`. |
 | Hard-codes macro names (`EL2_IC_TAG_SRAM`, …) | Discovers declarations from the staged sources; drivers only declare what *cannot* be discovered | Upstream adding a new package or guard macro does not silently escape the rename. |
 | No provenance record | `revinfo/<block>.revinfo.yml` | Requirement 3. |
-| No verification | 9 structural checks + a round-trip proof + CI re-import | See §5. |
+| No verification | 10 structural checks + a round-trip proof + CI re-import | See §5. |
+| Flattens everything into one design directory | Mirrors the upstream hierarchy: `src/ecc/rtl` → `src/ecc/rtl` | See §2.1. |
+
+### 2.1 Why mirror the caliptra-rtl hierarchy
+
+The imported tree deliberately reproduces the upstream directory layout instead
+of flattening each block into a single directory:
+
+* **Diffs line up.** `git log --oneline <sha>..main -- src/ecc/rtl src/ecc/coverage`
+  upstream and `git diff -- src/ecc` in ARCA cover the same paths, so reviewing an
+  upstream delta and reviewing the ARCA re-import are the same mental exercise.
+  The `git log` command is written verbatim into `revinfo/<block>.revinfo.yml`.
+* **Role of a file is visible from its path.** `rtl/` is the synthesizable
+  delivery, `coverage/` is verification collateral, `config/` holds filelists.
+  Flattening loses that and makes it easy to hand synthesis a covergroup.
+* **A block is a directory.** "Copy the block locally" means `src/ecc/` moves as
+  a unit, which is also the unit of ownership, of exclusion policy, and of the
+  provenance record.
+* **Room for the parts not imported yet.** `tb/`, `formal/`, `stimulus/`,
+  `uvmf_*/` already have their slot if ARCA later decides to vendor them.
+
+Path and prefix stay independent knobs: `UPSTREAM_SUBTREES` says what to take,
+`DEST_SUBTREES` + `BLOCK_DIR` say where it lands, `PREFIX` says what the
+identifiers are called. So `src/hmac` → `src/hmac512` with modules still named
+`arca_hmac*` is a two-line driver change, not a rename-engine change.
 
 ---
 
@@ -96,6 +120,9 @@ externally (`PLATFORM_HEADERS`), so the assumption is at least machine-checked.
 | Pattern | Reason |
 |---|---|
 | `*_reg_uvm.sv` | UVM RAL model. `` `include``s generated covergroup/sample headers that are not part of the RTL delivery, and pulls in `uvm_pkg`. Not needed for synthesis or for a netlist-level import. Re-enable by dropping it from `EXCLUDE_GLOBS` **and** importing the generated `.svh` files. |
+| `coverage/config/*_cm_hier.cfg` | Coverage-merge hierarchy configs. They name **testbench** scopes (`ecc_top_tb.dut.…`) that this import does not bring across, so importing them would commit dangling references. The coverage `.sv` (`*_cov_bind.sv`, `*_cov_if.sv`) *are* imported — they only depend on the RTL and on `kv_defines_pkg`. |
+| `config/compile.yml` | Describes the upstream tb/UVMF targets and resolves `$COMPILE_ROOT` / `$MSFT_REPO_ROOT` against the caliptra-rtl build environment. ARCA generates its own `config/arca_<name>.vf` instead, so the vendored block does not carry a dependency on an upstream build system. |
+| `tb/`, `formal/`, `stimulus/`, `uvmf_*/` | Out of scope for this example: the requirement was to vendor the *engines*. The mirrored hierarchy leaves the directories free so they can be added later without moving anything. |
 | `*.rdl` | SystemRDL source for the register block. Deliberately **not** committed next to the renamed RTL: regenerating from it with PeakRDL would emit *unprefixed* `<block>_reg.sv` and silently diverge from the committed fileset. The generated `<block>_reg.sv` / `<block>_reg_pkg.sv` are imported instead. If ARCA needs to regenerate, regenerate upstream first, then re-run the import. |
 
 Both exclusions are recorded in `revinfo/<block>.revinfo.yml` under
@@ -112,6 +139,9 @@ are structural. They are still fairly strong:
 `verify_import.sh` (runs automatically at the end of every import, and in CI):
 
 1. every file name carries the prefix
+1b. the ARCA layout mirrors the caliptra-rtl hierarchy — every directory
+    recorded in `revinfo` is present, and any deliberate deviation from the
+    upstream path is reported as an explicit note rather than passing silently
 2. every `module` / `package` / `interface` declaration carries the prefix
 3. every `` `define `` carries the macro prefix
 4. no double prefixing (`arca_arca_`) — idempotency
@@ -119,7 +149,8 @@ are structural. They are still fairly strong:
 6. the rename map is injective (no two originals collapse onto one name)
 7. every `` `include `` target resolves, either locally or from the declared
    shared platform header list
-8. the generated filelist covers every source and every entry exists
+8. the generated filelist lives under the block's `config/` directory (where
+   caliptra-rtl keeps it), covers every source, and every entry exists
 9. every committed file still matches the sha256 recorded in revinfo
    (detects hand-edits after import)
 
@@ -176,11 +207,11 @@ engineer the script to know what a name used to be.
 make updates UPSTREAM=~/src/caliptra-rtl        # review the changelog
 make import-ecc UPSTREAM=~/src/caliptra-rtl     # re-import
 make roundtrip UPSTREAM=~/src/caliptra-rtl      # re-prove naming-only
-git diff -- rtl/ecc                             # review as a normal RTL diff
+git diff -- src/ecc                             # review as a normal RTL diff
 ./tools/scripts/rename/import_block.sh ecc --commit
 ```
 
-Because the rename is deterministic and idempotent, `git diff -- rtl/ecc` after
+Because the rename is deterministic and idempotent, `git diff -- src/ecc` after
 a re-import shows exactly the upstream change, expressed in ARCA names. That is
 the property that makes this maintainable over multiple upstream releases.
 

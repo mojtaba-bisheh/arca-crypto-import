@@ -5,6 +5,20 @@
 #
 #   ./tools/scripts/rename/rename_hmac.sh --upstream /path/to/caliptra-rtl
 #
+# Layout
+# ------
+# The ARCA tree mirrors the caliptra-rtl hierarchy. Because hmac_drbg is its
+# own top-level directory upstream, it stays its own top-level directory here:
+#
+#   caliptra-rtl                       ARCA
+#   src/hmac/rtl/hmac_ctrl.sv      ->  src/hmac/rtl/arca_hmac_ctrl.sv
+#   src/hmac/coverage/...          ->  src/hmac/coverage/...
+#   src/hmac_drbg/rtl/hmac_drbg.sv ->  src/hmac_drbg/rtl/arca_hmac_drbg.sv
+#   src/hmac/config/hmac_ctrl.vf   ->  src/hmac/config/arca_hmac_ctrl.vf (generated)
+#
+# If ARCA prefers to shelve this engine as "hmac512", set DEST_SUBTREES below.
+# The directory name and the identifier prefix are independent knobs.
+#
 # Block-specific notes
 # --------------------
 # * Unlike ECC, HMAC spans TWO upstream directories: src/hmac/rtl and
@@ -21,6 +35,8 @@
 #   generated, prefixed, block-private header and redirects the `include, so
 #   the vendored block no longer reaches into caliptra-rtl global headers.
 # * hmac_reg_uvm.sv and hmac_reg.rdl are excluded for the same reasons as ECC.
+# * coverage/ is imported; coverage/config/*.cfg is not (it names a testbench
+#   hierarchy that is out of scope for this import).
 
 set -euo pipefail
 
@@ -28,7 +44,20 @@ BLOCK="hmac"
 
 UPSTREAM_SUBTREES=(
     "src/hmac/rtl"
+    "src/hmac/coverage"
     "src/hmac_drbg/rtl"
+    "src/hmac_drbg/coverage"
+)
+
+# Identity mapping: ARCA mirrors caliptra-rtl. To shelve the engine under
+# src/hmac512/ instead, change the first two entries to
+#   "src/hmac512/rtl" "src/hmac512/coverage"
+# and set BLOCK_DIR="src/hmac512". hmac_drbg keeps its own directory either way.
+DEST_SUBTREES=(
+    "src/hmac/rtl"
+    "src/hmac/coverage"
+    "src/hmac_drbg/rtl"
+    "src/hmac_drbg/coverage"
 )
 
 VF_FILELIST="src/hmac/config/hmac_ctrl.vf"

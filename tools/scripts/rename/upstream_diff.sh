@@ -46,7 +46,9 @@ fi
 for b in "${blocks[@]}"; do
     revinfo="$DEST/revinfo/$b.revinfo.yml"
     sha="$(sed -nE 's/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/\1/p' "$revinfo" | head -1)"
-    mapfile -t subtrees < <(sed -nE '/^  subtrees:/,/^  [a-z_]+:/ s/^    - (.*)$/\1/p' "$revinfo")
+    # subtrees are recorded as: - { upstream: "src/ecc/rtl", arca: "src/ecc/rtl" }
+    # The changelog is an *upstream* question, so pull the upstream side only.
+    mapfile -t subtrees < <(sed -nE '/^  subtrees:/,/^  [a-z_]+:/ s/^    -.*upstream:[[:space:]]*"([^"]+)".*/\1/p' "$revinfo")
 
     printf '\n======================================================================\n'
     printf ' %s : imported at %s\n' "$b" "${sha:0:12}"

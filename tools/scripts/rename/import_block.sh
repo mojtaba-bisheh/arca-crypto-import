@@ -96,7 +96,13 @@ if [ "$DO_COMMIT" -eq 1 ]; then
     sha="$(git -C "$UPSTREAM" rev-parse --short=12 HEAD)"
     paths=()
     for b in "${BLOCKS[@]}"; do
-        paths+=("rtl/$b" "revinfo/$b.revinfo.yml" "revinfo/$b.map")
+        # Each block mirrors its own slice of the caliptra-rtl hierarchy, so the
+        # paths to stage are read back out of the generated revinfo file rather
+        # than assumed.
+        rev="$REPO_ROOT/revinfo/$b.revinfo.yml"
+        mapfile -t dirs < <(sed -nE '/^[[:space:]]*source_dirs:/,/^[[:space:]]*filelist:/ s@^[[:space:]]*-[[:space:]]*(src/.*)$@\1@p' "$rev")
+        fl="$(sed -nE 's/^[[:space:]]*filelist:[[:space:]]*(.*)$/\1/p' "$rev" | head -1)"
+        paths+=("${dirs[@]}" "$fl" "revinfo/$b.revinfo.yml" "revinfo/$b.map")
     done
     git -C "$REPO_ROOT" add -- "${paths[@]}"
     if git -C "$REPO_ROOT" diff --cached --quiet; then

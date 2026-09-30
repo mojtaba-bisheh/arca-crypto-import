@@ -1,12 +1,12 @@
 # ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
 #
 # To review what changed upstream since this import:
-#   git -C <caliptra-rtl> log --oneline 9d6585080a35f7819ffc05be12b71a128c85ead1..origin/main -- src/hmac/rtl src/hmac_drbg/rtl 
+#   git -C <caliptra-rtl> log --oneline 9d6585080a35f7819ffc05be12b71a128c85ead1..origin/main -- src/hmac/rtl src/hmac/coverage src/hmac_drbg/rtl src/hmac_drbg/coverage 
 #
 block: hmac
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-09-30T19:43:39Z"
+imported_at: "2026-09-30T20:51:31Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -15,15 +15,17 @@ upstream:
   commit_date: "2026-09-29T12:11:24-07:00"
   commit_subject: "[VAL] Fix es_csrng_tb read sampling race (#1418)"
   working_tree_dirty: false
-  subtrees:
-    - src/hmac/rtl
-    - src/hmac_drbg/rtl
+  subtrees:  # upstream path -> ARCA path
+    - { upstream: "src/hmac/rtl", arca: "src/hmac/rtl" }
+    - { upstream: "src/hmac/coverage", arca: "src/hmac/coverage" }
+    - { upstream: "src/hmac_drbg/rtl", arca: "src/hmac_drbg/rtl" }
+    - { upstream: "src/hmac_drbg/coverage", arca: "src/hmac_drbg/coverage" }
   compile_order_from: src/hmac/config/hmac_ctrl.vf
 
 importer:
   script: tools/scripts/rename/rename_hmac.sh
-  library_version: "1.1.0"
-  toolchain_fingerprint: "238ebf3e0cf1586de5553bbb551e3f68c7645aaba2760f2777e5b2602fbab591"
+  library_version: "1.2.0"
+  toolchain_fingerprint: "31317b2b62f08e21327e6c0171b56cfd9bbf81714bfe2fdff2d06086f429b9b7"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -43,8 +45,13 @@ policy:
     - "uvm_pkg"
 
 artifacts:
-  rtl_dir: rtl/hmac
-  filelist: rtl/hmac/arca_hmac.f
+  block_dir: src/hmac
+  source_dirs:
+    - src/hmac/rtl
+    - src/hmac/coverage
+    - src/hmac_drbg/rtl
+    - src/hmac_drbg/coverage
+  filelist: src/hmac/config/arca_hmac_ctrl.vf
   rename_map: revinfo/hmac.map
 
 source_manifest:  # sha256 of the upstream files as imported
@@ -54,15 +61,23 @@ source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "90fc828ee3cabb988153ca45fe03a680205383faac7bfb3e579d763ee8cdf93a", path: "src/hmac/rtl/hmac_reg_pkg.sv" }
   - { sha256: "8b4140e0964072fa546ada339d456b9c92915137d4329fdbc13489a983a4c24c", path: "src/hmac/rtl/hmac_reg.sv" }
   - { sha256: "5e8d427d4d52de23ff84a0f18e4266f577f92d6a0579efb85c8729b8187c508f", path: "src/hmac/rtl/hmac.sv" }
+  - { sha256: "1b9256facf0aedccc126595e710fe38ebea70af5a3526c3bed04cb5452354540", path: "src/hmac/coverage/hmac_ctrl_cov_bind.sv" }
+  - { sha256: "e9559bc1a9093e181e0d78a978c1fda1c70ac29b71cad6e4f91c1ce7523a6dde", path: "src/hmac/coverage/hmac_ctrl_cov_if.sv" }
   - { sha256: "dcded5cbecb101528cd5204c3c81cd10adab1ccf179013e0948a508de7d8a4ba", path: "src/hmac_drbg/rtl/hmac_drbg.sv" }
+  - { sha256: "d34324379fa39f3632b6b7356404c4920abb8e23e71396c6a3e8fe148b812d74", path: "src/hmac_drbg/coverage/hmac_drbg_cov_bind.sv" }
+  - { sha256: "76694d385f538f6ebde45624ab9afd30cf941f078d8b833ccb0e73869809d664", path: "src/hmac_drbg/coverage/hmac_drbg_cov_if.sv" }
 
 renamed_manifest:  # sha256 of the committed, renamed files
-  - { sha256: "269d103fc85d1b8aafc7b0cb468ca7354243d8f083c8dd1e8d445e43f38a2943", path: "rtl/hmac/arca_hmac_config.svh" }
-  - { sha256: "96cbd74a77911cff2f2b7f38ea0b2741386294b7d62b1f33a88f34073531bf4f", path: "rtl/hmac/arca_hmac_core.sv" }
-  - { sha256: "577968b864362413c3344665feece512aec8db90814f749fe6a46272c2bc8bba", path: "rtl/hmac/arca_hmac_ctrl.sv" }
-  - { sha256: "028594557a793ab268694309919c7c8bc060a54946bc651b9cc0c1239e4e0c68", path: "rtl/hmac/arca_hmac_drbg.sv" }
-  - { sha256: "d9e8e714426d9fb0fe3969034159b231dad94f3a01b317fc74024925baa120e0", path: "rtl/hmac/arca_hmac.f" }
-  - { sha256: "079dc53706bf82e0502620f34a10422a67af2dabb57cc8817d7c8bd3fba0876e", path: "rtl/hmac/arca_hmac_param_pkg.sv" }
-  - { sha256: "6d2b320952c69aff3fec7544679b51004851bb2cf5bd65258274b866b697e2fd", path: "rtl/hmac/arca_hmac_reg_pkg.sv" }
-  - { sha256: "6c8b12f217505fe1f46ecd94fe09136bf7a68bd069e12457d4dc5a3c982c549c", path: "rtl/hmac/arca_hmac_reg.sv" }
-  - { sha256: "1d377849de38b8379a492df6eb7478e8ad8093841e8b65892595aa059ab44826", path: "rtl/hmac/arca_hmac.sv" }
+  - { sha256: "e523a46a6e30f2f8944687ce52871cdde15700072af3f912245c9bbb8d3e872d", path: "src/hmac/config/arca_hmac_ctrl.vf" }
+  - { sha256: "d61dffc87c81b86d5cc966b69f9ac8e90ee93124ef6e10c8bcad5d7fcf8197c1", path: "src/hmac/coverage/arca_hmac_ctrl_cov_bind.sv" }
+  - { sha256: "d3269b998b8addf098c0dd4c85a08907b05526395885b92dca783c9c75ada605", path: "src/hmac/coverage/arca_hmac_ctrl_cov_if.sv" }
+  - { sha256: "51e9b2216203b5f5a4d754ff5a08f20cca08ce325fcafd0c65455505fad36e7f", path: "src/hmac_drbg/coverage/arca_hmac_drbg_cov_bind.sv" }
+  - { sha256: "949de115575d1019bbf2b3c63556593be122dbce5e1fe77142f37ae7f7ff9e4f", path: "src/hmac_drbg/coverage/arca_hmac_drbg_cov_if.sv" }
+  - { sha256: "028594557a793ab268694309919c7c8bc060a54946bc651b9cc0c1239e4e0c68", path: "src/hmac_drbg/rtl/arca_hmac_drbg.sv" }
+  - { sha256: "269d103fc85d1b8aafc7b0cb468ca7354243d8f083c8dd1e8d445e43f38a2943", path: "src/hmac/rtl/arca_hmac_config.svh" }
+  - { sha256: "96cbd74a77911cff2f2b7f38ea0b2741386294b7d62b1f33a88f34073531bf4f", path: "src/hmac/rtl/arca_hmac_core.sv" }
+  - { sha256: "577968b864362413c3344665feece512aec8db90814f749fe6a46272c2bc8bba", path: "src/hmac/rtl/arca_hmac_ctrl.sv" }
+  - { sha256: "079dc53706bf82e0502620f34a10422a67af2dabb57cc8817d7c8bd3fba0876e", path: "src/hmac/rtl/arca_hmac_param_pkg.sv" }
+  - { sha256: "6d2b320952c69aff3fec7544679b51004851bb2cf5bd65258274b866b697e2fd", path: "src/hmac/rtl/arca_hmac_reg_pkg.sv" }
+  - { sha256: "6c8b12f217505fe1f46ecd94fe09136bf7a68bd069e12457d4dc5a3c982c549c", path: "src/hmac/rtl/arca_hmac_reg.sv" }
+  - { sha256: "1d377849de38b8379a492df6eb7478e8ad8093841e8b65892595aa059ab44826", path: "src/hmac/rtl/arca_hmac.sv" }

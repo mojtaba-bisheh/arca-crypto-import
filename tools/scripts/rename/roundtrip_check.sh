@@ -58,28 +58,38 @@ for b in "${blocks[@]}"; do
 
     printf '\n== %s (upstream %s, prefix %s) ==\n' "$b" "${sha:0:12}" "$prefix"
 
+    # upstream subtree -> ARCA subtree, as recorded at import time
+    declare -A dirmap=()
+    while IFS='|' read -r up ar; do
+        [ -n "${ar:-}" ] || continue
+        dirmap["$up"]="$ar"
+    done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*\{[[:space:]]*upstream:[[:space:]]*"([^"]+)",[[:space:]]*arca:[[:space:]]*"([^"]+)".*/\1|\2/p' "$revinfo")
+
     checked=0
     while read -r _ upath; do
         [ -n "${upath:-}" ] || continue
         base="$(basename "$upath")"
-        renamed="$DEST/rtl/$b/${prefix}${base}"
+        updir="$(dirname "$upath")"
+        arcadir="${dirmap[$updir]:-}"
+        [ -n "$arcadir" ] || { echo "  FAIL  no ARCA directory recorded for $updir"; rc=1; continue; }
+        renamed="$DEST/$arcadir/${prefix}${base}"
         [ -f "$renamed" ] || { echo "  FAIL  missing renamed file for $upath"; rc=1; continue; }
 
         if diffout="$(diff <(sed "s/${prefix}//g; s/${macro_prefix}//g" "$renamed") \
                           <(git -C "$UPSTREAM" show "$sha:$upath"))"; then
-            printf '  ok    %s\n' "$base"
+            printf '  ok    %s\n' "$upath"
         else
             # tolerate deliberate `include redirections only
             if [ -z "$(printf '%s\n' "$diffout" | grep -E '^[<>]' | grep -vE '`include')" ]; then
-                printf '  ok    %s (include redirected on purpose)\n' "$base"
+                printf '  ok    %s (include redirected on purpose)\n' "$upath"
             else
-                printf '  FAIL  %s differs beyond renaming:\n' "$base"
+                printf '  FAIL  %s differs beyond renaming:\n' "$upath"
                 printf '%s\n' "$diffout" | sed 's/^/        /'
                 rc=1
             fi
         fi
         checked=$((checked + 1))
-    done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"(src\/[^"]+)".*/\1 \2/p' "$revinfo")
+    done < <(sed -nE '/^source_manifest:/,/^renamed_manifest:/ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"(src\/[^"]+)".*/\1 \2/p' "$revinfo")
 
     printf '  -- %d file(s) round-tripped\n' "$checked"
     [ "$checked" -gt 0 ] || { echo "  FAIL  nothing checked"; rc=1; }

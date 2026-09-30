@@ -4,6 +4,16 @@
 #
 #   ./tools/scripts/rename/rename_ecc.sh --upstream /path/to/caliptra-rtl
 #
+# Layout
+# ------
+# The ARCA tree mirrors the caliptra-rtl hierarchy, so the correspondence
+# between the two trees is 1:1:
+#
+#   caliptra-rtl                          ARCA
+#   src/ecc/rtl/ecc_top.sv            ->  src/ecc/rtl/arca_ecc_top.sv
+#   src/ecc/coverage/ecc_top_cov_if.sv -> src/ecc/coverage/arca_ecc_top_cov_if.sv
+#   src/ecc/config/ecc_top.vf         ->  src/ecc/config/arca_ecc_top.vf (generated)
+#
 # Block-specific notes
 # --------------------
 # * ECC lives in a single upstream directory (src/ecc/rtl) but instantiates
@@ -20,6 +30,12 @@
 # * ecc_reg.rdl is the upstream register description. It is excluded from the
 #   renamed fileset because regenerating from it would produce unprefixed RTL;
 #   if ARCA ever needs to regenerate, re-run this script afterwards.
+# * The coverage/ directory is imported too. It exercises a case the rtl/
+#   directories do not: `bind ecc_top ecc_top_cov_if ...` -- the rename engine
+#   has to rewrite the bind target as well as the interface name.
+# * coverage/config/ecc_cm_hier.cfg is NOT imported: it names a *testbench*
+#   hierarchy (ecc_top_tb.dut) and the testbench is out of scope for this
+#   import, so the renamed file would carry a dangling reference.
 # * ECC needs no environment configuration macros.
 
 set -euo pipefail
@@ -28,6 +44,15 @@ BLOCK="ecc"
 
 UPSTREAM_SUBTREES=(
     "src/ecc/rtl"
+    "src/ecc/coverage"
+)
+
+# Where each upstream subtree lands in ARCA. The identity mapping keeps the
+# caliptra-rtl hierarchy; set an explicit path only to shelve the block
+# elsewhere, e.g. DEST_SUBTREES=("src/ecc384/rtl" "src/ecc384/coverage").
+DEST_SUBTREES=(
+    "src/ecc/rtl"
+    "src/ecc/coverage"
 )
 
 VF_FILELIST="src/ecc/config/ecc_top.vf"

@@ -11,8 +11,14 @@ following the same idea as VeeR-EL2's
 Two engines are imported end to end as worked examples: **ECC** (secp384r1) and
 **HMAC** (HMAC-SHA512, including the HMAC_DRBG it owns).
 
-Everything under `rtl/` and `revinfo/` in this repo is **generated** by the
+Everything under `src/` and `revinfo/` in this repo is **generated** by the
 scripts in `tools/scripts/rename/` and committed as-is.
+
+**The ARCA tree mirrors the caliptra-rtl hierarchy.** A block is imported as a
+whole directory — `src/ecc/{rtl,coverage,config}` upstream becomes
+`src/ecc/{rtl,coverage,config}` in ARCA, with every file inside renamed. That
+keeps upstream paths, ARCA paths and `git log` paths 1:1, which is what makes
+the "review the changelog, then re-import" loop cheap.
 
 ---
 
@@ -29,10 +35,25 @@ relocatable and lets ARCA carry its own release cadence.
 
 ## Repository layout
 
+The imported blocks keep their upstream paths, so `src/<block>/<subdir>/` in
+caliptra-rtl lands at `src/<block>/<subdir>/` in ARCA:
+
+| caliptra-rtl | ARCA | contents |
+|---|---|---|
+| `src/ecc/rtl/` | `src/ecc/rtl/` | 23 renamed `.sv` |
+| `src/ecc/coverage/` | `src/ecc/coverage/` | `arca_ecc_top_cov_{bind,if}.sv` |
+| `src/ecc/config/ecc_top.vf` | `src/ecc/config/arca_ecc_top.vf` | generated compile order |
+| `src/hmac/rtl/` | `src/hmac/rtl/` | 7 renamed `.sv` + generated `arca_hmac_config.svh` |
+| `src/hmac/coverage/` | `src/hmac/coverage/` | `arca_hmac_ctrl_cov_{bind,if}.sv` |
+| `src/hmac/config/hmac_ctrl.vf` | `src/hmac/config/arca_hmac_ctrl.vf` | generated compile order |
+| `src/hmac_drbg/rtl/` | `src/hmac_drbg/rtl/` | owned by the HMAC import |
+| `src/hmac_drbg/coverage/` | `src/hmac_drbg/coverage/` | |
+
 ```
-rtl/
-  ecc/                      generated, prefixed ECC fileset + arca_ecc.f
-  hmac/                     generated, prefixed HMAC + HMAC_DRBG + arca_hmac.f
+src/
+  ecc/       rtl/ coverage/ config/    generated, prefixed ECC fileset
+  hmac/      rtl/ coverage/ config/    generated, prefixed HMAC fileset
+  hmac_drbg/ rtl/ coverage/            imported by HMAC, referenced by ECC
 revinfo/
   ecc.revinfo.yml           provenance: upstream repo/commit/date, policy, sha256 manifests
   ecc.map                   full original -> renamed identifier table
@@ -49,6 +70,17 @@ tools/scripts/rename/
   upstream_diff.sh          "what changed upstream since we imported this?"
 docs/METHODOLOGY.md         design rationale, policies, how to add a new block
 ```
+
+`revinfo/` stays at the repo root on purpose: it is ARCA import *metadata*, not
+upstream content, so it must not shadow a real caliptra-rtl path.
+
+The destination path is a **separate knob** from the identifier prefix. A
+driver sets `UPSTREAM_SUBTREES` and, if ARCA must land the block somewhere
+else, `DEST_SUBTREES` + `BLOCK_DIR`. Renaming the HMAC directory to
+`src/hmac512/` while keeping `arca_hmac*` module names is a two-line change in
+`rename_hmac.sh` — documented in that script's header.
+
+---
 
 One script per block, all under `tools/scripts/rename/`. The blocks are
 *similar but not identical* — different directory hierarchies, different
@@ -93,9 +125,9 @@ To import and commit in one shot:
 | 3. apply | One Perl pass per file over the whole map, alternation sorted longest-first, with SystemVerilog identifier boundaries. |
 | 4. env macros | Macros the caliptra-rtl *environment* supplied are captured into a generated block-private header (`arca_hmac_config.svh`) and the `` `include `` is redirected there. |
 | 5. file rename | Every file gets the prefix; `` `include `` references were already rewritten in step 3. |
-| 6. filelist | A compile-ordered `arca_<block>.f` is generated, ordering derived from the upstream `.vf` filelist. |
+| 6. filelist | A compile-ordered `.vf` is generated *where upstream keeps it* — `src/<block>/config/arca_<name>.vf` — ordering derived from the upstream `.vf`, with `+incdir+` lines for every imported directory. |
 | 7. revinfo | `revinfo/<block>.revinfo.yml` records upstream repo/branch/commit/date/subject, dirty flag, subtrees, prefix, script fingerprint, policy (exclusions, keep-list, cross-block deps, env macros) and sha256 manifests before *and* after renaming. |
-| 8. verify | 9 structural checks, then the round-trip proof. |
+| 8. verify | 10 structural checks (including "the ARCA layout mirrors the caliptra-rtl hierarchy"), then the round-trip proof. |
 
 ### The rename engine, concretely
 
@@ -126,15 +158,17 @@ it against the exact upstream blob at the commit recorded in `revinfo/`:
 
 ```
 == ecc (upstream 9d6585080a35, prefix arca_) ==
-  ok    ecc_adder.sv
+  ok    src/ecc/rtl/ecc_adder.sv
   ...
-  -- 23 file(s) round-tripped
+  ok    src/ecc/coverage/ecc_top_cov_bind.sv
+  -- 25 file(s) round-tripped
 
 == hmac (upstream 9d6585080a35, prefix arca_) ==
-  ok    hmac_core.sv
-  ok    hmac_ctrl.sv (include redirected on purpose)
+  ok    src/hmac/rtl/hmac_core.sv
+  ok    src/hmac/rtl/hmac_ctrl.sv (include redirected on purpose)
   ...
-  -- 7 file(s) round-tripped
+  ok    src/hmac_drbg/rtl/hmac_drbg.sv
+  -- 11 file(s) round-tripped
 
 roundtrip_check: imported RTL differs from upstream by naming only
 ```
@@ -151,8 +185,14 @@ lines, no mangled string literals.
   different upstream directory. Policy: HMAC owns it and imports it once; ECC
   only rewrites the *reference*. Both land on `arca_hmac_drbg`, so the netlist
   has exactly one copy. Declared in `rename_ecc.sh:EXTRA_RENAME_IDENTS`.
-* **Multiple upstream directories per block.** HMAC spans `src/hmac/rtl` and
-  `src/hmac_drbg/rtl`.
+* **Multiple upstream directories per block.** HMAC spans four upstream
+  directories — `src/hmac/{rtl,coverage}` and `src/hmac_drbg/{rtl,coverage}` —
+  and all four are mirrored into ARCA at the same paths.
+* **`bind` targets.** The coverage files carry
+  `bind ecc_top ecc_top_cov_if i_ecc_top_cov_if (.*);`. Both the bound-to
+  module and the interface are block-owned, so both get prefixed
+  (`bind arca_ecc_top arca_ecc_top_cov_if ...`) while the *instance* name is
+  left alone — it is local to the bind, not part of the global namespace.
 * **Environment configuration macros.** HMAC consumes
   `` `CLP_CSR_HMAC_KEY_DWORDS ``, defined in caliptra-rtl's global
   `src/libs/rtl/caliptra_macros.svh`. The import captures it as
@@ -174,9 +214,10 @@ lines, no mangled string literals.
 ## Adding a new block
 
 1. `cp tools/scripts/rename/rename_ecc.sh tools/scripts/rename/rename_<block>.sh`
-2. Edit `BLOCK`, `UPSTREAM_SUBTREES`, `VF_FILELIST` / `VF_FILTER`,
+2. Edit `BLOCK`, `UPSTREAM_SUBTREES` (plus `DEST_SUBTREES` / `BLOCK_DIR` only if
+   ARCA must deviate from the upstream path), `VF_FILELIST` / `VF_FILTER`,
    `EXCLUDE_GLOBS`, `EXTRA_RENAME_IDENTS`, `ENV_MACRO_SPECS`, `KEEP_IDENTS`.
-   Document the block's quirks in the header comment.
+   Document the block's quirks and its path mapping in the header comment.
 3. `./tools/scripts/rename/import_block.sh <block> --commit`
 4. Add the block to `BLOCKS` in the `Makefile`.
 
@@ -196,8 +237,8 @@ Current state of the two imported blocks, all enforced in CI
 
 | Check | ECC | HMAC |
 |---|---|---|
-| structural verification (9 checks) | pass | pass |
-| round-trip vs upstream blobs | pass, 23 files | pass, 7 files |
+| structural verification (10 checks) | pass | pass |
+| round-trip vs upstream blobs | pass, 25 files | pass, 11 files |
 | re-import reproducibility | pass | pass |
 | `slang` elaboration | 0 errors, 0 warnings | 0 errors, 0 warnings |
 

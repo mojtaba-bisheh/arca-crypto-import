@@ -20,7 +20,19 @@
 #   UPSTREAM_SUBTREES     array of upstream dirs to import (repo-relative)
 #
 # Optional variables:
+#   DEST_SUBTREES         array parallel to UPSTREAM_SUBTREES giving the ARCA
+#                         path for each upstream subtree. Defaults to the
+#                         identity mapping, so the ARCA tree mirrors the
+#                         caliptra-rtl hierarchy exactly:
+#                           caliptra-rtl  src/ecc/rtl/ecc_top.sv
+#                           ARCA          src/ecc/rtl/arca_ecc_top.sv
+#                         Override only when ARCA deliberately shelves a block
+#                         under a different name, e.g.
+#                           DEST_SUBTREES=("src/hmac512/rtl")
+#   BLOCK_DIR             ARCA directory that owns the block's config/ dir.
+#                         Defaults to the parent of DEST_SUBTREES[0].
 #   VF_FILELIST           upstream .vf filelist used to derive compile order
+#                         (its basename is reused for the generated filelist)
 #   VF_FILTER             egrep pattern selecting this block's lines in VF_FILELIST
 #   EXCLUDE_GLOBS         array of basename globs never imported
 #   EXTRA_RENAME_IDENTS   array of "kind:name" tokens that are declared outside
@@ -39,7 +51,7 @@
 
 set -euo pipefail
 
-RC_SCRIPT_VERSION="1.1.0"
+RC_SCRIPT_VERSION="1.2.0"
 
 rc_log()  { printf '[%s] %s\n' "${BLOCK:-rename}" "$*"; }
 rc_warn() { printf '[%s] WARNING: %s\n' "${BLOCK:-rename}" "$*" >&2; }
@@ -68,9 +80,22 @@ rc_default_array() {
     done
 }
 
+# Guard the destination paths. rc_install removes these directories before
+# repopulating them, so anything outside src/ or containing '..' is refused.
+rc_check_relpath() {
+    local p="$1"
+    case "$p" in
+        src/*) : ;;
+        *) rc_die "destination path '$p' must live under src/" ;;
+    esac
+    case "$p" in
+        *..*|*//*|/*) rc_die "destination path '$p' is not a clean relative path" ;;
+    esac
+}
+
 rc_init() {
     rc_default_array EXCLUDE_GLOBS EXTRA_RENAME_IDENTS ENV_MACRO_SPECS \
-                     ENV_HEADER_REPLACE KEEP_IDENTS
+                     ENV_HEADER_REPLACE KEEP_IDENTS DEST_SUBTREES
 
     UPSTREAM=""
     DEST=""
@@ -106,7 +131,24 @@ rc_init() {
     esac
     MACRO_PREFIX="$(printf '%s' "$PREFIX" | tr '[:lower:]' '[:upper:]')"
 
-    OUT_RTL="$DEST/rtl/$BLOCK"
+    # ------------------------------------------------------------------
+    # Destination layout.
+    #
+    # ARCA mirrors the caliptra-rtl hierarchy: an upstream src/<block>/rtl
+    # lands at src/<block>/rtl in ARCA, so the correspondence between the two
+    # trees is 1:1 and a re-import shows up as an ordinary RTL diff. A driver
+    # may override individual paths via DEST_SUBTREES.
+    # ------------------------------------------------------------------
+    local i dst
+    for i in "${!UPSTREAM_SUBTREES[@]}"; do
+        dst="${DEST_SUBTREES[$i]:-${UPSTREAM_SUBTREES[$i]}}"
+        rc_check_relpath "$dst"
+        DEST_SUBTREES[$i]="$dst"
+    done
+    BLOCK_DIR="${BLOCK_DIR:-$(dirname "${DEST_SUBTREES[0]}")}"
+    rc_check_relpath "$BLOCK_DIR"
+    CONFIG_DIR="$BLOCK_DIR/config"
+
     OUT_REVINFO="$DEST/revinfo"
     WORK="$(mktemp -d "${TMPDIR:-/tmp}/arca-import-$BLOCK-XXXXXX")"
     STAGE="$WORK/stage"
@@ -137,16 +179,23 @@ rc_init() {
 }
 
 # ---------------------------------------------------------------------------
-# rc_stage -- copy the upstream subtrees into a flat staging directory
+# rc_stage -- copy the upstream subtrees into a staging tree that already has
+#             the final ARCA layout (src/<block>/rtl/...), so nothing downstream
+#             has to reconstruct where a file belongs.
+#
+# STAGED_FILES holds repo-relative paths, e.g. "src/ecc/rtl/ecc_top.sv".
 # ---------------------------------------------------------------------------
 rc_stage() {
-    local subtree src base skip glob
+    local i subtree dst src base rel skip glob
     STAGED_FILES=()
     SRC_MANIFEST="$WORK/src_manifest.txt"
     : > "$SRC_MANIFEST"
 
-    for subtree in "${UPSTREAM_SUBTREES[@]}"; do
+    for i in "${!UPSTREAM_SUBTREES[@]}"; do
+        subtree="${UPSTREAM_SUBTREES[$i]}"
+        dst="${DEST_SUBTREES[$i]}"
         [ -d "$UPSTREAM/$subtree" ] || rc_die "upstream subtree '$subtree' not found"
+        mkdir -p "$STAGE/$dst"
         while IFS= read -r src; do
             base="$(basename "$src")"
             skip=0
@@ -159,15 +208,31 @@ rc_stage() {
                 rc_log "  excluded  $subtree/$base"
                 continue
             fi
-            [ -e "$STAGE/$base" ] && rc_die "basename collision while staging: $base"
-            cp "$src" "$STAGE/$base"
-            STAGED_FILES+=("$base")
+            # Module and file names must stay unique across the whole block
+            # even though they now live in different directories.
+            rc_assert_unique_basename "$base"
+            rel="$dst/$base"
+            cp "$src" "$STAGE/$rel"
+            STAGED_FILES+=("$rel")
             printf '%s  %s/%s\n' "$(sha256sum "$src" | cut -d' ' -f1)" "$subtree" "$base" >> "$SRC_MANIFEST"
         done < <(find "$UPSTREAM/$subtree" -maxdepth 1 -type f | sort)
+        if [ "$dst" != "$subtree" ]; then
+            rc_log "  subtree   $subtree -> $dst"
+        else
+            rc_log "  subtree   $subtree"
+        fi
     done
 
     [ "${#STAGED_FILES[@]}" -gt 0 ] || rc_die "nothing staged"
-    rc_log "staged ${#STAGED_FILES[@]} file(s)"
+    rc_log "staged ${#STAGED_FILES[@]} file(s) into ${#DEST_SUBTREES[@]} director(ies)"
+}
+
+rc_assert_unique_basename() {
+    local base="$1" f
+    for f in "${STAGED_FILES[@]}"; do
+        [ "$(basename "$f")" = "$base" ] && rc_die "basename collision while staging: $base"
+    done
+    return 0
 }
 
 # ---------------------------------------------------------------------------
@@ -269,8 +334,10 @@ rc_env_macros() {
     ENV_HEADER=""
     [ "${#ENV_MACRO_SPECS[@]}" -gt 0 ] || return 0
 
-    local spec macro src line guard hdr
-    hdr="${PREFIX}${BLOCK}_config.svh"
+    local spec macro src line guard hdr hdr_dir
+    # The generated header belongs next to the RTL that includes it.
+    hdr_dir="$(dirname "${STAGED_FILES[0]}")"
+    hdr="$hdr_dir/${PREFIX}${BLOCK}_config.svh"
     ENV_HEADER="$hdr"
     guard="$(printf '%s%s_CONFIG_SVH' "$MACRO_PREFIX" "$(printf '%s' "$BLOCK" | tr '[:lower:]' '[:upper:]')")"
 
@@ -302,16 +369,16 @@ rc_env_macros() {
 
     printf '`endif // %s\n' "$guard" >> "$STAGE/$hdr"
     STAGED_FILES+=("$hdr")
-    printf 'file\t(generated)\t%s\n' "$hdr" >> "$MAP"
+    printf 'file\t(generated)\t%s\n' "$(basename "$hdr")" >> "$MAP"
 
-    local old
+    local old f
     for old in "${ENV_HEADER_REPLACE[@]}"; do
         [ -n "$old" ] || continue
-        pushd "$STAGE" >/dev/null
-        # shellcheck disable=SC2046
-        sed -i -E "s|(\`include[[:space:]]+\")${old}(\")|\1${hdr}\2|g" $(ls *.sv *.svh *.v 2>/dev/null || true)
-        popd >/dev/null
-        rc_log "  redirected \`include \"$old\" -> \"$hdr\""
+        for f in "${STAGED_FILES[@]}"; do
+            case "$f" in *.sv|*.svh|*.v) ;; *) continue ;; esac
+            sed -i -E "s|(\`include[[:space:]]+\")${old}(\")|\1$(basename "$hdr")\2|g" "$STAGE/$f"
+        done
+        rc_log "  redirected \`include \"$old\" -> \"$(basename "$hdr")\""
     done
 }
 
@@ -320,18 +387,18 @@ rc_env_macros() {
 #                    is already prefixed).
 # ---------------------------------------------------------------------------
 rc_rename_files() {
-    local f new out=()
-    pushd "$STAGE" >/dev/null
+    local f dir base new out=()
     for f in "${STAGED_FILES[@]}"; do
-        case "$f" in
+        dir="$(dirname "$f")"
+        base="$(basename "$f")"
+        case "$base" in
             "$PREFIX"*) out+=("$f"); continue ;;
         esac
-        new="${PREFIX}${f}"
-        [ -e "$new" ] && rc_die "rename collision: $new already exists"
-        mv "$f" "$new"
+        new="$dir/${PREFIX}${base}"
+        [ -e "$STAGE/$new" ] && rc_die "rename collision: $new already exists"
+        mv "$STAGE/$f" "$STAGE/$new"
         out+=("$new")
     done
-    popd >/dev/null
     STAGED_FILES=("${out[@]}")
     rc_log "renamed ${#STAGED_FILES[@]} file(s)"
 }
@@ -339,20 +406,25 @@ rc_rename_files() {
 # ---------------------------------------------------------------------------
 # rc_emit_filelist -- compile-ordered filelist.
 #
+# It lands in the block's config/ directory, mirroring where caliptra-rtl keeps
+# its own .vf filelists (src/ecc/config/ecc_top.vf -> src/ecc/config/arca_ecc_top.vf).
+#
 # The order is derived from the upstream .vf filelist when the driver provides
 # one; the imported block keeps the upstream package/module compile order and
 # we do not have to reinvent it. Files not mentioned upstream are appended.
 # ---------------------------------------------------------------------------
 rc_emit_filelist() {
-    local ordered=() seen f base line
-    FILELIST="${PREFIX}${BLOCK}.f"
+    local ordered=() f base line vf_base incdirs=() d
+    vf_base="${VF_FILELIST:+$(basename "$VF_FILELIST")}"
+    vf_base="${vf_base:-$BLOCK.vf}"
+    FILELIST="$CONFIG_DIR/${PREFIX}${vf_base}"
 
     if [ -n "${VF_FILELIST:-}" ] && [ -f "$UPSTREAM/$VF_FILELIST" ]; then
         while IFS= read -r line; do
-            base="$(basename "${line%%[[:space:]]*}")"
-            f="${PREFIX}${base}"
-            [ -f "$STAGE/$f" ] || continue
-            case " ${ordered[*]:-} " in *" $f "*) continue ;; esac
+            base="${PREFIX}$(basename "${line%%[[:space:]]*}")"
+            f="$(rc_staged_path "$base")"
+            [ -n "$f" ] || continue
+            case " ${ordered[*]} " in *" $f "*) continue ;; esac
             ordered+=("$f")
         done < <(grep -E "${VF_FILTER:-.}" "$UPSTREAM/$VF_FILELIST" | grep -vE '^\s*(\+|//|$)')
         rc_log "compile order derived from $VF_FILELIST"
@@ -364,32 +436,61 @@ rc_emit_filelist() {
     fi
 
     for f in "${STAGED_FILES[@]}"; do
-        case " ${ordered[*]:-} " in *" $f "*) continue ;; esac
+        case " ${ordered[*]} " in *" $f "*) continue ;; esac
         ordered+=("$f")
     done
 
+    for d in "${DEST_SUBTREES[@]}"; do
+        case " ${incdirs[*]} " in *" $d "*) continue ;; esac
+        incdirs+=("$d")
+    done
+
+    mkdir -p "$STAGE/$CONFIG_DIR"
     {
         printf '// GENERATED by tools/scripts/rename/rename_%s.sh -- do not edit by hand.\n' "$BLOCK"
         printf '// Compile-ordered filelist for the imported %s block.\n' "$BLOCK"
-        printf '+incdir+${ARCA_ROOT}/rtl/%s\n' "$BLOCK"
+        printf '// Set ARCA_ROOT to the root of this repository.\n'
+        for d in "${incdirs[@]}"; do
+            printf '+incdir+${ARCA_ROOT}/%s\n' "$d"
+        done
         for f in "${ordered[@]}"; do
             [ -n "$f" ] || continue
-            printf '${ARCA_ROOT}/rtl/%s/%s\n' "$BLOCK" "$f"
+            printf '${ARCA_ROOT}/%s\n' "$f"
         done
     } > "$STAGE/$FILELIST"
     rc_log "wrote $FILELIST"
+}
+
+# Resolve a renamed basename back to its staged, repo-relative path.
+rc_staged_path() {
+    local want="$1" f
+    for f in "${STAGED_FILES[@]}"; do
+        if [ "$(basename "$f")" = "$want" ]; then printf '%s' "$f"; return 0; fi
+    done
+    return 0
 }
 
 # ---------------------------------------------------------------------------
 # rc_install -- publish the staged block and its map into the ARCA repo
 # ---------------------------------------------------------------------------
 rc_install() {
-    rm -rf "$OUT_RTL"
-    mkdir -p "$OUT_RTL"
-    cp -a "$STAGE"/. "$OUT_RTL"/
+    local d
+    INSTALLED_FILES=()
+    for d in "${DEST_SUBTREES[@]}" "$CONFIG_DIR"; do
+        rc_check_relpath "$d"
+        rm -rf "${DEST:?}/$d"
+    done
+    mkdir -p "$DEST"
+    cp -a "$STAGE"/. "$DEST"/
+
+    local f
+    while IFS= read -r f; do
+        INSTALLED_FILES+=("${f#./}")
+    done < <(cd "$STAGE" && find . -type f | sed 's|^\./||' | sort)
+
     grep -vE '^\s*#' "$MAP" > "$OUT_REVINFO/$BLOCK.map" || true
     sed -i "1i # ARCA identifier rename map for block '$BLOCK' (prefix: $PREFIX)" "$OUT_REVINFO/$BLOCK.map"
-    rc_log "installed -> rtl/$BLOCK/ and revinfo/$BLOCK.map"
+    rc_log "installed -> $(printf '%s ' "${DEST_SUBTREES[@]}")and revinfo/$BLOCK.map"
 }
 
 # ---------------------------------------------------------------------------
@@ -423,8 +524,12 @@ rc_emit_revinfo() {
         printf '  commit_date: "%s"\n' "$UPSTREAM_DATE"
         printf '  commit_subject: "%s"\n' "$(printf '%s' "$UPSTREAM_DESC" | sed 's/"/\\"/g')"
         printf '  working_tree_dirty: %s\n' "$UPSTREAM_DIRTY"
-        printf '  subtrees:\n'
-        for tok in "${UPSTREAM_SUBTREES[@]}"; do printf '    - %s\n' "$tok"; done
+        printf '  subtrees:  # upstream path -> ARCA path\n'
+        local i
+        for i in "${!UPSTREAM_SUBTREES[@]}"; do
+            printf '    - { upstream: "%s", arca: "%s" }\n' \
+                   "${UPSTREAM_SUBTREES[$i]}" "${DEST_SUBTREES[$i]}"
+        done
         if [ -n "${VF_FILELIST:-}" ]; then
             printf '  compile_order_from: %s\n' "$VF_FILELIST"
         fi
@@ -459,8 +564,10 @@ rc_emit_revinfo() {
         fi
         printf '\n'
         printf 'artifacts:\n'
-        printf '  rtl_dir: rtl/%s\n' "$BLOCK"
-        printf '  filelist: rtl/%s/%s\n' "$BLOCK" "$FILELIST"
+        printf '  block_dir: %s\n' "$BLOCK_DIR"
+        printf '  source_dirs:\n'
+        for tok in "${DEST_SUBTREES[@]}"; do printf '    - %s\n' "$tok"; done
+        printf '  filelist: %s\n' "$FILELIST"
         printf '  rename_map: revinfo/%s.map\n' "$BLOCK"
         printf '\n'
         printf 'source_manifest:  # sha256 of the upstream files as imported\n'
@@ -469,9 +576,9 @@ rc_emit_revinfo() {
         done < "$SRC_MANIFEST"
         printf '\n'
         printf 'renamed_manifest:  # sha256 of the committed, renamed files\n'
-        for f in $(cd "$OUT_RTL" && ls | sort); do
-            printf '  - { sha256: "%s", path: "rtl/%s/%s" }\n' \
-                   "$(sha256sum "$OUT_RTL/$f" | cut -d' ' -f1)" "$BLOCK" "$f"
+        for f in "${INSTALLED_FILES[@]}"; do
+            printf '  - { sha256: "%s", path: "%s" }\n' \
+                   "$(sha256sum "$DEST/$f" | cut -d' ' -f1)" "$f"
         done
     } > "$out"
     rc_log "wrote revinfo/$BLOCK.revinfo.yml"
