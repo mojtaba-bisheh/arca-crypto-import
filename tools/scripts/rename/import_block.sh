@@ -91,6 +91,7 @@ done
 
 echo
 "$RENAME_DIR/verify_import.sh" --dest "$REPO_ROOT"
+"$RENAME_DIR/check_filelists.sh" --dest "$REPO_ROOT"
 
 if [ "$DO_COMMIT" -eq 1 ]; then
     sha="$(git -C "$UPSTREAM" rev-parse --short=12 HEAD)"

@@ -13,6 +13,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verify imported filesets
         run: ./tools/scripts/rename/verify_import.sh
+      - name: Verify UVMF filelist references resolve
+        run: ./tools/scripts/rename/check_filelists.sh
 
   roundtrip:
     name: rename is naming-only

@@ -226,10 +226,23 @@ makes that rule enforceable rather than aspirational.
 
 **What is and isn't proven.** The delivery tier (`rtl/`, `coverage/`) is
 elaborated by slang in CI, so for that tier "it compiles" is a fact. The UVMF
-collateral is *structurally* verified — every reference resolves, the round-trip
-shows naming-only divergence against upstream — but it is not simulated in CI,
-because that needs UVM and a licensed simulator. Call it reference-consistent,
-not sim-proven.
+collateral is *structurally* verified but not simulated — that needs UVM and a
+licensed simulator. Call it reference-consistent, not sim-proven.
+
+"Reference-consistent" is enforced rather than asserted. `check_filelists.sh`
+resolves every path named by every `.f` / `.F` in the import — expanding
+`$UVMF_VIP_LIBRARY_HOME` and `$UVMF_PROJECT_DIR` the way the UVMF run scripts
+do, skipping `${UVM_HOME}` and `uvmf_base_pkg` as external — and fails if any
+of them names a file that is not there:
+
+```
+$ make verify
+  ok    36 vendored path(s) in 24 UVMF filelist(s) all resolve (8 external ref(s) skipped)
+```
+
+This is the check that would have caught the dangling `interface_packages/`
+path described above, and it is the one check the round-trip *cannot* catch: a
+consistently-wrong path still strips back to the correct upstream one.
 
 ## What the import actually does
 

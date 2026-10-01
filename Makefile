@@ -25,6 +25,7 @@ $(addprefix import-,$(BLOCKS)): import-%:
 
 verify:
 	$(RENAME)/verify_import.sh
+	$(RENAME)/check_filelists.sh
 
 roundtrip:
 	$(RENAME)/roundtrip_check.sh $(UPSTREAM_ARG)
