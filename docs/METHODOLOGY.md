@@ -152,7 +152,9 @@ The whole block folder is imported, but with two different contracts:
 |---|---|---|
 | content | `rtl/`, `coverage/` | `tb/`, `formal/`, `stimulus/`, `uvmf_*/`, `coverage/config/` |
 | identifier rename | full map | **same** full map — the testbench must keep binding to the renamed RTL |
-| file-name rename | unconditional | only when the stem is itself a renamed `module`/`package`/`interface`. `Makefile`, `compile.do`, `.project` and the UVMF `.yaml` keep their names |
+| file-name rename | unconditional | unconditional for `*.sv *.svh *.v *.vh`; other files only when the stem is itself a renamed `module`/`package`/`interface`. `Makefile`, `compile.do`, `.project` and the UVMF `.yaml` keep their names |
+| directory rename | none — block dirs mirror upstream | a directory *named after* a renamed package follows it (`interface_packages/ECC_out_pkg/` → `arca_ECC_out_pkg/`), anchored **below** the declared subtree root so `src/hmac/` and `src/hmac_drbg/` are never touched even though `hmac` and `hmac_drbg` are renamed modules |
+| reference fix-up | identifier pass covers `` `include `` | `rc_fix_file_references` additionally rewrites every reference to a renamed *file name* — `.f` lists, `compile.do`, Makefiles |
 | unique basenames | asserted | not asserted — upstream deliberately reuses `Makefile` / `compile.do` across directories |
 | `` `include `` resolution | asserted | reported as a note; verification collateral legitimately includes UVM and caliptra-rtl headers that are not vendored |
 | covered by generated `.vf` | yes | no — the `.vf` is the synthesisable delivery |
@@ -160,6 +162,42 @@ The whole block folder is imported, but with two different contracts:
 | round-trip proof | yes | yes |
 
 `--no-collateral` restricts an import to the delivery tier.
+
+The non-HDL rule is narrower than it looks, and the principle is worth stating:
+a non-HDL file is renamed only when its name is *conventionally bound to a
+renamed HDL namespace object*. `ECC_in_pkg.vinfo` tracks the identity of
+`package ECC_in_pkg`, so it becomes `arca_ECC_in_pkg.vinfo`. Its sibling
+`ECC_in_filelist_hdl.f` is a tool artifact whose name means nothing to the
+language, so it keeps its upstream name. Roughly 186 files sit in that second
+category by design.
+
+### 4.3 Generated verification IP (UVMF)
+
+UVM **class** names are never renamed. A class is scoped by the package that
+declares it, not by the compilation unit, so `arca_ECC_in_pkg::ECC_in_agent`
+cannot collide with upstream's `ECC_in_pkg::ECC_in_agent`. Keeping them also
+means `+UVM_TESTNAME=test_top` and the generated `testlist` work unchanged. On
+the current import that is 71 class names left at upstream names, against **0**
+unprefixed `module`/`package`/`interface`/`program` declarations anywhere.
+
+The consequence is that the UVMF generator *inputs* — `ECC_bench.yaml`,
+`ECC_environment.yaml`, `ECC_*_interface.yaml` and the HMAC equivalents — name
+agents and environments, not packages, and so come through **byte-identical** to
+upstream. Regeneration is unaffected.
+
+It must be run upstream, though, not inside ARCA: those inputs are
+upstream-named, so running the generator in the renamed tree emits
+`interface_packages/ECC_in_pkg/` beside `arca_ECC_in_pkg/`. `src/` is a derived
+artifact — regenerate upstream, then re-run the import. The `reimport` CI job
+makes that enforceable by re-deriving `src/` and demanding a zero diff.
+
+One asymmetry is forced rather than chosen. Because the identifier pass is a
+text pass, it rewrites a package name inside a *path* string in a `.f` list just
+as readily as inside a declaration. UVMF names its VIP directories after the
+packages they hold, so those directories must be renamed too — otherwise the
+rewritten path points at a directory that does not exist. A parser-aware
+implementation could treat paths as a separate namespace and make the directory
+policy a free choice; with a text pass it is not free.
 
 ---
 
@@ -193,6 +231,15 @@ are structural. They are still fairly strong:
     testbench referring to an *unrenamed* `ecc_top` fails the build. What
     these deliberately do **not** assert is unique basenames, include
     resolution, or filelist coverage — see §4.2
+
+`check_filelists.sh` resolves every path named by every `.f`/`.F` in the
+import — expanding `$UVMF_VIP_LIBRARY_HOME` and `$UVMF_PROJECT_DIR` the way the
+UVMF run scripts do, skipping `${UVM_HOME}` and `uvmf_base_pkg` as external —
+and fails on any path naming a file that is not there (36 vendored paths across
+24 filelists today). This is deliberately the one thing the round-trip cannot
+subsume: a path that is *consistently* wrong, rewritten in the `.f` but not
+moved on disk, still strips the prefix back to the correct upstream string and
+passes. Only resolving against the actual tree catches it.
 
 `roundtrip_check.sh` — the strongest one. Strips the prefix back off and diffs
 against the exact upstream blob at the recorded commit, over **both** tiers
@@ -271,5 +318,9 @@ the property that makes this maintainable over multiple upstream releases.
   `arca_hmac_drbg`), but it means `$display` output text changes too. No
   `$readmemh`/`$fopen` file-path literals exist in ECC/HMAC, so nothing breaks
   today — a future block with data-file loads needs a check for that.
+* **The UVMF collateral is reference-consistent, not sim-proven.** Every
+  filelist path resolves and every identifier is renamed, but the benches are
+  not compiled in CI — that needs UVM and a simulator licence. A one-off `vsim`
+  compile on a licensed machine would close this.
 * **The shared platform library is not vendored here.** See §3.
 * **`.rdl` regeneration is out of band.** See §4.
