@@ -113,15 +113,24 @@ verify_block() {
     done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*\{[[:space:]]*upstream:[[:space:]]*"([^"]+)",[[:space:]]*arca:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
     [ "$bad" -eq 0 ] && ok "ARCA layout mirrors the caliptra-rtl hierarchy"
 
-    # 2. every declaration carries the prefix
+    # 2. every global-namespace declaration carries the prefix.
+    #
+    # module/package/interface/program are the compilation-unit-scope names --
+    # the ones that collide if ARCA and an unprefixed caliptra-rtl end up in one
+    # compile. SystemVerilog *classes* are deliberately not checked: a class is
+    # scoped by the package that declares it, so arca_ECC_in_pkg::ECC_in_agent
+    # cannot clash with ECC_in_pkg::ECC_in_agent. Leaving UVM class names alone
+    # is also what keeps +UVM_TESTNAME=test_top and the generated testlists
+    # working, and what lets the UVMF generator inputs stay byte-identical to
+    # upstream.
     bad=0
     while IFS= read -r decl; do
         [ -n "$decl" ] || continue
         local name="${decl##* }"
         case "$name" in "$prefix"*) ;; *) fail "unprefixed declaration: $decl"; bad=1 ;; esac
-    done < <(cd "$DEST" && grep -hoE '^[[:space:]]*(module|package|interface)[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${allfiles[@]}" \
+    done < <(cd "$DEST" && grep -hoE '^[[:space:]]*(module|package|interface|program)[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${allfiles[@]}" \
              | sed -E 's/^[[:space:]]*//; s/[[:space:]]+/ /')
-    [ "$bad" -eq 0 ] && ok "all module/package/interface declarations carry '$prefix'"
+    [ "$bad" -eq 0 ] && ok "all module/package/interface/program declarations carry '$prefix'"
 
     # 3. every `define carries the macro prefix
     bad=0

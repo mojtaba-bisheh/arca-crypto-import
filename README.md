@@ -169,6 +169,68 @@ synthesisable fileset.
 
 ---
 
+## Generated verification IP (UVMF) — does renaming break it?
+
+Short answer: no, and the generator still works. But `src/` is a **derived
+tree** and has to be treated as one.
+
+The UVMF benches under `src/ecc/uvmf_ecc/` and `src/hmac/uvmf_2022/` are machine
+generated. Two things live side by side there:
+
+| | what it is | what the import does to it |
+|---|---|---|
+| `<BLOCK>_bench.yaml`, `<BLOCK>_environment.yaml`, `<BLOCK>_*_interface.yaml` | the generator **inputs** | nothing — all 10 are **byte-identical** to upstream |
+| `uvmf_template_output/` | the generator **output** | fully renamed: packages, interfaces, modules, file names, package directories, and every `.f` / `.vinfo` / `Makefile` / `compile.do` reference to them |
+
+**Why the inputs are untouched.** They describe UVM *components* — `top_env: ECC`,
+`bfm_name: ECC_in_agent`. Those become SystemVerilog **class** names, and classes
+are not in SystemVerilog's global namespace; they are scoped by the package that
+holds them. The rename map only carries `module`, `package`, `interface` and
+`` `define ``, so the YAML has nothing in it to rewrite. That is deliberate, and
+it has a useful side effect: `+UVM_TESTNAME=test_top` and the `testlist` entries
+keep working, because the class is still `test_top` — it just lives in
+`arca_ECC_tests_pkg` now.
+
+The result, measured on the current import:
+
+```
+$ grep -rhoP '^\s*(module|package|interface|program)\s+\K\w+' src --include=*.sv --include=*.svh \
+    | sort -u | grep -cv '^arca_'
+0          # zero unprefixed global-namespace declarations, anywhere
+$ grep -rhoP '^\s*(virtual\s+)?class\s+\K\w+' src --include=*.sv --include=*.svh | sort -u | grep -cv '^arca_'
+71         # UVM classes keep upstream names — scoped by prefixed packages
+```
+
+**Package directories follow their package.** UVMF names a VIP directory after
+the package it holds and then refers to it by that literal path:
+
+```
+$UVMF_VIP_LIBRARY_HOME/interface_packages/ECC_in_pkg/ECC_in_pkg.sv
+```
+
+The identifier pass rewrites `ECC_in_pkg` in that string whether we like it or
+not, so the directory has to move to `arca_ECC_in_pkg/` or every filelist
+dangles. It does, and the `Makefile`, `compile.do`, `.f`, `.F` and `.vinfo`
+references all follow.
+
+**Regeneration workflow.** Do *not* re-run `uvmf_gen` inside ARCA — the inputs
+are upstream-named, so it would emit `interface_packages/ECC_in_pkg/` next to
+the renamed tree. Instead:
+
+1. regenerate upstream (or in a scratch clone of caliptra-rtl),
+2. re-run `import_block.sh <block> --upstream <that tree>`.
+
+Nothing under `src/` is ever hand-edited; the `import is reproducible` CI job
+re-runs the whole import from upstream and asserts a zero diff, which is what
+makes that rule enforceable rather than aspirational.
+
+**What is and isn't proven.** The delivery tier (`rtl/`, `coverage/`) is
+elaborated by slang in CI, so for that tier "it compiles" is a fact. The UVMF
+collateral is *structurally* verified — every reference resolves, the round-trip
+shows naming-only divergence against upstream — but it is not simulated in CI,
+because that needs UVM and a licensed simulator. Call it reference-consistent,
+not sim-proven.
+
 ## What the import actually does
 
 | Step | What happens |
