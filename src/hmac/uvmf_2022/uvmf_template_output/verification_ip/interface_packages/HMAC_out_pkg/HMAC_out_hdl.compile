@@ -1,0 +1,9 @@
+needs:
+  - $UVMF_HOME/uvmf_base_pkg/uvmf_base_pkg_hdl.compile
+  - ./HMAC_out_common.compile
+incdir:
+  - .
+src:
+  - src/arca_HMAC_out_if.sv
+  - src/arca_HMAC_out_monitor_bfm.sv
+  - src/arca_HMAC_out_driver_bfm.sv

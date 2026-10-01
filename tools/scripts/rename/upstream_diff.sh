@@ -49,6 +49,10 @@ for b in "${blocks[@]}"; do
     # subtrees are recorded as: - { upstream: "src/ecc/rtl", arca: "src/ecc/rtl" }
     # The changelog is an *upstream* question, so pull the upstream side only.
     mapfile -t subtrees < <(sed -nE '/^  subtrees:/,/^  [a-z_]+:/ s/^    -.*upstream:[[:space:]]*"([^"]+)".*/\1/p' "$revinfo")
+    # the collateral tier is imported too, so upstream changes there matter as
+    # much as changes to the RTL -- review the whole block folder
+    mapfile -t cdirs < <(sed -nE '/^[[:space:]]*collateral_dirs:/,/^[[:space:]]*filelist:/ s@^[[:space:]]*-[[:space:]]*(src/.*)$@\1@p' "$revinfo")
+    [ "${#cdirs[@]}" -eq 0 ] || subtrees+=("${cdirs[@]}")
 
     printf '\n======================================================================\n'
     printf ' %s : imported at %s\n' "$b" "${sha:0:12}"

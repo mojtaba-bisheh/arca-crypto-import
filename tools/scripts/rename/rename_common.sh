@@ -43,6 +43,34 @@
 #                         to the generated block-private config header
 #   KEEP_IDENTS           array of identifiers that must NOT be prefixed
 #                         (shared platform libraries owned by ARCA, not by the block)
+#   COLLATERAL_SUBTREES   array of upstream dirs imported *recursively* as
+#                         verification collateral (tb/, formal/, stimulus/,
+#                         uvmf_*/ ...). Same identifier map, looser contract --
+#                         see "Two tiers" below. Imported at the identity path.
+#   ARTIFACT_GLOBS        basename globs treated as build/simulation *outputs*
+#                         and never imported from any tier. Defaults below.
+#
+# ---------------------------------------------------------------------------
+# Two tiers: delivery vs collateral
+# ---------------------------------------------------------------------------
+# UPSTREAM_SUBTREES is the *delivery*: the files ARCA ships in a netlist.
+# Every name in it is prefixed, every file name is prefixed, the generated
+# filelist covers it, and CI elaborates it. The contract is strict.
+#
+# COLLATERAL_SUBTREES is everything else in the block folder -- testbenches,
+# formal properties, stimulus lists, UVMF generated output. It is imported so
+# the block folder arrives whole and ARCA can reuse upstream verification, but
+# the contract is looser on purpose:
+#
+#   * the same identifier map is applied, so collateral keeps referring to the
+#     renamed RTL correctly;
+#   * a collateral *file* is renamed only when its name is itself a renamed
+#     identifier (ecc_top_tb.sv -> arca_ecc_top_tb.sv), so Makefile,
+#     compile.do and hmac_vectors_singleblk.txt keep their names;
+#   * it is not elaborated in CI -- that needs UVM and a simulator licence.
+#
+# Build and simulation *outputs* (ARTIFACT_GLOBS: *.ucdb, *.exe, *.o, ...) are
+# never imported from either tier. They are regenerated, not vendored.
 #
 # Optional hook functions:
 #   block_pre_rename      run after staging, before the map is applied
@@ -51,7 +79,7 @@
 
 set -euo pipefail
 
-RC_SCRIPT_VERSION="1.2.0"
+RC_SCRIPT_VERSION="1.3.0"
 
 rc_log()  { printf '[%s] %s\n' "${BLOCK:-rename}" "$*"; }
 rc_warn() { printf '[%s] WARNING: %s\n' "${BLOCK:-rename}" "$*" >&2; }
@@ -93,9 +121,19 @@ rc_check_relpath() {
     esac
 }
 
+# Build / simulation outputs. Checked into caliptra-rtl in a few places, but
+# they are derived files: vendoring them would commit stale results and bloat
+# the ARCA history. Regenerate instead.
+RC_DEFAULT_ARTIFACT_GLOBS=(
+    '*.ucdb' '*.exe' '*.o' '*.a' '*.so' '*.pyc' '*.wlf' '*.vstf' '*.vcd' '*.fsdb'
+)
+
 rc_init() {
     rc_default_array EXCLUDE_GLOBS EXTRA_RENAME_IDENTS ENV_MACRO_SPECS \
-                     ENV_HEADER_REPLACE KEEP_IDENTS DEST_SUBTREES
+                     ENV_HEADER_REPLACE KEEP_IDENTS DEST_SUBTREES \
+                     COLLATERAL_SUBTREES ARTIFACT_GLOBS
+    [ "${#ARTIFACT_GLOBS[@]}" -gt 0 ] || ARTIFACT_GLOBS=("${RC_DEFAULT_ARTIFACT_GLOBS[@]}")
+    WITH_COLLATERAL=1
 
     UPSTREAM=""
     DEST=""
@@ -108,6 +146,7 @@ rc_init() {
             --dest)     DEST="${2:?--dest needs a value}";         shift 2 ;;
             --prefix)   PREFIX="${2:?--prefix needs a value}";     shift 2 ;;
             --keep-work) KEEP_WORK=1; shift ;;
+            --no-collateral) WITH_COLLATERAL=0; shift ;;
             --help|-h)  rc_usage; exit 0 ;;
             *) rc_usage >&2; rc_die "unknown argument: $1" ;;
         esac
@@ -227,6 +266,58 @@ rc_stage() {
     rc_log "staged ${#STAGED_FILES[@]} file(s) into ${#DEST_SUBTREES[@]} director(ies)"
 }
 
+# ---------------------------------------------------------------------------
+# rc_stage_collateral -- recursively stage the rest of the block folder.
+#
+# Unlike the delivery subtrees this walks the whole tree and preserves every
+# intermediate directory, so src/ecc/uvmf_ecc/uvmf_template_output/... lands at
+# the same path in ARCA. Basenames are allowed to repeat here (there are four
+# different Makefiles under src/ecc/uvmf_ecc alone) precisely because the full
+# path is preserved.
+# ---------------------------------------------------------------------------
+rc_stage_collateral() {
+    COLLATERAL_FILES=()
+    COLLATERAL_BINARIES=()
+    COLLATERAL_DIRS=()
+    [ "${#COLLATERAL_SUBTREES[@]}" -gt 0 ] || return 0
+    if [ "$WITH_COLLATERAL" -eq 0 ]; then
+        rc_log "collateral skipped (--no-collateral)"
+        return 0
+    fi
+
+    local subtree src rel base skip glob n_txt=0 n_bin=0 n_art=0
+    for subtree in "${COLLATERAL_SUBTREES[@]}"; do
+        [ -n "$subtree" ] || continue
+        rc_check_relpath "$subtree"
+        [ -d "$UPSTREAM/$subtree" ] || rc_die "collateral subtree '$subtree' not found"
+        COLLATERAL_DIRS+=("$subtree")
+        while IFS= read -r src; do
+            rel="$subtree/${src#$UPSTREAM/$subtree/}"
+            base="$(basename "$src")"
+            skip=0
+            for glob in "${ARTIFACT_GLOBS[@]}" "${EXCLUDE_GLOBS[@]}"; do
+                [ -n "$glob" ] || continue
+                # shellcheck disable=SC2053
+                if [[ "$base" == $glob ]]; then skip=1; break; fi
+            done
+            if [ "$skip" -eq 1 ]; then n_art=$((n_art+1)); continue; fi
+
+            mkdir -p "$STAGE/$(dirname "$rel")"
+            cp "$src" "$STAGE/$rel"
+            printf '%s  %s\n' "$(sha256sum "$src" | cut -d' ' -f1)" "$rel" >> "$SRC_MANIFEST"
+            # Text files take the identifier map; anything else is carried
+            # through byte-for-byte (PDFs, reference diagrams, ...).
+            if grep -Iq . "$src" 2>/dev/null; then
+                COLLATERAL_FILES+=("$rel"); n_txt=$((n_txt+1))
+            else
+                COLLATERAL_BINARIES+=("$rel"); n_bin=$((n_bin+1))
+            fi
+        done < <(find "$UPSTREAM/$subtree" -type f | sort)
+        rc_log "  collateral $subtree"
+    done
+    rc_log "staged $n_txt collateral text file(s), $n_bin binary, $n_art artifact(s) skipped"
+}
+
 rc_assert_unique_basename() {
     local base="$1" f
     for f in "${STAGED_FILES[@]}"; do
@@ -244,7 +335,8 @@ rc_build_map() {
     : > "$MAP.raw"
 
     pushd "$STAGE" >/dev/null
-    for f in "${STAGED_FILES[@]}"; do
+    for f in "${STAGED_FILES[@]}" "${COLLATERAL_FILES[@]}"; do
+        case "$f" in *.sv|*.svh|*.v|*.vh) ;; *) continue ;; esac
         # Declarations owned by the block.
         grep -hoE '^[[:space:]]*(module|package|interface)[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "$f" 2>/dev/null \
             | sed -E 's/^[[:space:]]*//; s/[[:space:]]+/\t/' >> "$MAP.raw" || true
@@ -314,7 +406,7 @@ rc_apply() {
     local f
     rc_log "applying rename map"
     pushd "$STAGE" >/dev/null
-    perl "$RC_LIB_DIR/lib/apply_map.pl" "$MAP" "${STAGED_FILES[@]}"
+    perl "$RC_LIB_DIR/lib/apply_map.pl" "$MAP" "${STAGED_FILES[@]}" "${COLLATERAL_FILES[@]}"
     popd >/dev/null
 
     # Idempotency guard: a double prefix means the map was applied twice or an
@@ -401,6 +493,36 @@ rc_rename_files() {
     done
     STAGED_FILES=("${out[@]}")
     rc_log "renamed ${#STAGED_FILES[@]} file(s)"
+    rc_rename_collateral_files
+}
+
+# ---------------------------------------------------------------------------
+# rc_rename_collateral_files -- prefix a collateral file name only when the
+# name *is* a renamed identifier.
+#
+# ecc_top_tb.sv is named after module ecc_top_tb, which the map renamed, so the
+# file follows. Makefile, compile.do, hmac_vectors_singleblk.txt and
+# ECC_bench.yaml are not identifiers -- renaming them would break the scripts
+# that reference them by name for no namespace benefit.
+# ---------------------------------------------------------------------------
+rc_rename_collateral_files() {
+    local f dir base stem ext new out=() n=0
+    [ "${#COLLATERAL_FILES[@]}" -gt 0 ] || return 0
+    for f in "${COLLATERAL_FILES[@]}" "${COLLATERAL_BINARIES[@]}"; do
+        dir="$(dirname "$f")"; base="$(basename "$f")"
+        stem="${base%%.*}"; ext="${base#"$stem"}"
+        if grep -qP "^(module|package|interface)\t\Q$stem\E\t" "$MAP"; then
+            new="$dir/${PREFIX}${stem}${ext}"
+            [ -e "$STAGE/$new" ] && rc_die "collateral rename collision: $new"
+            mv "$STAGE/$f" "$STAGE/$new"
+            printf 'file\t%s\t%s\n' "$f" "$new" >> "$MAP"
+            out+=("$new"); n=$((n+1))
+        else
+            out+=("$f")
+        fi
+    done
+    COLLATERAL_INSTALLED=("${out[@]}")
+    rc_log "renamed $n collateral file name(s) of ${#out[@]}"
 }
 
 # ---------------------------------------------------------------------------
@@ -476,7 +598,7 @@ rc_staged_path() {
 rc_install() {
     local d
     INSTALLED_FILES=()
-    for d in "${DEST_SUBTREES[@]}" "$CONFIG_DIR"; do
+    for d in "${DEST_SUBTREES[@]}" "${COLLATERAL_DIRS[@]}" "$CONFIG_DIR"; do
         rc_check_relpath "$d"
         rm -rf "${DEST:?}/$d"
     done
@@ -544,6 +666,8 @@ rc_emit_revinfo() {
         printf 'policy:\n'
         printf '  excluded_globs:\n'
         for tok in "${EXCLUDE_GLOBS[@]}"; do [ -n "$tok" ] && printf '    - "%s"\n' "$tok"; done
+        printf '  artifact_globs:  # build/sim outputs, regenerated not vendored\n'
+        for tok in "${ARTIFACT_GLOBS[@]}"; do [ -n "$tok" ] && printf '    - "%s"\n' "$tok"; done
         printf '  cross_block_identifiers:\n'
         if [ "${#EXTRA_RENAME_IDENTS[@]}" -gt 0 ]; then
             for tok in "${EXTRA_RENAME_IDENTS[@]}"; do [ -n "$tok" ] && printf '    - "%s"\n' "$tok"; done
@@ -567,6 +691,12 @@ rc_emit_revinfo() {
         printf '  block_dir: %s\n' "$BLOCK_DIR"
         printf '  source_dirs:\n'
         for tok in "${DEST_SUBTREES[@]}"; do printf '    - %s\n' "$tok"; done
+        if [ "${#COLLATERAL_DIRS[@]}" -gt 0 ]; then
+            printf '  collateral_dirs:  # imported whole, looser rename contract\n'
+            for tok in "${COLLATERAL_DIRS[@]}"; do printf '    - %s\n' "$tok"; done
+        else
+            printf '  collateral_dirs: []\n'
+        fi
         printf '  filelist: %s\n' "$FILELIST"
         printf '  rename_map: revinfo/%s.map\n' "$BLOCK"
         printf '\n'
@@ -589,6 +719,7 @@ rc_emit_revinfo() {
 # ---------------------------------------------------------------------------
 rc_run() {
     rc_stage
+    rc_stage_collateral
     if declare -F block_pre_rename >/dev/null; then block_pre_rename; fi
     rc_build_map
     rc_apply

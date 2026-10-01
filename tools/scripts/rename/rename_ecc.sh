@@ -13,6 +13,15 @@
 #   src/ecc/rtl/ecc_top.sv            ->  src/ecc/rtl/arca_ecc_top.sv
 #   src/ecc/coverage/ecc_top_cov_if.sv -> src/ecc/coverage/arca_ecc_top_cov_if.sv
 #   src/ecc/config/ecc_top.vf         ->  src/ecc/config/arca_ecc_top.vf (generated)
+#   src/ecc/tb/ecc_top_tb.sv          ->  src/ecc/tb/arca_ecc_top_tb.sv
+#   src/ecc/formal/...                ->  src/ecc/formal/...
+#   src/ecc/stimulus/...              ->  src/ecc/stimulus/...
+#   src/ecc/uvmf_ecc/...              ->  src/ecc/uvmf_ecc/...
+#
+# The whole src/ecc folder is imported. rtl/ + coverage/ are the *delivery*
+# (strict contract, elaborated in CI); tb/, formal/, stimulus/ and uvmf_ecc/
+# are *collateral* (same identifier map, looser contract) -- see the "Two
+# tiers" section in rename_common.sh.
 #
 # Block-specific notes
 # --------------------
@@ -33,9 +42,19 @@
 # * The coverage/ directory is imported too. It exercises a case the rtl/
 #   directories do not: `bind ecc_top ecc_top_cov_if ...` -- the rename engine
 #   has to rewrite the bind target as well as the interface name.
-# * coverage/config/ecc_cm_hier.cfg is NOT imported: it names a *testbench*
-#   hierarchy (ecc_top_tb.dut) and the testbench is out of scope for this
-#   import, so the renamed file would carry a dangling reference.
+# * coverage/config/ecc_cm_hier.cfg IS imported now that the testbench comes
+#   along; the hierarchy path it names (ecc_top_tb.dut) is renamed with
+#   everything else.
+# * src/ecc/config/ is deliberately NOT collateral. ARCA generates its own
+#   filelist there, and the upstream ecc_top.vf / ecc_top_tb.vf / compile.yml
+#   resolve $COMPILE_ROOT against the caliptra-rtl build environment. Copying
+#   them would both collide with the generated arca_ecc_top.vf and re-introduce
+#   a dependency on an upstream build system.
+# * src/ecc/tb/ecc_secp384r1.exe and the three uvmf .ucdb coverage databases are
+#   build/simulation *outputs* checked into upstream. They are skipped by
+#   ARTIFACT_GLOBS -- vendoring them would commit stale results.
+# * src/ecc/formal/fv_ecc_block_overview.pdf is binary but is documentation,
+#   not an output, so it is carried through byte-for-byte.
 # * ECC needs no environment configuration macros.
 
 set -euo pipefail
@@ -47,9 +66,20 @@ UPSTREAM_SUBTREES=(
     "src/ecc/coverage"
 )
 
+# The rest of the src/ecc folder: imported whole, same identifier map, looser
+# contract. See "Two tiers" in rename_common.sh.
+COLLATERAL_SUBTREES=(
+    "src/ecc/tb"
+    "src/ecc/coverage/config"
+    "src/ecc/formal"
+    "src/ecc/stimulus"
+    "src/ecc/uvmf_ecc"
+)
+
 # Where each upstream subtree lands in ARCA. The identity mapping keeps the
 # caliptra-rtl hierarchy; set an explicit path only to shelve the block
 # elsewhere, e.g. DEST_SUBTREES=("src/ecc384/rtl" "src/ecc384/coverage").
+
 DEST_SUBTREES=(
     "src/ecc/rtl"
     "src/ecc/coverage"

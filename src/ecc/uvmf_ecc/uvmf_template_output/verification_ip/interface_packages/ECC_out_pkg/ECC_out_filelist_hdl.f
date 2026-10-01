@@ -1,0 +1,1 @@
+$UVMF_VIP_LIBRARY_HOME/interface_packages/arca_ECC_out_pkg/arca_ECC_out_pkg_hdl.sv

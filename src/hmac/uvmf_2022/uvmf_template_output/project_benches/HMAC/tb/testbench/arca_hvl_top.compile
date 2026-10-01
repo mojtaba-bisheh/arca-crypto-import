@@ -1,0 +1,7 @@
+incdir:
+  - ${uvm_path}/src
+  - .
+needs:
+  - ../tests/arca_HMAC_tests_pkg.compile
+src:
+  - arca_hvl_top.sv

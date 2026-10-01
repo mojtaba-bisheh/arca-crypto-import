@@ -53,6 +53,21 @@ UPSTREAM_SUBTREES=(
 # src/hmac512/ instead, change the first two entries to
 #   "src/hmac512/rtl" "src/hmac512/coverage"
 # and set BLOCK_DIR="src/hmac512". hmac_drbg keeps its own directory either way.
+# The rest of both block folders. src/hmac/config and src/hmac_drbg/config stay
+# out: ARCA generates its own filelist there and the upstream .vf/compile.yml
+# resolve $COMPILE_ROOT against the caliptra-rtl build environment.
+COLLATERAL_SUBTREES=(
+    "src/hmac/tb"
+    "src/hmac/coverage/config"
+    "src/hmac/formal"
+    "src/hmac/stimulus"
+    "src/hmac/uvmf_2022"
+    "src/hmac_drbg/tb"
+    "src/hmac_drbg/coverage/config"
+    "src/hmac_drbg/formal"
+    "src/hmac_drbg/stimulus"
+)
+
 DEST_SUBTREES=(
     "src/hmac/rtl"
     "src/hmac/coverage"

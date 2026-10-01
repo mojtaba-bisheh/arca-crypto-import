@@ -24,7 +24,7 @@ Mapping to this repo:
 
 | Requirement | Where |
 |---|---|
-| 1 | `rename_common.sh:rc_stage`, output mirrored at the upstream paths (`src/<block>/{rtl,coverage}`, filelist at `src/<block>/config/`) |
+| 1 | `rename_common.sh:rc_stage` (delivery) + `rc_stage_collateral` (the rest of the block folder), output mirrored at the upstream paths; filelist at `src/<block>/config/` |
 | 2 | `rename_common.sh:rc_build_map` + `lib/apply_map.pl` + `rc_env_macros` |
 | 3 | `rename_common.sh:rc_emit_revinfo` → `revinfo/<block>.revinfo.yml`; consumed by `upstream_diff.sh` |
 | 4 | `import_block.sh --commit` |
@@ -120,14 +120,46 @@ externally (`PLATFORM_HEADERS`), so the assumption is at least machine-checked.
 | Pattern | Reason |
 |---|---|
 | `*_reg_uvm.sv` | UVM RAL model. `` `include``s generated covergroup/sample headers that are not part of the RTL delivery, and pulls in `uvm_pkg`. Not needed for synthesis or for a netlist-level import. Re-enable by dropping it from `EXCLUDE_GLOBS` **and** importing the generated `.svh` files. |
-| `coverage/config/*_cm_hier.cfg` | Coverage-merge hierarchy configs. They name **testbench** scopes (`ecc_top_tb.dut.…`) that this import does not bring across, so importing them would commit dangling references. The coverage `.sv` (`*_cov_bind.sv`, `*_cov_if.sv`) *are* imported — they only depend on the RTL and on `kv_defines_pkg`. |
 | `config/compile.yml` | Describes the upstream tb/UVMF targets and resolves `$COMPILE_ROOT` / `$MSFT_REPO_ROOT` against the caliptra-rtl build environment. ARCA generates its own `config/arca_<name>.vf` instead, so the vendored block does not carry a dependency on an upstream build system. |
-| `tb/`, `formal/`, `stimulus/`, `uvmf_*/` | Out of scope for this example: the requirement was to vendor the *engines*. The mirrored hierarchy leaves the directories free so they can be added later without moving anything. |
+| `config/*.vf` | Upstream filelists resolve `$COMPILE_ROOT` / `$MSFT_REPO_ROOT` against the caliptra-rtl build environment, and renaming `ecc_top.vf` would collide with the generated `arca_ecc_top.vf` in the same directory. ARCA generates its own compile order instead. |
 | `*.rdl` | SystemRDL source for the register block. Deliberately **not** committed next to the renamed RTL: regenerating from it with PeakRDL would emit *unprefixed* `<block>_reg.sv` and silently diverge from the committed fileset. The generated `<block>_reg.sv` / `<block>_reg_pkg.sv` are imported instead. If ARCA needs to regenerate, regenerate upstream first, then re-run the import. |
 
-Both exclusions are recorded in `revinfo/<block>.revinfo.yml` under
+These are recorded in `revinfo/<block>.revinfo.yml` under
 `policy.excluded_globs`, so the decision is visible in the artifact and not
 just in this document.
+
+### 4.1 Build and simulation outputs — `ARTIFACT_GLOBS`
+
+Everything else under `src/<block>/` **is** imported (see §4.2), except files
+matching `policy.artifact_globs`: `*.ucdb`, `*.exe`, `*.o`, `*.a`, `*.so`,
+`*.pyc`, `*.wlf`, `*.vstf`, `*.vcd`, `*.fsdb`. Upstream checks a few of these
+in — `src/ecc/tb/ecc_secp384r1.exe` and three `.ucdb` under
+`src/ecc/uvmf_ecc/.../sim/` — but they are *outputs*: vendoring them commits
+stale results, bloats history, and invites someone to trust a coverage
+database that was never produced from the ARCA fileset. The sources that
+produce them are all imported. The import logs exactly how many were skipped
+(`[ecc] staged 190 collateral text file(s), 1 binary, 4 artifact(s) skipped`).
+
+Binary files that are *documentation* rather than output —
+`src/ecc/formal/fv_ecc_block_overview.pdf` — are carried through byte-for-byte
+and `cmp`-checked by `roundtrip_check.sh`.
+
+### 4.2 Two tiers: delivery and collateral
+
+The whole block folder is imported, but with two different contracts:
+
+| | delivery (`UPSTREAM_SUBTREES`) | collateral (`COLLATERAL_SUBTREES`) |
+|---|---|---|
+| content | `rtl/`, `coverage/` | `tb/`, `formal/`, `stimulus/`, `uvmf_*/`, `coverage/config/` |
+| identifier rename | full map | **same** full map — the testbench must keep binding to the renamed RTL |
+| file-name rename | unconditional | only when the stem is itself a renamed `module`/`package`/`interface`. `Makefile`, `compile.do`, `.project` and the UVMF `.yaml` keep their names |
+| unique basenames | asserted | not asserted — upstream deliberately reuses `Makefile` / `compile.do` across directories |
+| `` `include `` resolution | asserted | reported as a note; verification collateral legitimately includes UVM and caliptra-rtl headers that are not vendored |
+| covered by generated `.vf` | yes | no — the `.vf` is the synthesisable delivery |
+| CI elaboration | yes (`slang`) | no (needs UVM and a simulator licence) |
+| round-trip proof | yes | yes |
+
+`--no-collateral` restricts an import to the delivery tier.
 
 ---
 
@@ -153,9 +185,15 @@ are structural. They are still fairly strong:
    caliptra-rtl keeps it), covers every source, and every entry exists
 9. every committed file still matches the sha256 recorded in revinfo
    (detects hand-edits after import)
+10. collateral-tier summary: file/directory/SV counts, and the identifier
+    checks (2, 4, 5) are applied to the collateral sources too, so a
+    testbench referring to an *unrenamed* `ecc_top` fails the build. What
+    check 10 deliberately does **not** assert is unique basenames, include
+    resolution, or filelist coverage — see §4.2
 
 `roundtrip_check.sh` — the strongest one. Strips the prefix back off and diffs
-against the exact upstream blob at the recorded commit. Only `` `include ``
+against the exact upstream blob at the recorded commit, over **both** tiers
+(419 files for the two blocks); binaries are compared with `cmp`. Only `` `include ``
 redirections (the deliberate env-macro capture) are tolerated. This proves the
 import is a **pure token substitution**: no logic edits, no dropped lines, no
 mangled string literals.

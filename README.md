@@ -48,12 +48,19 @@ caliptra-rtl lands at `src/<block>/<subdir>/` in ARCA:
 | `src/hmac/config/hmac_ctrl.vf` | `src/hmac/config/arca_hmac_ctrl.vf` | generated compile order |
 | `src/hmac_drbg/rtl/` | `src/hmac_drbg/rtl/` | owned by the HMAC import |
 | `src/hmac_drbg/coverage/` | `src/hmac_drbg/coverage/` | |
+| `src/<block>/tb/` | `src/<block>/tb/` | block testbenches + vectors |
+| `src/<block>/formal/` | `src/<block>/formal/` | formal properties, `.pdf` overview |
+| `src/<block>/stimulus/` | `src/<block>/stimulus/` | test vectors |
+| `src/ecc/uvmf_ecc/`, `src/hmac/uvmf_2022/` | same | generated UVMF environment |
 
 ```
 src/
-  ecc/       rtl/ coverage/ config/    generated, prefixed ECC fileset
-  hmac/      rtl/ coverage/ config/    generated, prefixed HMAC fileset
+  ecc/       rtl/ coverage/ config/    delivery tier: generated, prefixed ECC fileset
+             tb/ formal/ stimulus/ uvmf_ecc/     collateral tier
+  hmac/      rtl/ coverage/ config/    delivery tier: generated, prefixed HMAC fileset
+             tb/ formal/ stimulus/ uvmf_2022/    collateral tier
   hmac_drbg/ rtl/ coverage/            imported by HMAC, referenced by ECC
+             tb/ formal/ stimulus/
 revinfo/
   ecc.revinfo.yml           provenance: upstream repo/commit/date, policy, sha256 manifests
   ecc.map                   full original -> renamed identifier table
@@ -116,18 +123,58 @@ To import and commit in one shot:
 
 ---
 
+## The whole block folder is imported — in two tiers
+
+The requirement was "copy the entire block", not "copy the RTL", so the import
+takes **everything under `src/<block>/`**: `rtl/`, `coverage/`, `tb/`,
+`formal/`, `stimulus/` and the generated UVMF environment. Over 400 files per
+import, not 36.
+
+The two tiers differ in how strict the rename contract is, not in whether the
+files are carried:
+
+| | **delivery tier** | **collateral tier** |
+|---|---|---|
+| driver knob | `UPSTREAM_SUBTREES` | `COLLATERAL_SUBTREES` |
+| what | `rtl/`, `coverage/` | `tb/`, `formal/`, `stimulus/`, `uvmf_*/`, `coverage/config/` |
+| identifier rename | yes, same map | yes, **same map** — so the testbench still binds to the renamed RTL |
+| file names | *every* file is prefixed | prefixed **only** when the stem is itself a renamed module/package/interface, so `Makefile`, `compile.do` and the UVMF `.yaml` keep their names |
+| flat-namespace guarantee | asserted (unique basenames, every `` `include `` resolves, covered by the generated `.vf`) | not asserted — upstream deliberately reuses `Makefile`, `compile.do`, `.project` across directories |
+| CI | elaborated by `slang` | carried and round-tripped, not elaborated (needs UVM + a simulator licence) |
+| round-trip proof | yes | yes |
+
+Two things are still *not* vendored, on purpose:
+
+* **Build and simulation outputs** — `ARTIFACT_GLOBS` skips `*.ucdb`, `*.exe`,
+  `*.o`, `*.wlf`, `*.vcd`, `*.fsdb`, … Upstream checks a few of these in
+  (`src/ecc/tb/ecc_secp384r1.exe`, three `.ucdb` under `uvmf_ecc/.../sim/`);
+  vendoring them would commit stale results and bloat the history. Everything
+  needed to *regenerate* them is imported.
+* **Upstream `config/`** — the `.vf` / `compile.yml` there resolve
+  `$COMPILE_ROOT` and `$MSFT_REPO_ROOT` against the caliptra-rtl build
+  environment, and ARCA generates its own `arca_*.vf` into that directory.
+
+Binary files that are *documentation* rather than output — e.g.
+`src/ecc/formal/fv_ecc_block_overview.pdf` — are carried through byte-for-byte
+and `cmp`-checked by the round-trip.
+
+`--no-collateral` imports the delivery tier only, if a consumer wants just the
+synthesisable fileset.
+
+---
+
 ## What the import actually does
 
 | Step | What happens |
 |------|--------------|
-| 1. stage | Upstream subtrees are copied into a temp dir. `*_reg_uvm.sv` and `*.rdl` are excluded (see [METHODOLOGY](docs/METHODOLOGY.md)). sha256 of every source file is recorded. |
+| 1. stage | Upstream subtrees are copied into a temp dir — delivery tier flattened per subtree, collateral tier recursively, preserving paths. `*_reg_uvm.sv` and `*.rdl` are excluded (see [METHODOLOGY](docs/METHODOLOGY.md)). sha256 of every source file is recorded. |
 | 2. map | Every `module` / `package` / `interface` / `` `define `` declared *inside* the block is collected, plus driver-declared cross-block identifiers and environment config macros. The keep-list (shared platform identifiers) is subtracted. Result: `revinfo/<block>.map`. |
 | 3. apply | One Perl pass per file over the whole map, alternation sorted longest-first, with SystemVerilog identifier boundaries. |
 | 4. env macros | Macros the caliptra-rtl *environment* supplied are captured into a generated block-private header (`arca_hmac_config.svh`) and the `` `include `` is redirected there. |
 | 5. file rename | Every file gets the prefix; `` `include `` references were already rewritten in step 3. |
 | 6. filelist | A compile-ordered `.vf` is generated *where upstream keeps it* — `src/<block>/config/arca_<name>.vf` — ordering derived from the upstream `.vf`, with `+incdir+` lines for every imported directory. |
 | 7. revinfo | `revinfo/<block>.revinfo.yml` records upstream repo/branch/commit/date/subject, dirty flag, subtrees, prefix, script fingerprint, policy (exclusions, keep-list, cross-block deps, env macros) and sha256 manifests before *and* after renaming. |
-| 8. verify | 10 structural checks (including "the ARCA layout mirrors the caliptra-rtl hierarchy"), then the round-trip proof. |
+| 8. verify | 10 structural checks (including "the ARCA layout mirrors the caliptra-rtl hierarchy" and a collateral-tier consistency summary), then the round-trip proof over **both** tiers. |
 
 ### The rename engine, concretely
 
@@ -158,20 +205,20 @@ it against the exact upstream blob at the commit recorded in `revinfo/`:
 
 ```
 == ecc (upstream 9d6585080a35, prefix arca_) ==
-  ok    src/ecc/rtl/ecc_adder.sv
-  ...
-  ok    src/ecc/coverage/ecc_top_cov_bind.sv
-  -- 25 file(s) round-tripped
+  ok    1 binary file(s) carried byte-for-byte
+  -- 215 file(s) round-tripped
 
 == hmac (upstream 9d6585080a35, prefix arca_) ==
-  ok    src/hmac/rtl/hmac_core.sv
   ok    src/hmac/rtl/hmac_ctrl.sv (include redirected on purpose)
-  ...
-  ok    src/hmac_drbg/rtl/hmac_drbg.sv
-  -- 11 file(s) round-tripped
+  ok    src/hmac/rtl/hmac.sv (include redirected on purpose)
+  -- 204 file(s) round-tripped
 
 roundtrip_check: imported RTL differs from upstream by naming only
 ```
+
+Only the interesting lines are printed: a clean file is silent, the two HMAC
+`` `include `` redirections are the deliberate env-macro capture, and the one
+binary is `fv_ecc_block_overview.pdf`.
 
 That is the property that matters for a security IP import: the vendored RTL
 differs from upstream by **names only** — no stray logic edits, no dropped
@@ -214,7 +261,7 @@ lines, no mangled string literals.
 ## Adding a new block
 
 1. `cp tools/scripts/rename/rename_ecc.sh tools/scripts/rename/rename_<block>.sh`
-2. Edit `BLOCK`, `UPSTREAM_SUBTREES` (plus `DEST_SUBTREES` / `BLOCK_DIR` only if
+2. Edit `BLOCK`, `UPSTREAM_SUBTREES`, `COLLATERAL_SUBTREES` (plus `DEST_SUBTREES` / `BLOCK_DIR` only if
    ARCA must deviate from the upstream path), `VF_FILELIST` / `VF_FILTER`,
    `EXCLUDE_GLOBS`, `EXTRA_RENAME_IDENTS`, `ENV_MACRO_SPECS`, `KEEP_IDENTS`.
    Document the block's quirks and its path mapping in the header comment.
@@ -235,12 +282,14 @@ it to the real ARCA tree. It is not a product deliverable.
 Current state of the two imported blocks, all enforced in CI
 (`.github/workflows/checks.yml`):
 
-| Check | ECC | HMAC |
+| Check | ECC | HMAC (+ HMAC_DRBG) |
 |---|---|---|
+| delivery tier | 25 files | 12 files |
+| collateral tier | 191 files in 5 dirs (4 build artifacts skipped) | 193 files in 9 dirs |
 | structural verification (10 checks) | pass | pass |
-| round-trip vs upstream blobs | pass, 25 files | pass, 11 files |
+| round-trip vs upstream blobs | pass, 215 files | pass, 204 files |
 | re-import reproducibility | pass | pass |
-| `slang` elaboration | 0 errors, 0 warnings | 0 errors, 0 warnings |
+| `slang` elaboration (delivery tier) | 0 errors, 0 warnings | 0 errors, 0 warnings |
 
 See [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) for the design rationale,
 the ownership policy, and the known gaps.

@@ -8,7 +8,7 @@
 #
 # These checks are deliberately *structural*, not semantic: no SystemVerilog
 # parser is assumed to be present on a developer machine. The GitHub Actions
-# workflow in .github/workflows/lint.yml additionally runs a real SV front end
+# workflow in .github/workflows/checks.yml additionally runs a real SV front end
 # (slang / verilator --lint-only) over the generated filelists.
 
 set -euo pipefail
@@ -67,18 +67,31 @@ verify_block() {
 
     # The block's source directories, mirroring the caliptra-rtl hierarchy.
     local dirs
-    mapfile -t dirs < <(sed -nE '/^[[:space:]]*source_dirs:/,/^[[:space:]]*filelist:/ s/^[[:space:]]*-[[:space:]]*(src\/.*)$/\1/p' "$revinfo")
+    mapfile -t dirs < <(sed -nE '/^[[:space:]]*source_dirs:/,/^[[:space:]]*(collateral_dirs|filelist):/ s/^[[:space:]]*-[[:space:]]*(src\/.*)$/\1/p' "$revinfo")
     [ "${#dirs[@]}" -gt 0 ] || { fail "revinfo lists no source_dirs"; return; }
     local d
     for d in "${dirs[@]}"; do
         [ -d "$DEST/$d" ] || { fail "source dir missing: $d"; return; }
     done
 
+    # Collateral directories: the rest of the block folder (tb/, formal/,
+    # stimulus/, uvmf_*/). Imported whole, held to a looser contract -- see the
+    # "Two tiers" section in rename_common.sh.
+    local cdirs=() cfiles=()
+    mapfile -t cdirs < <(sed -nE '/^[[:space:]]*collateral_dirs:/,/^[[:space:]]*filelist:/ s/^[[:space:]]*-[[:space:]]*(src\/.*)$/\1/p' "$revinfo")
+
     # Every imported source, as a repo-relative path.
     local files
     mapfile -t files < <(cd "$DEST" && find "${dirs[@]}" -maxdepth 1 -type f \
                           \( -name '*.sv' -o -name '*.svh' -o -name '*.v' \) | sort)
     [ "${#files[@]}" -gt 0 ] || { fail "no sources under ${dirs[*]}"; return; }
+    if [ "${#cdirs[@]}" -gt 0 ]; then
+        mapfile -t cfiles < <(cd "$DEST" && find "${cdirs[@]}" -type f \
+                              \( -name '*.sv' -o -name '*.svh' -o -name '*.v' \) 2>/dev/null | sort)
+    fi
+    # Checks 2-6 cover both tiers: a testbench that still says `ecc_top` would
+    # silently bind to whatever other ecc_top is in the simulation.
+    local allfiles=("${files[@]}" "${cfiles[@]}")
 
     # 1. every file name carries the prefix
     local f b bad=0
@@ -106,7 +119,7 @@ verify_block() {
         [ -n "$decl" ] || continue
         local name="${decl##* }"
         case "$name" in "$prefix"*) ;; *) fail "unprefixed declaration: $decl"; bad=1 ;; esac
-    done < <(cd "$DEST" && grep -hoE '^[[:space:]]*(module|package|interface)[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${files[@]}" \
+    done < <(cd "$DEST" && grep -hoE '^[[:space:]]*(module|package|interface)[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${allfiles[@]}" \
              | sed -E 's/^[[:space:]]*//; s/[[:space:]]+/ /')
     [ "$bad" -eq 0 ] && ok "all module/package/interface declarations carry '$prefix'"
 
@@ -120,8 +133,8 @@ verify_block() {
     [ "$bad" -eq 0 ] && ok "all \`define macros carry '$macro_prefix'"
 
     # 4. no double prefixing (idempotency of the rename engine)
-    if (cd "$DEST" && grep -qE "(${prefix}){2}|(${macro_prefix}){2}" "${files[@]}"); then
-        (cd "$DEST" && grep -nE "(${prefix}){2}|(${macro_prefix}){2}" "${files[@]}" | head -5)
+    if (cd "$DEST" && grep -qE "(${prefix}){2}|(${macro_prefix}){2}" "${allfiles[@]}"); then
+        (cd "$DEST" && grep -nE "(${prefix}){2}|(${macro_prefix}){2}" "${allfiles[@]}" | head -5)
         fail "double-prefixed identifiers present"
     else
         ok "no double-prefixed identifiers"
@@ -133,7 +146,7 @@ verify_block() {
     while IFS=$'\t' read -r kind orig new; do
         [ -n "${new:-}" ] || continue
         [ "$kind" = "file" ] && continue
-        if (cd "$DEST" && perl -ne 'exit 0 if /(?<![A-Za-z0-9_\$\\])\Q'"$orig"'\E(?![A-Za-z0-9_\$])/; END{exit 1}' "${files[@]}"); then
+        if (cd "$DEST" && perl -ne 'exit 0 if /(?<![A-Za-z0-9_\$\\])\Q'"$orig"'\E(?![A-Za-z0-9_\$])/; END{exit 1}' "${allfiles[@]}"); then
             fail "original identifier still present: $orig"
             bad=1
         fi
@@ -174,7 +187,7 @@ verify_block() {
         fi
     done < <(cd "$DEST" && grep -HoE '^[[:space:]]*`include[[:space:]]+"[^"]+"' "${files[@]}" \
              | sed -E 's/^([^:]+):.*"([^"]+)".*/\1|\2/' | sort -u)
-    [ "$bad" -eq 0 ] && ok "all \`include targets resolve"
+    [ "$bad" -eq 0 ] && ok "all \`include targets resolve in the delivery tier"
 
     # 8. filelist is complete, lives in the block's config/ dir, and resolves
     if [ -z "$filelist" ] || [ ! -f "$DEST/$filelist" ]; then
@@ -210,6 +223,36 @@ verify_block() {
         fi
     done < <(sed -nE '/^renamed_manifest:/,$ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
     [ "$bad" -eq 0 ] && ok "renamed manifest matches working tree"
+
+    # 10. collateral tier -- imported whole, looser contract.
+    #
+    # Checks 2-6 already covered its SystemVerilog, so the identifiers are
+    # consistent with the delivery. What is *not* asserted here:
+    #   * file names need not carry the prefix (Makefile, compile.do, test
+    #     vector .txt files are not identifiers);
+    #   * `include targets need not resolve inside the block -- testbenches
+    #     reach into caliptra-rtl verification headers and UVM, neither of which
+    #     this import vendors. Those are reported, not failed.
+    if [ "${#cdirs[@]}" -eq 0 ]; then
+        printf '  note  no collateral imported for this block\n'
+    else
+        local nall ninc=0
+        nall="$(cd "$DEST" && find "${cdirs[@]}" -type f 2>/dev/null | wc -l)"
+        while IFS='|' read -r src inc; do
+            [ -n "${inc:-}" ] || continue
+            [ -f "$DEST/$(dirname "$src")/$inc" ] && continue
+            local hit=0 p2
+            for p2 in "${incdirs[@]}"; do [ -f "$DEST/$p2/$inc" ] && hit=1; done
+            [ "$hit" -eq 1 ] && continue
+            for p2 in "${PLATFORM_HEADERS[@]}"; do [ "$inc" = "$p2" ] && hit=1; done
+            [ "$hit" -eq 1 ] && continue
+            ninc=$((ninc + 1))
+        done < <(cd "$DEST" && [ "${#cfiles[@]}" -gt 0 ] && grep -HoE '^[[:space:]]*`include[[:space:]]+"[^"]+"' "${cfiles[@]}" \
+                 | sed -E 's/^([^:]+):.*"([^"]+)".*/\1|\2/' | sort -u)
+        ok "collateral tier: $nall file(s) in ${#cdirs[@]} dir(s), ${#cfiles[@]} SystemVerilog, identifiers consistent with the delivery"
+        [ "$ninc" -gt 0 ] && printf '  note  %d collateral `include target(s) resolve outside the block (UVM / caliptra-rtl verification headers, not vendored)\n' "$ninc"
+    fi
+    return 0
 }
 
 if [ -n "$BLOCK" ]; then

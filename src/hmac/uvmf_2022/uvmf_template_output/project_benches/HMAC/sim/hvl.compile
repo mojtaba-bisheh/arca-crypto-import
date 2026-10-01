@@ -1,0 +1,2 @@
+needs:
+  - ../tb/testbench/arca_hvl_top.compile
