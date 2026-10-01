@@ -138,7 +138,8 @@ files are carried:
 | driver knob | `UPSTREAM_SUBTREES` | `COLLATERAL_SUBTREES` |
 | what | `rtl/`, `coverage/` | `tb/`, `formal/`, `stimulus/`, `uvmf_*/`, `coverage/config/` |
 | identifier rename | yes, same map | yes, **same map** — so the testbench still binds to the renamed RTL |
-| file names | *every* file is prefixed | prefixed **only** when the stem is itself a renamed module/package/interface, so `Makefile`, `compile.do` and the UVMF `.yaml` keep their names |
+| file names | *every* file is prefixed | every **HDL source** (`*.sv *.svh *.v *.vh`) is prefixed; other files only when the stem is a renamed identifier, so `Makefile`, `compile.do` and the UVMF `.yaml` keep their names |
+| directory names | unchanged (block dirs mirror upstream) | prefixed when the directory is *named after* a renamed package — UVMF's `interface_packages/ECC_out_pkg/` becomes `arca_ECC_out_pkg/` so the generated `.f` lists still resolve |
 | flat-namespace guarantee | asserted (unique basenames, every `` `include `` resolves, covered by the generated `.vf`) | not asserted — upstream deliberately reuses `Makefile`, `compile.do`, `.project` across directories |
 | CI | elaborated by `slang` | carried and round-tripped, not elaborated (needs UVM + a simulator licence) |
 | round-trip proof | yes | yes |
@@ -158,6 +159,11 @@ Binary files that are *documentation* rather than output — e.g.
 `src/ecc/formal/fv_ecc_block_overview.pdf` — are carried through byte-for-byte
 and `cmp`-checked by the round-trip.
 
+After the renames, a final pass rewrites every *reference to a file by name* —
+`` `include `` directives, UVMF `.f` filelists, `compile.do` scripts — so the
+collateral still points at the files that now exist. `verify_import.sh` asserts
+that **no HDL source anywhere in the import is left without the prefix**.
+
 `--no-collateral` imports the delivery tier only, if a consumer wants just the
 synthesisable fileset.
 
@@ -174,7 +180,7 @@ synthesisable fileset.
 | 5. file rename | Every file gets the prefix; `` `include `` references were already rewritten in step 3. |
 | 6. filelist | A compile-ordered `.vf` is generated *where upstream keeps it* — `src/<block>/config/arca_<name>.vf` — ordering derived from the upstream `.vf`, with `+incdir+` lines for every imported directory. |
 | 7. revinfo | `revinfo/<block>.revinfo.yml` records upstream repo/branch/commit/date/subject, dirty flag, subtrees, prefix, script fingerprint, policy (exclusions, keep-list, cross-block deps, env macros) and sha256 manifests before *and* after renaming. |
-| 8. verify | 10 structural checks (including "the ARCA layout mirrors the caliptra-rtl hierarchy" and a collateral-tier consistency summary), then the round-trip proof over **both** tiers. |
+| 8. verify | 11 structural checks (including "the ARCA layout mirrors the caliptra-rtl hierarchy" and a collateral-tier consistency summary), then the round-trip proof over **both** tiers. |
 
 ### The rename engine, concretely
 
@@ -286,7 +292,7 @@ Current state of the two imported blocks, all enforced in CI
 |---|---|---|
 | delivery tier | 25 files | 12 files |
 | collateral tier | 191 files in 5 dirs (4 build artifacts skipped) | 193 files in 9 dirs |
-| structural verification (10 checks) | pass | pass |
+| structural verification (11 checks) | pass | pass |
 | round-trip vs upstream blobs | pass, 215 files | pass, 204 files |
 | re-import reproducibility | pass | pass |
 | `slang` elaboration (delivery tier) | 0 errors, 0 warnings | 0 errors, 0 warnings |

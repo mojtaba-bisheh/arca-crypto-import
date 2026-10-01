@@ -5,45 +5,47 @@
 // pragma uvmf custom header end
 //----------------------------------------------------------------------
 //----------------------------------------------------------------------
-//
-// DESCRIPTION: This package includes all high level sequence classes used 
-//     in the environment.  These include utility sequences and top
-//     level sequences.
+//     
+// PACKAGE: This file defines all of the files contained in the
+//    environment package that will run on the host simulator.
 //
 // CONTAINS:
-//     -<ECC_sequence_base>
-//     -<example_derived_test_sequence>
+//     - <ECC_configuration.svh>
+//     - <arca_ECC_environment.svh>
+//     - <arca_ECC_env_sequence_base.svh>
+//     - <arca_ECC_predictor.svh>
 //
 //----------------------------------------------------------------------
-//
 //----------------------------------------------------------------------
 //
+package arca_ECC_env_pkg;
 
-package arca_ECC_sequences_pkg;
   import uvm_pkg::*;
+  `include "uvm_macros.svh"
   import uvmf_base_pkg::*;
   import arca_ECC_in_pkg::*;
   import arca_ECC_in_pkg_hdl::*;
   import arca_ECC_out_pkg::*;
   import arca_ECC_out_pkg_hdl::*;
-  import arca_ECC_parameters_pkg::*;
-  import arca_ECC_env_pkg::*;
-  `include "uvm_macros.svh"
+ 
+  `uvm_analysis_imp_decl(_ECC_in_agent_ae)
 
   // pragma uvmf custom package_imports_additional begin
   // pragma uvmf custom package_imports_additional end
 
-  `include "src/arca_ECC_bench_sequence_base.svh"
-  `include "src/arca_register_test_sequence.svh"
-  `include "src/arca_example_derived_test_sequence.svh"
-  `include "src/arca_ECC_normal_sequence.svh"
-  `include "src/arca_ECC_otf_reset_sequence.svh"
+  // Parameters defined as HVL parameters
+
+  `include "src/arca_ECC_env_typedefs.svh"
+  `include "src/arca_ECC_env_configuration.svh"
+  `include "src/arca_ECC_predictor.svh"
+  `include "src/arca_ECC_environment.svh"
+  `include "src/arca_ECC_env_sequence_base.svh"
 
   // pragma uvmf custom package_item_additional begin
-  // UVMF_CHANGE_ME : When adding new sequences to the src directory
+  // UVMF_CHANGE_ME : When adding new environment level sequences to the src directory
   //    be sure to add the sequence file here so that it will be
-  //    compiled as part of the sequence package.  Be sure to place
-  //    the new sequence after any base sequences of the new sequence.
+  //    compiled as part of the environment package.  Be sure to place
+  //    the new sequence after any base sequence of the new sequence.
   // pragma uvmf custom package_item_additional end
 
 endpackage

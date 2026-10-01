@@ -22,7 +22,7 @@ Date: 28-07-2023 Author: LUBIS EDA
 The following subdirectories are part of the main directory **formal**
 
 - model: Contains the high level abstracted model
-- properties: Contains the assertion IP(AIP) named as fv_hmac.sv and the constraints in place for the respective AIP fv_constraints.sv and fv_constraints_wip.sv
+- properties: Contains the assertion IP(AIP) named as fv_hmac.sv and the constraints in place for the respective AIP arca_fv_constraints.sv and arca_fv_constraints_wip.sv
 
 ## DUT Overview
 
@@ -46,7 +46,7 @@ Hmac algorithm starts with padding the key with IPAD and OPAD constants. Once HM
 
 ## Assertion IP Overview
 
-The Assertion IP signals are bound with the respective signals in the dut, where for the rst is binded with the DUT (reset_n && !zeroize), which ensures the reset functionality. Assertion IP is binded with arca_hmac_core and checks for the functionality of only arca_hmac_core. The digest of sha512_masked_core is considered to be cut open. This is perfomed on the formal tool. This way the tool has the freedom to choose any random value of digest coming out of sha512_maked_core so as to reduce the complex functionality of sha512 hashing. With this approach, IP makes sure arca_hmac_core is functionality correct irrespective of correct computed value of digest and helps in proof convergence. Constraints are made on init_cmd and next_cmd signals of arca_hmac_core The constraints can be looked up at fv_constraints.sv.
+The Assertion IP signals are bound with the respective signals in the dut, where for the rst is binded with the DUT (reset_n && !zeroize), which ensures the reset functionality. Assertion IP is binded with arca_hmac_core and checks for the functionality of only arca_hmac_core. The digest of sha512_masked_core is considered to be cut open. This is perfomed on the formal tool. This way the tool has the freedom to choose any random value of digest coming out of sha512_maked_core so as to reduce the complex functionality of sha512 hashing. With this approach, IP makes sure arca_hmac_core is functionality correct irrespective of correct computed value of digest and helps in proof convergence. Constraints are made on init_cmd and next_cmd signals of arca_hmac_core The constraints can be looked up at arca_fv_constraints.sv.
 
 - reset_a: Checks that all the resgiters are resetted and the state is idle, with the ready to high.
 

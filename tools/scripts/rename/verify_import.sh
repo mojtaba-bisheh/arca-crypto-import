@@ -236,8 +236,20 @@ verify_block() {
     if [ "${#cdirs[@]}" -eq 0 ]; then
         printf '  note  no collateral imported for this block\n'
     else
-        local nall ninc=0
+        local nall ninc=0 bad
         nall="$(cd "$DEST" && find "${cdirs[@]}" -type f 2>/dev/null | wc -l)"
+
+        # every HDL source carries the prefix, same rule as the delivery tier;
+        # non-HDL collateral (Makefile, compile.do, *.yaml) deliberately does not
+        bad="$(cd "$DEST" && find "${cdirs[@]}" \
+                 \( -name '*.sv' -o -name '*.svh' -o -name '*.v' -o -name '*.vh' \) \
+                 ! -name "${prefix}*" 2>/dev/null)"
+        if [ -n "$bad" ]; then
+            fail "collateral HDL file name(s) missing '$prefix':"
+            printf '%s\n' "$bad" | sed 's/^/          /'
+        else
+            ok "all collateral HDL file names carry '$prefix'"
+        fi
         while IFS='|' read -r src inc; do
             [ -n "${inc:-}" ] || continue
             [ -f "$DEST/$(dirname "$src")/$inc" ] && continue

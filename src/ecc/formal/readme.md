@@ -3,7 +3,7 @@ The description of the proofs, is provided in the caliptra 1.0 version which are
 **MACROS :** 
 TOP 
 
-- Used for the submodules fv_ecc_fau.sv and fv_scalar_blinding.sv and in fv_ecc_dsa_ctrl_constraints.sv.
+- Used for the submodules arca_fv_ecc_fau.sv and arca_fv_scalar_blinding.sv and in fv_ecc_dsa_ctrl_constraints.sv.
 
 - Use this macro or define this macro only when loading the design the with arca_ecc_dsa_ctrl as top module.
 

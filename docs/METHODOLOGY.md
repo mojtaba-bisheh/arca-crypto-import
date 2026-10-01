@@ -45,7 +45,7 @@ a security IP import:
 | `\b` / ad-hoc `[^A-Za-z0-9_]` boundaries | `(?<![A-Za-z0-9_$\\]) … (?![A-Za-z0-9_$])` | `$` is a legal SV identifier character and escaped identifiers start with `\`. |
 | Hard-codes macro names (`EL2_IC_TAG_SRAM`, …) | Discovers declarations from the staged sources; drivers only declare what *cannot* be discovered | Upstream adding a new package or guard macro does not silently escape the rename. |
 | No provenance record | `revinfo/<block>.revinfo.yml` | Requirement 3. |
-| No verification | 10 structural checks + a round-trip proof + CI re-import | See §5. |
+| No verification | 11 structural checks + a round-trip proof + CI re-import | See §5. |
 | Flattens everything into one design directory | Mirrors the upstream hierarchy: `src/ecc/rtl` → `src/ecc/rtl` | See §2.1. |
 
 ### 2.1 Why mirror the caliptra-rtl hierarchy
@@ -185,10 +185,13 @@ are structural. They are still fairly strong:
    caliptra-rtl keeps it), covers every source, and every entry exists
 9. every committed file still matches the sha256 recorded in revinfo
    (detects hand-edits after import)
-10. collateral-tier summary: file/directory/SV counts, and the identifier
+10. every collateral HDL file name carries the prefix — the same assertion
+    check 1 makes for the delivery tier, so no `.sv`/`.svh`/`.v`/`.vh`
+    anywhere in the import escapes the namespace
+11. collateral-tier summary: file/directory/SV counts, and the identifier
     checks (2, 4, 5) are applied to the collateral sources too, so a
     testbench referring to an *unrenamed* `ecc_top` fails the build. What
-    check 10 deliberately does **not** assert is unique basenames, include
+    these deliberately do **not** assert is unique basenames, include
     resolution, or filelist coverage — see §4.2
 
 `roundtrip_check.sh` — the strongest one. Strips the prefix back off and diffs

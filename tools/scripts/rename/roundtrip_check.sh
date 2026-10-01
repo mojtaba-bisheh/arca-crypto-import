@@ -65,13 +65,15 @@ for b in "${blocks[@]}"; do
         dirmap["$up"]="$ar"
     done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*\{[[:space:]]*upstream:[[:space:]]*"([^"]+)",[[:space:]]*arca:[[:space:]]*"([^"]+)".*/\1|\2/p' "$revinfo")
 
-    # collateral subtrees are identity-mapped (imported in place), so their
-    # ARCA directory is the upstream directory; only the basename may change.
-    cdirs=()
-    while read -r d; do
-        [ -n "${d:-}" ] || continue
-        cdirs+=("$d")
-    done < <(sed -nE '/^[[:space:]]*collateral_dirs:/,/^[[:space:]]*filelist:/ s/^[[:space:]]*-[[:space:]]*(src\/.*)$/\1/p' "$revinfo")
+    # Resolving upstream path -> ARCA path: both file names *and* directory
+    # names may carry the prefix (UVMF names a directory after the package it
+    # holds). Rather than re-deriving the rule, strip the prefix out of every
+    # committed path and index by the result -- that is the upstream path.
+    declare -A pathmap=()
+    while read -r _ rpath; do
+        [ -n "${rpath:-}" ] || continue
+        pathmap["${rpath//${prefix}/}"]="$rpath"
+    done < <(sed -nE '/^renamed_manifest:/,$ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"(src\/[^"]+)".*/\1 \2/p' "$revinfo")
 
     checked=0
     binchecked=0
@@ -80,19 +82,16 @@ for b in "${blocks[@]}"; do
         base="$(basename "$upath")"
         updir="$(dirname "$upath")"
 
-        arcadir="${dirmap[$updir]:-}"
-        if [ -z "$arcadir" ]; then
-            for d in "${cdirs[@]:-}"; do
-                case "$upath" in "$d"/*) arcadir="$updir"; break ;; esac
-            done
+        renamed=""
+        if [ -n "${pathmap[$upath]:-}" ]; then
+            renamed="$DEST/${pathmap[$upath]}"
+        else
+            # delivery subtrees may be relocated (DEST_SUBTREES), in which case
+            # the stripped path does not equal the upstream path
+            arcadir="${dirmap[$updir]:-}"
+            [ -n "$arcadir" ] && renamed="$DEST/$arcadir/${prefix}${base}"
         fi
-        [ -n "$arcadir" ] || { echo "  FAIL  no ARCA directory recorded for $updir"; rc=1; continue; }
-
-        # the collateral tier renames a file only when its stem is itself a
-        # renamed identifier, so accept either spelling
-        renamed="$DEST/$arcadir/${prefix}${base}"
-        [ -f "$renamed" ] || renamed="$DEST/$arcadir/${base}"
-        [ -f "$renamed" ] || { echo "  FAIL  missing renamed file for $upath"; rc=1; continue; }
+        [ -n "$renamed" ] && [ -f "$renamed" ] || { echo "  FAIL  missing renamed file for $upath"; rc=1; continue; }
 
         if ! grep -Iq . "$renamed" 2>/dev/null; then
             # binary collateral: must be carried through byte-for-byte

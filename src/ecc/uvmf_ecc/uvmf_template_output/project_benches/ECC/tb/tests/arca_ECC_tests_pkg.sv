@@ -36,11 +36,11 @@ package arca_ECC_tests_pkg;
   // pragma uvmf custom package_imports_additional begin 
   // pragma uvmf custom package_imports_additional end
 
-   `include "src/test_top.svh"
-   `include "src/register_test.svh"
-   `include "src/example_derived_test.svh"
-   `include "src/ECC_normal_test.svh"
-   `include "src/ECC_otf_reset_test.svh"
+   `include "src/arca_test_top.svh"
+   `include "src/arca_register_test.svh"
+   `include "src/arca_example_derived_test.svh"
+   `include "src/arca_ECC_normal_test.svh"
+   `include "src/arca_ECC_otf_reset_test.svh"
 
   // pragma uvmf custom package_item_additional begin
   // UVMF_CHANGE_ME : When adding new tests to the src directory

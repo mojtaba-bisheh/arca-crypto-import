@@ -7,7 +7,7 @@ Date: 28-08-2023 Author: LUBIS EDA
 The following subdirectories are part of the main directory **formal**
 
 - model: Contains the high level abstracted model
-- properties: Contains the assertion IP(AIP) named as fv_hmac_drbg.sv and the constraints in place for the respective AIP fv_constraints.sv. The folder also contains fv_cover_points.sv that cover certain conditions that are not covered by the properties.
+- properties: Contains the assertion IP(AIP) named as arca_fv_hmac_drbg.sv and the constraints in place for the respective AIP arca_fv_constraints.sv. The folder also contains arca_fv_cover_points.sv that cover certain conditions that are not covered by the properties.
 
 ## DUT Overview
 

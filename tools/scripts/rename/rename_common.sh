@@ -79,7 +79,7 @@
 
 set -euo pipefail
 
-RC_SCRIPT_VERSION="1.3.0"
+RC_SCRIPT_VERSION="1.4.0"
 
 rc_log()  { printf '[%s] %s\n' "${BLOCK:-rename}" "$*"; }
 rc_warn() { printf '[%s] WARNING: %s\n' "${BLOCK:-rename}" "$*" >&2; }
@@ -228,6 +228,8 @@ rc_stage() {
     local i subtree dst src base rel skip glob
     STAGED_FILES=()
     SRC_MANIFEST="$WORK/src_manifest.txt"
+    FILE_RENAMES="$WORK/file_renames.tsv"
+    : > "$FILE_RENAMES"
     : > "$SRC_MANIFEST"
 
     for i in "${!UPSTREAM_SUBTREES[@]}"; do
@@ -489,6 +491,7 @@ rc_rename_files() {
         new="$dir/${PREFIX}${base}"
         [ -e "$STAGE/$new" ] && rc_die "rename collision: $new already exists"
         mv "$STAGE/$f" "$STAGE/$new"
+        printf '%s\t%s\n' "$base" "${PREFIX}${base}" >> "$FILE_RENAMES"
         out+=("$new")
     done
     STAGED_FILES=("${out[@]}")
@@ -497,32 +500,138 @@ rc_rename_files() {
 }
 
 # ---------------------------------------------------------------------------
-# rc_rename_collateral_files -- prefix a collateral file name only when the
-# name *is* a renamed identifier.
+# rc_rename_collateral_files -- prefix collateral file names.
 #
-# ecc_top_tb.sv is named after module ecc_top_tb, which the map renamed, so the
-# file follows. Makefile, compile.do, hmac_vectors_singleblk.txt and
-# ECC_bench.yaml are not identifiers -- renaming them would break the scripts
-# that reference them by name for no namespace benefit.
+# Every HDL source file (*.sv *.svh *.v *.vh) is prefixed unconditionally, the
+# same rule the delivery tier uses: the file name is part of how a fileset is
+# identified, and a vendored src/ecc/formal/.../fv_add_sub_alter_coverpoints.sv
+# sitting next to someone else's copy of the same upstream file is exactly the
+# collision the prefix exists to prevent. Note the stem is not always an
+# identifier -- that file declares module fv_add_sub_alter_coverpoints_m -- so
+# the name cannot be derived from the map.
+#
+# Non-HDL files are prefixed only when the stem *is* a renamed identifier.
+# Makefile, compile.do, hmac_vectors_singleblk.txt and ECC_bench.yaml stay as
+# they are: renaming them breaks the tools that look them up by name, for no
+# namespace benefit (they are not in SystemVerilog's global namespace).
+#
+# *Directories* are prefixed when their name is a renamed identifier. UVMF
+# names a package directory after the package it contains
+# (verification_ip/interface_packages/ECC_out_pkg/), and the generated .f lists
+# reference it by that path -- so the directory has to follow the package into
+# arca_ECC_out_pkg/ or the filelists dangle.
+#
+# References to the renamed files -- `include, .f lists, do/tcl scripts -- are
+# fixed up afterwards by rc_fix_file_references.
 # ---------------------------------------------------------------------------
 rc_rename_collateral_files() {
-    local f dir base stem ext new out=() n=0
+    local f dir base stem ext new out=() n=0 nd=0 hdl comp newdir comps=() root st
+    local -A ident=() dirseen=()
     [ "${#COLLATERAL_FILES[@]}" -gt 0 ] || return 0
+
+    # one pass over the map instead of a grep per file/component
+    while IFS=$'\t' read -r kind orig _; do
+        case "$kind" in module|package|interface) ident["$orig"]=1 ;; esac
+    done < "$MAP"
+
     for f in "${COLLATERAL_FILES[@]}" "${COLLATERAL_BINARIES[@]}"; do
         dir="$(dirname "$f")"; base="$(basename "$f")"
         stem="${base%%.*}"; ext="${base#"$stem"}"
-        if grep -qP "^(module|package|interface)\t\Q$stem\E\t" "$MAP"; then
-            new="$dir/${PREFIX}${stem}${ext}"
-            [ -e "$STAGE/$new" ] && rc_die "collateral rename collision: $new"
-            mv "$STAGE/$f" "$STAGE/$new"
-            printf 'file\t%s\t%s\n' "$f" "$new" >> "$MAP"
-            out+=("$new"); n=$((n+1))
-        else
-            out+=("$f")
+
+        # Directory components named after a renamed identifier follow it --
+        # but only *below* the declared subtree root. src/hmac/ and
+        # src/hmac_drbg/ are block directories that happen to share a name with
+        # a module; renaming them would break the mirrored hierarchy, and the
+        # directory name is already a separate knob (BLOCK_DIR/DEST_SUBTREES).
+        root=""
+        for st in "${COLLATERAL_SUBTREES[@]}"; do
+            case "$f" in "$st"/*) [ "${#st}" -gt "${#root}" ] && root="$st" ;; esac
+        done
+        newdir="$root"
+        IFS='/' read -r -a comps <<< "${dir#"$root"}"
+        for comp in "${comps[@]}"; do
+            [ -n "$comp" ] || continue
+            case "$comp" in
+                "$PREFIX"*) : ;;
+                *) [ -n "${ident[$comp]:-}" ] && comp="${PREFIX}${comp}" ;;
+            esac
+            newdir="${newdir:+$newdir/}$comp"
+        done
+        if [ "$newdir" != "$dir" ] && [ -z "${dirseen[$newdir]:-}" ]; then
+            dirseen["$newdir"]=1; nd=$((nd + 1))
         fi
+
+        hdl=0
+        case "$base" in *.sv|*.svh|*.v|*.vh) hdl=1 ;; esac
+
+        case "$base" in
+            "$PREFIX"*) new="$newdir/$base" ;;
+            *)
+                if [ "$hdl" -eq 1 ] || { [ -n "$stem" ] && [ -n "${ident[$stem]:-}" ]; }; then
+                    new="$newdir/${PREFIX}${base}"
+                    printf 'file\t%s\t%s\n' "$f" "$new" >> "$MAP"
+                    printf '%s\t%s\n' "$base" "${PREFIX}${base}" >> "$FILE_RENAMES"
+                    n=$((n + 1))
+                else
+                    new="$newdir/$base"
+                fi
+                ;;
+        esac
+
+        if [ "$new" != "$f" ]; then
+            [ -e "$STAGE/$new" ] && rc_die "collateral rename collision: $new"
+            mkdir -p "$STAGE/$(dirname "$new")"
+            mv "$STAGE/$f" "$STAGE/$new"
+        fi
+        out+=("$new")
     done
+
     COLLATERAL_INSTALLED=("${out[@]}")
-    rc_log "renamed $n collateral file name(s) of ${#out[@]}"
+    # moving the last file out of a renamed directory leaves the old one behind
+    find "$STAGE" -type d -empty -delete
+    rc_log "renamed $n collateral file name(s) and $nd directory name(s) of ${#out[@]}"
+    rc_fix_file_references
+}
+
+# ---------------------------------------------------------------------------
+# rc_fix_file_references -- after collateral files are renamed, rewrite every
+# reference to them by name.
+#
+# The identifier pass cannot do this: a reference to
+# "fv_add_sub_alter_coverpoints.sv" is a *file* name, not an identifier, and
+# the stem is not in the map. Matching the name together with its extension
+# keeps the substitution tight; the look-behind excludes identifier characters
+# so an already-prefixed "arca_fv_...sv" cannot match again (idempotent).
+#
+# Scope is every text file in both tiers: `include directives, formal .f lists,
+# compile.do / tcl scripts and Makefiles all name files.
+# ---------------------------------------------------------------------------
+rc_fix_file_references() {
+    local n
+    [ -s "$FILE_RENAMES" ] || return 0
+    n="$(wc -l < "$FILE_RENAMES")"
+    perl -e '
+        my ($mapfile, @files) = @ARGV;
+        open(my $m, "<", $mapfile) or die $!;
+        my %r;
+        while (<$m>) { chomp; my ($o, $n) = split /\t/; $r{$o} = $n if defined $n; }
+        close $m;
+        exit 0 unless %r;
+        my $alt = join "|", map { quotemeta } sort { length($b) <=> length($a) } keys %r;
+        my $re  = qr/(?<![A-Za-z0-9_])($alt)/;
+        for my $f (@files) {
+            open(my $in, "<", $f) or next;
+            local $/; my $txt = <$in>; close $in;
+            my $orig = $txt;
+            $txt =~ s/$re/$r{$1}/g;
+            next if $txt eq $orig;
+            open(my $out, ">", $f) or die $!;
+            print $out $txt; close $out;
+        }
+    ' "$FILE_RENAMES" \
+      $(printf "$STAGE/%s " "${STAGED_FILES[@]}") \
+      $(printf "$STAGE/%s " "${COLLATERAL_INSTALLED[@]}")
+    rc_log "rewrote references to $n renamed file name(s)"
 }
 
 # ---------------------------------------------------------------------------
