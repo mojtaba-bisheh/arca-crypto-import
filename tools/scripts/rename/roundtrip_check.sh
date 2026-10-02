@@ -121,6 +121,28 @@ for b in "${blocks[@]}"; do
         fi
     done < <(sed -nE '/^source_manifest:/,/^renamed_manifest:/ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"(src\/[^"]+)".*/\1 \2/p' "$revinfo")
 
+    # Code-generator inputs are held to a *stronger* contract than everything
+    # else: byte-identical, not merely naming-equivalent. The loop above strips
+    # the prefix before diffing, so a yaml that had wrongly been prefixed would
+    # strip straight back to the upstream text and pass unnoticed -- and the
+    # next regeneration would then emit names that disagree with what is
+    # committed. Compare these against upstream directly.
+    local_gi=0
+    while IFS= read -r gi; do
+        [ -n "$gi" ] || continue
+        if [ ! -f "$DEST/$gi" ]; then
+            printf '  FAIL  generator input %s declared but not imported\n' "$gi"; rc=1; continue
+        fi
+        if git -C "$UPSTREAM" show "$sha:$gi" 2>/dev/null | cmp -s - "$DEST/$gi"; then
+            local_gi=$((local_gi + 1))
+        else
+            printf '  FAIL  generator input %s is not byte-identical to upstream\n' "$gi"
+            printf '        regeneration would diverge from what is committed\n'
+            rc=1
+        fi
+    done < <(sed -nE '/^[[:space:]]*generator_inputs:/,/^[[:space:]]*keep_list:/ s/^[[:space:]]*-[[:space:]]*"([^"]+)".*/\1/p' "$revinfo")
+    [ "$local_gi" -eq 0 ] || printf '  ok    %d generator input(s) byte-identical to upstream\n' "$local_gi"
+
     [ "$binchecked" -eq 0 ] || printf '  ok    %d binary file(s) carried byte-for-byte\n' "$binchecked"
     printf '  -- %d file(s) round-tripped\n' "$checked"
     [ "$checked" -gt 0 ] || { echo "  FAIL  nothing checked"; rc=1; }

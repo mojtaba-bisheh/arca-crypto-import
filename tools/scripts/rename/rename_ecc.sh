@@ -99,6 +99,22 @@ EXTRA_RENAME_IDENTS=(
     "module:hmac_drbg"
 )
 
+# UVMF generator inputs. These describe the verification environment -- agents,
+# environments, interface ports -- and name nothing that the rename map
+# touches: UVM agents and environments become SystemVerilog *classes*, which
+# are scoped by their package rather than by the compilation unit. So they come
+# through byte-identical, and regenerating upstream stays possible.
+#
+# roundtrip_check.sh asserts byte-identity for these specifically, rather than
+# the naming-only equivalence it asserts everywhere else.
+GENERATOR_INPUTS=(
+    "src/ecc/uvmf_ecc/ECC_bench.yaml"
+    "src/ecc/uvmf_ecc/ECC_environment.yaml"
+    "src/ecc/uvmf_ecc/ECC_in_interface.yaml"
+    "src/ecc/uvmf_ecc/ECC_out_interface.yaml"
+    "src/ecc/uvmf_ecc/ECC_util_comp_ECC_predictor.yaml"
+)
+
 ENV_MACRO_SPECS=()
 ENV_HEADER_REPLACE=()
 

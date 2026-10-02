@@ -87,6 +87,22 @@ EXTRA_RENAME_IDENTS=()
 
 # Macros the caliptra-rtl environment applies to configure this block.
 # Format: MACRO@<upstream path of the header that defines it>
+# UVMF generator inputs. These describe the verification environment -- agents,
+# environments, interface ports -- and name nothing that the rename map
+# touches: UVM agents and environments become SystemVerilog *classes*, which
+# are scoped by their package rather than by the compilation unit. So they come
+# through byte-identical, and regenerating upstream stays possible.
+#
+# roundtrip_check.sh asserts byte-identity for these specifically, rather than
+# the naming-only equivalence it asserts everywhere else.
+GENERATOR_INPUTS=(
+    "src/hmac/uvmf_2022/HMAC_bench.yaml"
+    "src/hmac/uvmf_2022/HMAC_environment.yaml"
+    "src/hmac/uvmf_2022/HMAC_in_interface.yaml"
+    "src/hmac/uvmf_2022/HMAC_out_interface.yaml"
+    "src/hmac/uvmf_2022/HMAC_util_comp_HMAC_predictor.yaml"
+)
+
 ENV_MACRO_SPECS=(
     "CLP_CSR_HMAC_KEY_DWORDS@src/libs/rtl/caliptra_macros.svh"
 )

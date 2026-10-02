@@ -79,7 +79,7 @@
 
 set -euo pipefail
 
-RC_SCRIPT_VERSION="1.4.0"
+RC_SCRIPT_VERSION="1.5.0"
 
 rc_log()  { printf '[%s] %s\n' "${BLOCK:-rename}" "$*"; }
 rc_warn() { printf '[%s] WARNING: %s\n' "${BLOCK:-rename}" "$*" >&2; }
@@ -128,10 +128,17 @@ RC_DEFAULT_ARTIFACT_GLOBS=(
     '*.ucdb' '*.exe' '*.o' '*.a' '*.so' '*.pyc' '*.wlf' '*.vstf' '*.vcd' '*.fsdb'
 )
 
+# Code-generator inputs. A block may vendor files that are *fed to* a generator
+# rather than compiled -- the UVMF .yaml descriptions are the case here. They
+# must come through byte-identical to upstream or regeneration silently
+# diverges from what is committed, and the round-trip cannot catch that on its
+# own: it strips the prefix before comparing, so a yaml that had wrongly been
+# prefixed would strip back to the upstream text and pass. Listing them here
+# makes the invariant checkable. See rc_check_generator_inputs.
 rc_init() {
     rc_default_array EXCLUDE_GLOBS EXTRA_RENAME_IDENTS ENV_MACRO_SPECS \
                      ENV_HEADER_REPLACE KEEP_IDENTS DEST_SUBTREES \
-                     COLLATERAL_SUBTREES ARTIFACT_GLOBS
+                     COLLATERAL_SUBTREES ARTIFACT_GLOBS GENERATOR_INPUTS
     [ "${#ARTIFACT_GLOBS[@]}" -gt 0 ] || ARTIFACT_GLOBS=("${RC_DEFAULT_ARTIFACT_GLOBS[@]}")
     WITH_COLLATERAL=1
 
@@ -789,6 +796,12 @@ rc_emit_revinfo() {
         else
             printf '    []\n'
         fi
+        printf '  generator_inputs:  # fed to a code generator, must stay byte-identical to upstream\n'
+        if [ "${#GENERATOR_INPUTS[@]}" -gt 0 ]; then
+            for tok in "${GENERATOR_INPUTS[@]}"; do [ -n "$tok" ] && printf '    - "%s"\n' "$tok"; done
+        else
+            printf '    []\n'
+        fi
         printf '  keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed\n'
         if [ "${#KEEP_IDENTS[@]}" -gt 0 ]; then
             for tok in "${KEEP_IDENTS[@]}"; do [ -n "$tok" ] && printf '    - "%s"\n' "$tok"; done
@@ -826,6 +839,34 @@ rc_emit_revinfo() {
 # ---------------------------------------------------------------------------
 # rc_run -- orchestration
 # ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# rc_check_generator_inputs -- enforce the stronger contract on generator inputs
+#
+# Everything else in the block is held to "differs from upstream by naming
+# only". These files are held to "byte-identical to upstream", because they are
+# read by a code generator rather than compiled: if they were renamed, the next
+# regeneration would emit names that disagree with what is committed, and the
+# round-trip check could not tell (it strips the prefix before comparing).
+#
+# Generator inputs live in the collateral tier, which preserves upstream paths
+# verbatim, so the ARCA path and the upstream path are the same string.
+# ---------------------------------------------------------------------------
+rc_check_generator_inputs() {
+    [ "${#GENERATOR_INPUTS[@]}" -gt 0 ] || return 0
+    [ "$WITH_COLLATERAL" -eq 1 ] || return 0
+    local gi n=0
+    for gi in "${GENERATOR_INPUTS[@]}"; do
+        [ -n "$gi" ] || continue
+        rc_check_relpath "$gi"
+        [ -f "$UPSTREAM/$gi" ] || rc_die "generator input '$gi' not present upstream"
+        [ -f "$DEST/$gi" ] || rc_die "generator input '$gi' was not imported"
+        cmp -s "$UPSTREAM/$gi" "$DEST/$gi" || \
+            rc_die "generator input '$gi' was modified; it must stay byte-identical to upstream"
+        n=$((n + 1))
+    done
+    rc_log "generator inputs byte-identical to upstream ($n file(s))"
+}
+
 rc_run() {
     rc_stage
     rc_stage_collateral
@@ -837,6 +878,7 @@ rc_run() {
     rc_rename_files
     rc_emit_filelist
     rc_install
+    rc_check_generator_inputs
     rc_emit_revinfo
     "$RC_LIB_DIR/verify_import.sh" --dest "$DEST" --block "$BLOCK" --prefix "$PREFIX"
     rc_log "import complete"

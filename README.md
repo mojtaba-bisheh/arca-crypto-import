@@ -169,10 +169,48 @@ synthesisable fileset.
 
 ---
 
+## What gets renamed, and why not just `rtl/`
+
+A fair question when you first see the import touch `tb/`, `formal/` and the
+UVMF tree: *shouldn't the rename stop at `rtl/`?* Especially since some files —
+the UVMF `.yaml` generator inputs — visibly cannot be renamed at all.
+
+The scope is not a list of directories. It is one rule:
+
+> **Rename anything that names a renamed thing.**
+
+Everything else falls out of that, including the apparent exception:
+
+| Directory | Names renamed things? | Renamed? |
+|---|---|---|
+| `rtl/` | declares them | yes |
+| `coverage/` | binds to `ecc_top` | yes |
+| `tb/` | instantiates `ecc_top`, imports `ecc_params_pkg` | yes |
+| `formal/` | binds to submodules, imports packages | yes |
+| `uvmf_*/uvmf_template_output/` | instantiates `ecc_top`, imports `ecc_defines_pkg` | yes |
+| `uvmf_*/<BLOCK>_*.yaml` | **no** — names UVM *classes*, which are not in the rename map | **no** |
+
+So the YAML is not an exception carved out by hand. It is an *instance* of the
+same rule, and that is exactly why it survives byte-identical: a `module`,
+`package` or `interface` is a compilation-unit-global name and must be
+prefixed; a UVM class is scoped by the package that holds it and must not be.
+The YAML names only the latter.
+
+**Restricting the rename to `rtl/` is a coherent alternative, with a cost.** You
+would vendor `tb/`, `formal/` and the UVMF tree verbatim as unrenamed
+reference material. That is simpler and the round-trip gets trivially stronger.
+But none of it would then bind to the renamed RTL — `ecc_top` no longer exists
+in ARCA — so verification would have to stay upstream, and ARCA could not run
+its own regressions against its own vendored copy. This repo takes the wider
+scope because an engine you cannot test in-tree is not really vendored. If the
+narrower scope is preferred, `COLLATERAL_SUBTREES=()` in the block driver
+already expresses it.
+
 ## Generated verification IP (UVMF) — does renaming break it?
 
-Short answer: no, and the generator still works. But `src/` is a **derived
-tree** and has to be treated as one.
+Short answer: no, and the generator still works — but the generated tree is
+*not* a throwaway derived artifact, which is the part that is easy to get
+wrong.
 
 The UVMF benches under `src/ecc/uvmf_ecc/` and `src/hmac/uvmf_2022/` are machine
 generated. Two things live side by side there:
@@ -180,7 +218,7 @@ generated. Two things live side by side there:
 | | what it is | what the import does to it |
 |---|---|---|
 | `<BLOCK>_bench.yaml`, `<BLOCK>_environment.yaml`, `<BLOCK>_*_interface.yaml` | the generator **inputs** | nothing — all 10 are **byte-identical** to upstream |
-| `uvmf_template_output/` | the generator **output** | fully renamed: packages, interfaces, modules, file names, package directories, and every `.f` / `.vinfo` / `Makefile` / `compile.do` reference to them |
+| `uvmf_template_output/` | generated **and then hand-edited** (see below) | fully renamed: packages, interfaces, modules, file names, package directories, and every `.f` / `.vinfo` / `Makefile` / `compile.do` reference to them |
 
 **Why the inputs are untouched.** They describe UVM *components* — `top_env: ECC`,
 `bfm_name: ECC_in_agent`. Those become SystemVerilog **class** names, and classes
@@ -199,6 +237,55 @@ $ grep -rhoP '^\s*(module|package|interface|program)\s+\K\w+' src --include=*.sv
 0          # zero unprefixed global-namespace declarations, anywhere
 $ grep -rhoP '^\s*(virtual\s+)?class\s+\K\w+' src --include=*.sv --include=*.svh | sort -u | grep -cv '^arca_'
 71         # UVM classes keep upstream names — scoped by prefixed packages
+```
+
+**The generated tree is also hand-edited, so it is source.** UVMF emits
+`// pragma uvmf custom <name> begin` / `end` regions and *preserves their
+contents* across regeneration. They are where a human fills in what the YAML
+cannot describe — above all the DUT itself:
+
+```systemverilog
+// src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/tb/testbench/arca_hdl_top.sv
+  // pragma uvmf custom dut_instantiation begin
+  arca_ecc_top #( .AHB_DATA_WIDTH(64), .AHB_ADDR_WIDTH(15) ) dut ( ... );
+  arca_ecc_top_cov_bind i_ecc_top_cov_bind();
+  // pragma uvmf custom dut_instantiation end
+```
+
+76 files under `src/ecc/uvmf_ecc/` carry such regions (152 across the whole
+import). Three consequences, and they are the reason the scope is what it is:
+
+1. **It must be vendored.** Regenerating from the YAML alone does not produce a
+   working bench — it produces a bench with an empty `dut_instantiation`.
+2. **It must be renamed.** Those custom regions name `ecc_top`,
+   `ecc_top_cov_bind`, `ecc_defines_pkg` — all renamed. Carry them verbatim and
+   the bench does not bind to the RTL we actually vendored.
+3. **Renaming the YAML roots would not help.** The tempting alternative is to
+   rename `"ECC_in"` → `"arca_ECC_in"` in the inputs so the generator emits
+   prefixed names natively and the post-hoc pass disappears. It doesn't
+   disappear: the hand-written custom regions still contain unprefixed RTL
+   identifiers, which no generator will fix. That option adds a second naming
+   scheme and removes nothing.
+
+**Byte-identity of the inputs is checked, not assumed.** The round-trip check
+structurally *cannot* police this: it strips the prefix before comparing, so a
+`.yaml` wrongly renamed to `arca_ECC_in` strips straight back to `ECC_in` and
+passes — while the next regeneration would silently emit names disagreeing with
+what is committed. Each block driver therefore declares its generator inputs:
+
+```bash
+# tools/scripts/rename/rename_ecc.sh
+GENERATOR_INPUTS=(
+    "src/ecc/uvmf_ecc/ECC_bench.yaml"
+    ...
+)
+```
+
+and they are compared to upstream with `cmp` — no prefix stripping — at import
+time and again in `roundtrip_check.sh`:
+
+```
+  ok    5 generator input(s) byte-identical to upstream
 ```
 
 **Package directories follow their package.** UVMF names a VIP directory after
@@ -220,7 +307,8 @@ the renamed tree. Instead:
 1. regenerate upstream (or in a scratch clone of caliptra-rtl),
 2. re-run `import_block.sh <block> --upstream <that tree>`.
 
-Nothing under `src/` is ever hand-edited; the `import is reproducible` CI job
+Hand edits to the custom regions belong upstream too, for the same reason.
+Nothing under `src/` is ever hand-edited *in ARCA*; the `import is reproducible` CI job
 re-runs the whole import from upstream and asserts a zero diff, which is what
 makes that rule enforceable rather than aspirational.
 
@@ -369,6 +457,7 @@ Current state of the two imported blocks, all enforced in CI
 | collateral tier | 191 files in 5 dirs (4 build artifacts skipped) | 193 files in 9 dirs |
 | structural verification (11 checks) | pass | pass |
 | round-trip vs upstream blobs | pass, 215 files | pass, 204 files |
+| generator inputs byte-identical | pass, 5 files | pass, 5 files |
 | re-import reproducibility | pass | pass |
 | `slang` elaboration (delivery tier) | 0 errors, 0 warnings | 0 errors, 0 warnings |
 

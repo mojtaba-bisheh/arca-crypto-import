@@ -6,7 +6,7 @@
 block: hmac
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-01T18:33:03Z"
+imported_at: "2026-10-02T13:50:13Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -24,8 +24,8 @@ upstream:
 
 importer:
   script: tools/scripts/rename/rename_hmac.sh
-  library_version: "1.4.0"
-  toolchain_fingerprint: "ec622b432c4a9c043ed24152fbae22a1890f1312d737675197a1abb25eb2c49c"
+  library_version: "1.5.0"
+  toolchain_fingerprint: "f8e9d5d9e5cf223d7d80c577259ffa078fe41dacd333db602009a917babaa8c7"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -48,6 +48,12 @@ policy:
     []
   environment_config_macros:
     - "CLP_CSR_HMAC_KEY_DWORDS@src/libs/rtl/caliptra_macros.svh"
+  generator_inputs:  # fed to a code generator, must stay byte-identical to upstream
+    - "src/hmac/uvmf_2022/HMAC_bench.yaml"
+    - "src/hmac/uvmf_2022/HMAC_environment.yaml"
+    - "src/hmac/uvmf_2022/HMAC_in_interface.yaml"
+    - "src/hmac/uvmf_2022/HMAC_out_interface.yaml"
+    - "src/hmac/uvmf_2022/HMAC_util_comp_HMAC_predictor.yaml"
   keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed
     - "kv_defines_pkg"
     - "kv_read_t"

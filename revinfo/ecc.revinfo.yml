@@ -6,7 +6,7 @@
 block: ecc
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-01T18:30:27Z"
+imported_at: "2026-10-02T13:49:43Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -22,8 +22,8 @@ upstream:
 
 importer:
   script: tools/scripts/rename/rename_ecc.sh
-  library_version: "1.4.0"
-  toolchain_fingerprint: "36dbfeb0ddb7831abcc5f3d196f0f900ab6abc8fe6afd937db2012bcc94e4422"
+  library_version: "1.5.0"
+  toolchain_fingerprint: "34c2f380d41d1ce9ded8dcffbbcbe828e4f9b959d36d5db65ba3b6144448de1e"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -46,6 +46,12 @@ policy:
     - "module:hmac_drbg"
   environment_config_macros:
     []
+  generator_inputs:  # fed to a code generator, must stay byte-identical to upstream
+    - "src/ecc/uvmf_ecc/ECC_bench.yaml"
+    - "src/ecc/uvmf_ecc/ECC_environment.yaml"
+    - "src/ecc/uvmf_ecc/ECC_in_interface.yaml"
+    - "src/ecc/uvmf_ecc/ECC_out_interface.yaml"
+    - "src/ecc/uvmf_ecc/ECC_util_comp_ECC_predictor.yaml"
   keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed
     - "kv_defines_pkg"
     - "kv_read_t"

@@ -171,6 +171,31 @@ renamed HDL namespace object*. `ECC_in_pkg.vinfo` tracks the identity of
 language, so it keeps its upstream name. Roughly 186 files sit in that second
 category by design.
 
+### 4.2a Rename scope: why not stop at `rtl/`
+
+The set of directories the rename touches is derived, not enumerated. The rule
+is:
+
+> rename anything that **names** a renamed thing.
+
+`rtl/` declares the renamed identifiers; `coverage/`, `tb/`, `formal/` and the
+UVMF template output all reference them (`ecc_top`, `ecc_top_cov_bind`,
+`ecc_defines_pkg`), so all of them are renamed. The UVMF `.yaml` generator
+inputs name UVM *classes* only, which are deliberately not in the rename map
+(§4.3), so they are untouched. The YAML is therefore not an exception to the
+rule — it is an instance of it, and that is precisely why regeneration still
+works.
+
+The narrower scope — rename `rtl/` + `coverage/` and vendor the rest verbatim —
+is self-consistent and is expressible today as `COLLATERAL_SUBTREES=()` in the
+block driver. It was rejected because the unrenamed benches then bind to
+`ecc_top`, which does not exist in ARCA, so no verification collateral could be
+run against the vendored RTL. The cost of the wider scope is a larger renamed
+surface; the cost of the narrower one is that verification cannot follow the
+block.
+
+---
+
 ### 4.3 Generated verification IP (UVMF)
 
 UVM **class** names are never renamed. A class is scoped by the package that
@@ -187,9 +212,35 @@ upstream. Regeneration is unaffected.
 
 It must be run upstream, though, not inside ARCA: those inputs are
 upstream-named, so running the generator in the renamed tree emits
-`interface_packages/ECC_in_pkg/` beside `arca_ECC_in_pkg/`. `src/` is a derived
-artifact — regenerate upstream, then re-run the import. The `reimport` CI job
-makes that enforceable by re-deriving `src/` and demanding a zero diff.
+`interface_packages/ECC_in_pkg/` beside `arca_ECC_in_pkg/`. Regenerate
+upstream, then re-run the import. The `reimport` CI job makes that enforceable
+by re-deriving `src/` and demanding a zero diff.
+
+`uvmf_template_output/` is nonetheless **not** a pure derived artifact, and
+treating it as one would be the mistake here. UVMF emits
+`// pragma uvmf custom <name> begin` / `end` regions and preserves their
+contents across regeneration; 76 files under `src/ecc/uvmf_ecc/` carry them (152
+across the import), and the DUT instantiation itself lives in one
+(`dut_instantiation` in `arca_hdl_top.sv`). It is generated-*then-hand-edited*
+source. Hence: it must be vendored (regeneration alone yields an empty DUT
+region), and it must be renamed (those hand-written regions name renamed RTL
+identifiers).
+
+This also disposes of the obvious alternative — renaming the YAML name roots so
+the generator emits prefixed names natively and the post-hoc rename pass becomes
+unnecessary. It does not become unnecessary: the custom regions still carry
+unprefixed RTL identifiers that no generator rewrites. The option would
+introduce a second naming scheme and eliminate nothing.
+
+Because the inputs are held to a *stronger* contract than the rest of the import
+— byte-identical, not naming-equivalent — they get their own check. The
+round-trip cannot supply it: it strips the prefix before comparing, so a `.yaml`
+wrongly renamed to `arca_ECC_in` strips back to `ECC_in` and passes, while the
+next regeneration diverges from what is committed. Each driver declares a
+`GENERATOR_INPUTS` list; `rc_check_generator_inputs` `cmp`s each entry against
+upstream at import time, the list is recorded under `policy.generator_inputs` in
+`revinfo`, and `roundtrip_check.sh` re-checks it against the pinned upstream
+blob with no prefix stripping.
 
 One asymmetry is forced rather than chosen. Because the identifier pass is a
 text pass, it rewrites a package name inside a *path* string in a `.f` list just
@@ -247,6 +298,11 @@ against the exact upstream blob at the recorded commit, over **both** tiers
 redirections (the deliberate env-macro capture) are tolerated. This proves the
 import is a **pure token substitution**: no logic edits, no dropped lines, no
 mangled string literals.
+
+It also enforces the one contract it cannot express by stripping: every path in
+`policy.generator_inputs` is `cmp`'d against the pinned upstream blob **without**
+prefix stripping (§4.3), because a wrongly-renamed generator input would strip
+back to the upstream text and pass the main loop silently.
 
 CI (`.github/workflows/checks.yml`) adds:
 
