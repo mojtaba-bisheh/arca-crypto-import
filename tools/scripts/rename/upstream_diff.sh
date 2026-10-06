@@ -11,6 +11,9 @@
 
 set -euo pipefail
 
+# shellcheck source=revinfo_lib.sh
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/revinfo_lib.sh"
+
 DEST="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 UPSTREAM=""
 BLOCK=""
@@ -37,14 +40,11 @@ blocks=()
 if [ -n "$BLOCK" ]; then
     blocks=("$BLOCK")
 else
-    for r in "$DEST"/revinfo/*.revinfo.yml; do
-        [ -e "$r" ] || continue
-        blocks+=("$(basename "$r" .revinfo.yml)")
-    done
+    while read -r b _; do blocks+=("$b"); done < <(ri_find "$DEST")
 fi
 
 for b in "${blocks[@]}"; do
-    revinfo="$DEST/revinfo/$b.revinfo.yml"
+    revinfo="$(ri_path "$DEST" "$b" || true)"
     sha="$(sed -nE 's/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/\1/p' "$revinfo" | head -1)"
     # subtrees are recorded as: - { upstream: "src/ecc/rtl", arca: "src/ecc/rtl" }
     # The changelog is an *upstream* question, so pull the upstream side only.

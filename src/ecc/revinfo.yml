@@ -6,7 +6,7 @@
 block: ecc
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T13:41:43Z"
+imported_at: "2026-10-06T14:03:49Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -23,7 +23,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_ecc.sh
   library_version: "2.0.0"
-  toolchain_fingerprint: "f190d0e955e8179fc65500b95de4dd1966dc2cb5284c9d9aaec55f14f9b3ecda"
+  toolchain_fingerprint: "152bbb765c2a94e01b37f6ab2e01406a68ee61722022c396a21508b9007eab72"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -74,7 +74,7 @@ artifacts:
     - src/ecc/stimulus
     - src/ecc/uvmf_ecc
   filelist: src/ecc/config/arca_ecc_top.vf
-  rename_map: revinfo/ecc.map
+  rename_map: src/ecc/revinfo.map
 
 source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "6993fa19662fbf06f951d3799c11c7c846b1901d12dc10bb136253996678a87b", path: "src/ecc/rtl/ecc_adder.sv" }

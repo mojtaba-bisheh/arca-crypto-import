@@ -13,6 +13,9 @@
 
 set -euo pipefail
 
+# shellcheck source=revinfo_lib.sh
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/revinfo_lib.sh"
+
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 RENAME_DIR="$REPO_ROOT/tools/scripts/rename"
 UPSTREAM_REPO="${ARCA_UPSTREAM_REPO:-https://github.com/chipsalliance/caliptra-rtl.git}"
@@ -100,12 +103,13 @@ if [ "$DO_COMMIT" -eq 1 ]; then
         # Each block mirrors its own slice of the caliptra-rtl hierarchy, so the
         # paths to stage are read back out of the generated revinfo file rather
         # than assumed.
-        rev="$REPO_ROOT/revinfo/$b.revinfo.yml"
+        rev="$(ri_path "$REPO_ROOT" "$b")"
+        bdir="${rev%/*}"; bdir="${bdir#$REPO_ROOT/}"
         mapfile -t dirs < <(sed -nE '/^[[:space:]]*source_dirs:/,/^[[:space:]]*(collateral_dirs|filelist):/ s@^[[:space:]]*-[[:space:]]*(src/.*)$@\1@p' "$rev")
         mapfile -t cdirs < <(sed -nE '/^[[:space:]]*collateral_dirs:/,/^[[:space:]]*filelist:/ s@^[[:space:]]*-[[:space:]]*(src/.*)$@\1@p' "$rev")
         [ "${#cdirs[@]}" -eq 0 ] || dirs+=("${cdirs[@]}")
         fl="$(sed -nE 's/^[[:space:]]*filelist:[[:space:]]*(.*)$/\1/p' "$rev" | head -1)"
-        paths+=("${dirs[@]}" "$fl" "revinfo/$b.revinfo.yml" "revinfo/$b.map")
+        paths+=("${dirs[@]}" "$fl" "$bdir/revinfo.yml" "$bdir/revinfo.map")
     done
     git -C "$REPO_ROOT" add -- "${paths[@]}"
     if git -C "$REPO_ROOT" diff --cached --quiet; then
@@ -114,7 +118,7 @@ if [ "$DO_COMMIT" -eq 1 ]; then
         git -C "$REPO_ROOT" commit -m "Import $(printf '%s ' "${BLOCKS[@]}")from caliptra-rtl@${sha}
 
 Vendored with prefix '${PREFIX}' via tools/scripts/rename/.
-Provenance recorded in revinfo/*.revinfo.yml."
+Provenance recorded in src/<block>/revinfo.yml."
         echo "committed."
     fi
 fi

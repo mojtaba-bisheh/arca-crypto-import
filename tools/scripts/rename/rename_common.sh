@@ -231,7 +231,9 @@ rc_init() {
         esac
     done
 
-    OUT_REVINFO="$DEST/revinfo"
+    # Provenance lives *inside* the block it describes, so copying src/ecc/
+    # anywhere carries the record of where it came from with it.
+    OUT_REVINFO="$DEST/$BLOCK_DIR"
     WORK="$(mktemp -d "${TMPDIR:-/tmp}/arca-import-$BLOCK-XXXXXX")"
     STAGE="$WORK/stage"
     MAP="$WORK/map.tsv"
@@ -831,9 +833,9 @@ rc_install() {
         INSTALLED_FILES+=("${f#./}")
     done < <(cd "$STAGE" && find . -type f | sed 's|^\./||' | sort)
 
-    grep -vE '^\s*#' "$MAP" > "$OUT_REVINFO/$BLOCK.map" || true
-    sed -i "1i # ARCA identifier rename map for block '$BLOCK' (prefix: $PREFIX)" "$OUT_REVINFO/$BLOCK.map"
-    rc_log "installed -> $(printf '%s ' "${DEST_SUBTREES[@]}")and revinfo/$BLOCK.map"
+    grep -vE '^\s*#' "$MAP" > "$OUT_REVINFO/revinfo.map" || true
+    sed -i "1i # ARCA identifier rename map for block '$BLOCK' (prefix: $PREFIX)" "$OUT_REVINFO/revinfo.map"
+    rc_log "installed -> $(printf '%s ' "${DEST_SUBTREES[@]}")and $BLOCK_DIR/revinfo.map"
 }
 
 # ---------------------------------------------------------------------------
@@ -843,7 +845,7 @@ rc_install() {
 # changelog when pulling updates, and to reproduce the import exactly.
 # ---------------------------------------------------------------------------
 rc_emit_revinfo() {
-    local out="$OUT_REVINFO/$BLOCK.revinfo.yml"
+    local out="$OUT_REVINFO/revinfo.yml"
     local f tok script_sha
     script_sha="$(sha256sum "$0" "$RC_LIB_DIR/rename_common.sh" "$RC_LIB_DIR/lib/apply_map.pl" \
                   | sha256sum | cut -d' ' -f1)"
@@ -928,7 +930,7 @@ rc_emit_revinfo() {
             printf '  collateral_dirs: []\n'
         fi
         printf '  filelist: %s\n' "$FILELIST"
-        printf '  rename_map: revinfo/%s.map\n' "$BLOCK"
+        printf '  rename_map: %s/revinfo.map\n' "$BLOCK_DIR"
         printf '\n'
         printf 'source_manifest:  # sha256 of the upstream files as imported\n'
         while IFS= read -r tok; do
@@ -941,7 +943,7 @@ rc_emit_revinfo() {
                    "$(sha256sum "$DEST/$f" | cut -d' ' -f1)" "$f"
         done
     } > "$out"
-    rc_log "wrote revinfo/$BLOCK.revinfo.yml"
+    rc_log "wrote $BLOCK_DIR/revinfo.yml"
 }
 
 # ---------------------------------------------------------------------------

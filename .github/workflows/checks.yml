@@ -36,15 +36,19 @@ jobs:
       - name: Re-run the import at the recorded commit and diff
         run: |
           set -e
-          for r in revinfo/*.revinfo.yml; do
-            b=$(basename "$r" .revinfo.yml)
+          for r in src/*/revinfo.yml; do
+            b=$(sed -nE 's/^block:[[:space:]]*(.+)$/\1/p' "$r" | head -1)
             sha=$(sed -nE 's/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/\1/p' "$r" | head -1)
             git -C .upstream-cache/caliptra-rtl checkout --quiet --detach "$sha"
             ./tools/scripts/rename/rename_$b.sh --upstream .upstream-cache/caliptra-rtl --dest .
           done
-          # Only the "imported_at" timestamp is allowed to move.
-          git diff --stat -- src/ | tee /tmp/rtl.diff
-          test ! -s /tmp/rtl.diff || { echo "re-import produced different RTL"; git diff -- src/; exit 1; }
+          # Everything but the provenance records must be bit-identical.
+          git diff --stat -- src/ ':(exclude)src/*/revinfo.yml' | tee /tmp/rtl.diff
+          test ! -s /tmp/rtl.diff || { echo "re-import produced different RTL"; git diff -- src/ ':(exclude)src/*/revinfo.yml'; exit 1; }
+          # revinfo.yml may differ only in the imported_at timestamp.
+          git diff -U0 -- src/*/revinfo.yml \
+            | grep -E '^[+-][^+-]' | grep -vE '^[+-]imported_at:' > /tmp/rev.diff || true
+          test ! -s /tmp/rev.diff || { echo "revinfo changed beyond imported_at:"; cat /tmp/rev.diff; exit 1; }
 
   lint:
     name: SystemVerilog elaboration

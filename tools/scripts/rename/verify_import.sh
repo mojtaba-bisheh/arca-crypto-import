@@ -13,6 +13,9 @@
 
 set -euo pipefail
 
+# shellcheck source=revinfo_lib.sh
+. "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/revinfo_lib.sh"
+
 DEST=""
 BLOCK=""
 PREFIX=""
@@ -48,14 +51,15 @@ ok()   { printf '  ok    %s\n' "$*"; }
 
 verify_block() {
     local block="$1"
-    local revinfo="$DEST/revinfo/$block.revinfo.yml"
-    local map="$DEST/revinfo/$block.map"
+    local revinfo map
+    revinfo="$(ri_path "$DEST" "$block" || true)"
+    map="${revinfo%/*}/revinfo.map"
     local prefix="$PREFIX" macro_prefix filelist
 
     printf '\n== %s ==\n' "$block"
 
-    [ -f "$revinfo" ]  || { fail "revinfo/$block.revinfo.yml missing"; return; }
-    [ -f "$map" ]      || { fail "revinfo/$block.map missing"; return; }
+    [ -n "$revinfo" ] && [ -f "$revinfo" ] || { fail "no revinfo.yml found for block '$block'"; return; }
+    [ -f "$map" ]      || { fail "${map#$DEST/} missing"; return; }
 
     if [ -z "$prefix" ]; then
         prefix="$(sed -nE 's/^prefix:[[:space:]]*"(.*)"$/\1/p' "$revinfo" | head -1)"
@@ -345,13 +349,11 @@ if [ -n "$BLOCK" ]; then
     verify_block "$BLOCK"
 else
     found=0
-    for r in "$DEST"/revinfo/*.revinfo.yml; do
-        [ -e "$r" ] || continue
+    while read -r b r; do
         found=1
-        b="$(basename "$r" .revinfo.yml)"
         verify_block "$b"
-    done
-    [ "$found" -eq 1 ] || { echo "no imported blocks found under $DEST/revinfo" >&2; exit 1; }
+    done < <(ri_find "$DEST")
+    [ "$found" -eq 1 ] || { echo "no imported blocks found under $DEST/src" >&2; exit 1; }
 fi
 
 printf '\n'
