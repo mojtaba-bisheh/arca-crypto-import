@@ -847,7 +847,12 @@ rc_install() {
 rc_emit_revinfo() {
     local out="$OUT_REVINFO/revinfo.yml"
     local f tok script_sha
-    script_sha="$(sha256sum "$0" "$RC_LIB_DIR/rename_common.sh" "$RC_LIB_DIR/lib/apply_map.pl" \
+    # Hash the *contents* only. sha256sum prints the path next to each digest,
+    # so feeding its output back in would make the fingerprint depend on how the
+    # script was invoked ("./tools/.../rename_ecc.sh" vs an absolute path from
+    # import_block.sh) rather than on the toolchain, and a re-import would not
+    # reproduce.
+    script_sha="$(cat "$0" "$RC_LIB_DIR/rename_common.sh" "$RC_LIB_DIR/lib/apply_map.pl" \
                   | sha256sum | cut -d' ' -f1)"
 
     {
