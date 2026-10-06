@@ -6,7 +6,7 @@
 block: ecc
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T15:02:16Z"
+imported_at: "2026-10-06T15:22:04Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -18,12 +18,17 @@ upstream:
   subtrees:  # upstream path -> ARCA path
     - { upstream: "src/ecc/rtl", arca: "src/ecc/rtl" }
     - { upstream: "src/ecc/coverage", arca: "src/ecc/coverage" }
+  collateral_subtrees:  # upstream path -> ARCA path
+    - { upstream: "src/ecc/tb", arca: "src/ecc/tb" }
+    - { upstream: "src/ecc/coverage/config", arca: "src/ecc/coverage/config" }
+    - { upstream: "src/ecc/stimulus", arca: "src/ecc/stimulus" }
+    - { upstream: "src/ecc/uvmf_ecc", arca: "src/ecc/uvmf_ecc" }
   compile_order_from: src/ecc/config/ecc_top.vf
 
 importer:
   script: tools/scripts/rename/rename_ecc.sh
   library_version: "2.0.2"
-  toolchain_fingerprint: "495f68794fe6cffb1376e8618f421007739cca8825e229086739607fb6007a68"
+  toolchain_fingerprint: "9148e76f663e832708cae7bf6bb9031a1c66d149d2f9a3311ce38eeac8e22bfc"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 

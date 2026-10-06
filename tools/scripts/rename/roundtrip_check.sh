@@ -56,6 +56,35 @@ for b in "${blocks[@]}"; do
     git -C "$UPSTREAM" cat-file -e "$sha^{commit}" 2>/dev/null || {
         echo "upstream checkout does not contain $sha (fetch it first)" >&2; rc=1; continue; }
 
+    # A block may vendor from more than one repository. ABR takes its coverage
+    # bind from caliptra-rtl and all 153 RTL files from the adams-bridge
+    # submodule, which has its own history -- so "what did this look like
+    # upstream" has to be asked of the right repo at the right sha.
+    sub_paths=(); sub_shas=()
+    while IFS='|' read -r sp ssha; do
+        [ -n "${ssha:-}" ] || continue
+        sub_paths+=("$sp"); sub_shas+=("$ssha")
+        git -C "$UPSTREAM/$sp" cat-file -e "$ssha^{commit}" 2>/dev/null || {
+            echo "submodule $sp does not contain $ssha (git submodule update --init?)" >&2
+            rc=1; }
+    done < <(sed -nE '/^  submodules:/,/^  subtrees:/{
+                 s/^[[:space:]]*-[[:space:]]*path:[[:space:]]*"([^"]+)".*/P \1/p
+                 s/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/C \1/p
+             }' "$revinfo" | paste -d'|' - - | sed -E 's/^P ([^|]*)\|C (.*)$/\1|\2/')
+
+    # repo + sha to ask about an upstream path
+    upstream_repo_for() {
+        local up="$1" i
+        for i in "${!sub_paths[@]}"; do
+            case "$up" in "${sub_paths[$i]}"/*)
+                printf '%s\t%s\t%s\n' "$UPSTREAM/${sub_paths[$i]}" "${sub_shas[$i]}" \
+                       "${up#"${sub_paths[$i]}"/}"
+                return 0 ;;
+            esac
+        done
+        printf '%s\t%s\t%s\n' "$UPSTREAM" "$sha" "$up"
+    }
+
     printf '\n== %s (upstream %s, prefix %s) ==\n' "$b" "${sha:0:12}" "$prefix"
 
     # upstream subtree -> ARCA subtree, as recorded at import time
@@ -64,6 +93,27 @@ for b in "${blocks[@]}"; do
         [ -n "${ar:-}" ] || continue
         dirmap["$up"]="$ar"
     done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*\{[[:space:]]*upstream:[[:space:]]*"([^"]+)",[[:space:]]*arca:[[:space:]]*"([^"]+)".*/\1|\2/p' "$revinfo")
+
+    # dirmap keys whole directories, which is enough for the delivery tier
+    # (staged one level deep) but not for collateral, which is recursive. Keep
+    # the roots separately and resolve by longest matching prefix.
+    roots_up=(); roots_arca=()
+    for up in "${!dirmap[@]}"; do
+        roots_up+=("$up"); roots_arca+=("${dirmap[$up]}")
+    done
+    remap_path() {
+        local up="$1" i best=-1 blen=0
+        for i in "${!roots_up[@]}"; do
+            case "$up" in "${roots_up[$i]}"/*)
+                [ "${#roots_up[$i]}" -gt "$blen" ] && { blen="${#roots_up[$i]}"; best="$i"; } ;;
+            esac
+        done
+        if [ "$best" -ge 0 ]; then
+            printf '%s%s\n' "${roots_arca[$best]}" "${up#"${roots_up[$best]}"}"
+        else
+            printf '%s\n' "$up"
+        fi
+    }
 
     # Resolving upstream path -> ARCA path: both file names *and* directory
     # names may carry the prefix (UVMF names a directory after the package it
@@ -82,12 +132,17 @@ for b in "${blocks[@]}"; do
         base="$(basename "$upath")"
         updir="$(dirname "$upath")"
 
+        # Where upstream put it is not where ARCA puts it, for any block that
+        # relocates a subtree. Translate first, then look the result up.
+        mapped="$(remap_path "$upath")"
         renamed=""
-        if [ -n "${pathmap[$upath]:-}" ]; then
-            renamed="$DEST/${pathmap[$upath]}"
+        if [ -n "${pathmap[$mapped]:-}" ]; then
+            renamed="$DEST/${pathmap[$mapped]}"
+        elif [ -f "$DEST/$(dirname "$mapped")/${prefix}${base}" ]; then
+            renamed="$DEST/$(dirname "$mapped")/${prefix}${base}"
+        elif [ -f "$DEST/$mapped" ]; then
+            renamed="$DEST/$mapped"
         else
-            # delivery subtrees may be relocated (DEST_SUBTREES), in which case
-            # the stripped path does not equal the upstream path
             arcadir="${dirmap[$updir]:-}"
             [ -n "$arcadir" ] && renamed="$DEST/$arcadir/${prefix}${base}"
         fi
@@ -95,7 +150,8 @@ for b in "${blocks[@]}"; do
 
         if ! grep -Iq . "$renamed" 2>/dev/null; then
             # binary collateral: must be carried through byte-for-byte
-            if git -C "$UPSTREAM" show "$sha:$upath" | cmp -s - "$renamed"; then
+            IFS=$'\t' read -r urepo usha urel < <(upstream_repo_for "$upath")
+            if git -C "$urepo" show "$usha:$urel" | cmp -s - "$renamed"; then
                 binchecked=$((binchecked + 1))
             else
                 printf '  FAIL  %s binary content changed\n' "$upath"
@@ -104,8 +160,9 @@ for b in "${blocks[@]}"; do
             continue
         fi
 
+        IFS=$'\t' read -r urepo usha urel < <(upstream_repo_for "$upath")
         if diffout="$(diff <(sed "s/${prefix}//g; s/${macro_prefix}//g" "$renamed") \
-                          <(git -C "$UPSTREAM" show "$sha:$upath"))"; then
+                          <(git -C "$urepo" show "$usha:$urel"))"; then
             checked=$((checked + 1))
             continue
         fi
@@ -119,7 +176,7 @@ for b in "${blocks[@]}"; do
             printf '%s\n' "$diffout" | sed 's/^/        /'
             rc=1
         fi
-    done < <(sed -nE '/^source_manifest:/,/^renamed_manifest:/ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"(src\/[^"]+)".*/\1 \2/p' "$revinfo")
+    done < <(sed -nE '/^source_manifest:/,/^renamed_manifest:/ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
 
     # Code-generator inputs are held to a *stronger* contract than everything
     # else: byte-identical, not merely naming-equivalent. The loop above strips

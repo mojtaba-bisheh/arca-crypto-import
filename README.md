@@ -5,9 +5,10 @@ Worked example of vendoring Caliptra crypto engines from
 into ARCA under an `arca_` namespace, modelled on VeeR-EL2's
 `tools/prefix_macros.sh`.
 
-Two blocks are imported for real — **ECC** and **HMAC** (which carries
-`hmac_drbg` with it) — so the flow is exercised against actual edge cases
-rather than described in the abstract.
+Eight blocks are imported for real — **ECC**, **HMAC** (which carries
+`hmac_drbg` with it), **SHA3**, **SHA512**, **SHA512_MASKED**, **SHA256**,
+**AES** and **ABR** (Adams Bridge, ML-DSA/ML-KEM) — so the flow is exercised
+against actual edge cases rather than described in the abstract.
 
 This repo exists to agree on the methodology. It is not a product deliverable.
 
@@ -43,11 +44,16 @@ src/ecc/              mirrors caliptra-rtl's src/ecc/
   revinfo.map         identifier rename map
 
 src/hmac/  src/hmac_drbg/    same shape; one import owns both
+src/sha3/  src/aes/          no collateral upstream: rtl/ only
+src/sha512/ src/sha512_masked/ src/sha256/
+src/abr/              25 unit folders, each with its own rtl/
+  <unit>/rtl/ <unit>/tb/ ...
 
 tools/scripts/rename/
   rename_common.sh    shared engine
   rename_ecc.sh       per-block driver: subtrees, filelist, quirks
-  rename_hmac.sh
+  rename_hmac.sh      ... one per block, eight in total
+  rename_abr.sh       two-repo provenance (caliptra-rtl + adams-bridge)
   import_block.sh     runs a driver, then verifies
   verify_import.sh    13 structural checks
   roundtrip_check.sh  strips the prefix, diffs against the upstream blobs
@@ -57,6 +63,26 @@ tools/scripts/rename/
 
 `revinfo` lives **inside** the block it describes, so copying `src/ecc/`
 anywhere carries the record of where it came from.
+
+## ABR: a block with two upstreams
+
+In caliptra-rtl `src/abr/` holds four files; the ~160 RTL sources live in the
+`submodules/adams-bridge` submodule, spread over 25 units that each have their
+own `rtl/`. ARCA keeps ABR as a normal block under `src/abr/`, so the import
+reads from two repositories at two commits and `revinfo.yml` records both:
+
+```yaml
+upstream: { repo: ..., commit: 9d6585080a35..., branch: main }
+submodules:
+  - { path: "submodules/adams-bridge", commit: 2f15ffb1a2e9..., ... }
+```
+
+`roundtrip_check.sh` resolves each file against whichever repo it came from, so
+the guarantee is the same as for every other block.
+
+The 25 unit directories are **not** collapsed into one `src/abr/rtl/`: the
+per-unit `+incdir+` set is load-bearing — sources `` `include `` across unit
+boundaries by bare filename, so flattening would change which file wins.
 
 ## Rename scope: synthesized design material only
 
@@ -167,6 +193,10 @@ What the importer does instead is *consume* one file -- `config/ecc_top.vf`,
 single filelist (`config/arca_ecc_top.vf`) listing the vendored sources in that
 order under their new names. So `config/` in ARCA is generated output, not a copy.
 
+**ABR's `config/`, `tools/` and `docs/`**, and the `lint/` and `data/` folders
+some OpenTitan-derived blocks carry, are skipped for the same reason: tool
+configuration that only resolves inside its originating repo.
+
 **`formal/`** is not imported. The formal properties are a caliptra-rtl
 verification asset rather than part of the deliverable, and ARCA has no formal
 flow to run them in; vendoring them would mean rebasing 42 files of bound
@@ -217,13 +247,23 @@ upstream branch is declared (`--branch`, default `main`) rather than read from
 the clone, which CI has in detached HEAD. `imported_at`, `bash` and `perl`
 describe the importing machine and are allowed to differ; nothing else is.
 
-| | ECC | HMAC (+ HMAC_DRBG) |
-|---|---|---|
-| delivery tier | 25 files | 12 files |
-| collateral tier | 165 files, 4 dirs | 172 files, 7 dirs |
-| byte-identical to upstream | 157 of 193 | 162 of 187 |
-| structural / round-trip / re-import | pass | pass |
-| `slang` elaboration | 0 errors, 0 warnings | 0 errors, 0 warnings |
+| block | delivery | collateral | byte-identical to upstream |
+|---|---|---|---|
+| `ecc` (+ `hmac_drbg` refs) | 26 files | 165 files, 4 dirs | 158 of 191 |
+| `hmac` (+ `hmac_drbg`) | 14 files | 172 files, 7 dirs | 164 of 186 |
+| `sha3` | 19 files | — | 0 of 19 |
+| `sha512` | 12 files | 160 files, 4 dirs | 154 of 172 |
+| `sha512_masked` | 3 files | 1 file, 1 dir | 0 of 4 |
+| `sha256` | 11 files | 10 files, 3 dirs | 7 of 21 |
+| `aes` | 45 files | — | 0 of 45 |
+| `abr` | 158 files | 433 files, 45 dirs | 380 of 591 |
+| **total** | **288** | **941** | **863 of 1229 (70%)** |
+
+Structural, round-trip, filelist and re-import checks pass for all eight;
+`slang` elaborates every delivery tier with 0 errors and 0 warnings.
+The delivery tier is where every file is renamed by construction, so a block
+with no collateral (`sha3`, `aes`) shows 0 byte-identical — that is the policy
+working, not a defect.
 
 ## Updating a block
 
@@ -259,3 +299,16 @@ special-casing the shared engine.
   of it is not solved here.
 * `src/ecc/coverage/config/*.cfg` name RTL hierarchy paths; they are renamed by
   the identifier pass but not semantically validated.
+* Generated `.vf` filelists resolve *cross-block* dependencies against
+  `${CALIPTRA_ROOT}` (unprefixed upstream), not against the ARCA copy. This
+  concealed a real defect once: ECC imported `hmac_param_pkg` unprefixed while
+  ARCA's HMAC declares `arca_hmac_param_pkg`, and nothing caught it until the
+  dependency matrix was written down by hand. Cross-block identifiers must be
+  listed in the dependant's `EXTRA_RENAME_IDENTS`:
+
+  ```
+  ecc           -> hmac           module:hmac_drbg, package:hmac_param_pkg
+  hmac          -> sha512_masked  module:sha512_masked_core
+  sha512_masked -> sha512         module:sha512_core, sha512_h/k_constants, sha512_w_mem
+  sha3, sha256, aes, abr          no cross-block dependencies
+  ```

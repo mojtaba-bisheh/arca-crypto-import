@@ -35,7 +35,7 @@ set -euo pipefail
 DEST="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 while [ $# -gt 0 ]; do
     case "$1" in
-        --dest) DEST="$2"; shift 2 ;;
+        --dest) DEST="$(cd "$2" && pwd)"; shift 2 ;;
         -h|--help) sed -n '2,32p' "$0"; exit 0 ;;
         *) echo "check_filelists.sh: unknown argument '$1'" >&2; exit 2 ;;
     esac
@@ -50,11 +50,12 @@ while IFS= read -r fl; do
     fldir="$(dirname "$fl")"
 
     # walk up to the uvmf_template_output root this filelist lives under
-    root="$fldir"
-    while [ "$root" != "/" ] && [ "$(basename "$root")" != "uvmf_template_output" ]; do
-        root="$(dirname "$root")"
+    root="$fldir" up=""
+    while [ "$root" != "/" ] && [ "$root" != "$up" ] \
+          && [ "$(basename "$root")" != "uvmf_template_output" ]; do
+        up="$root"; root="$(dirname "$root")"
     done
-    if [ "$root" = "/" ]; then
+    if [ "$(basename "$root")" != "uvmf_template_output" ]; then
         vip=""; proj=""
     else
         vip="$root/verification_ip"
@@ -66,9 +67,19 @@ while IFS= read -r fl; do
         # strip comments and compiler switches; keep bare paths only
         line="${line%%//*}"
         line="$(printf '%s' "$line" | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//')"
+        # a handful of vendored ".f" files are actually shell run scripts
+        # (QVIP ships qrun_32.f / qrun_64.f). They use backslash line
+        # continuations and mix switches, assignments and paths on one line.
+        line="${line%\\}"
+        line="$(printf '%s' "$line" | sed -E 's/[[:space:]]+$//')"
         [ -n "$line" ] || continue
         case "$line" in
             '+'*|'-'*|'#'*) continue ;;
+        esac
+        # a filelist entry is a single token; anything with whitespace left in
+        # it is a command line, not a path
+        case "$line" in
+            *[[:space:]]*) nskip=$((nskip + 1)); continue ;;
         esac
 
         # external dependencies we deliberately do not vendor

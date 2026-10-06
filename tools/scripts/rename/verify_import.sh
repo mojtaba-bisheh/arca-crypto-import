@@ -132,7 +132,7 @@ verify_block() {
             printf '  note  layout override: upstream %s -> arca %s\n' "$up" "$ar"
         fi
         case " ${dirs[*]} " in *" $ar "*) ;; *) fail "revinfo subtree '$ar' not in source_dirs"; bad=1 ;; esac
-    done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*\{[[:space:]]*upstream:[[:space:]]*"([^"]+)",[[:space:]]*arca:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
+    done < <(sed -nE '/^subtrees:/,/^[a-z_]+:/ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*upstream:[[:space:]]*"([^"]+)",[[:space:]]*arca:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
     [ "$bad" -eq 0 ] && ok "ARCA layout mirrors the caliptra-rtl hierarchy"
 
     # 2. every global-namespace declaration in synthesizable RTL carries the

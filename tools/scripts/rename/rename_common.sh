@@ -42,6 +42,11 @@
 #   ENV_HEADER_REPLACE    array of header basenames whose `include is redirected
 #                         to the generated block-private config header
 #   KEEP_IDENTS           array of identifiers that must NOT be prefixed
+#   SUBMODULE_PATHS       array of paths, relative to the upstream checkout,
+#                         whose RTL this block vendors but which are separate
+#                         git repositories. Each is recorded as its own
+#                         provenance entry: one caliptra-rtl commit is not
+#                         enough to describe where the sources came from.
 #   EXTRA_PATH_DIRS       array of directory names that appear as path
 #                         components of foreign paths (doc URLs, upstream-repo
 #                         references) and must keep their unprefixed spelling
@@ -172,7 +177,8 @@ rc_init() {
     rc_default_array EXCLUDE_GLOBS EXTRA_RENAME_IDENTS ENV_MACRO_SPECS \
                      ENV_HEADER_REPLACE KEEP_IDENTS DEST_SUBTREES \
                      COLLATERAL_SUBTREES ARTIFACT_GLOBS GENERATOR_INPUTS \
-                     SYNTH_SUBTREES EXTRA_PATH_DIRS
+                     SYNTH_SUBTREES EXTRA_PATH_DIRS SUBMODULE_PATHS \
+                     COLLATERAL_DEST_SUBTREES
     [ "${#ARTIFACT_GLOBS[@]}" -gt 0 ] || ARTIFACT_GLOBS=("${RC_DEFAULT_ARTIFACT_GLOBS[@]}")
     WITH_COLLATERAL=1
 
@@ -362,14 +368,20 @@ rc_stage_collateral() {
         return 0
     fi
 
-    local subtree src rel base skip glob n_txt=0 n_bin=0 n_art=0
-    for subtree in "${COLLATERAL_SUBTREES[@]}"; do
+    local subtree dst src rel base skip glob n_txt=0 n_bin=0 n_art=0 i
+    for i in "${!COLLATERAL_SUBTREES[@]}"; do
+        subtree="${COLLATERAL_SUBTREES[$i]}"
         [ -n "$subtree" ] || continue
-        rc_check_relpath "$subtree"
+        # Collateral normally lands at the same path it came from -- that is the
+        # whole point of mirroring caliptra-rtl's hierarchy. ABR is the exception:
+        # its sources come from a submodule, so the upstream path is not a legal
+        # ARCA path and the driver has to say where it goes.
+        dst="${COLLATERAL_DEST_SUBTREES[$i]:-$subtree}"
         [ -d "$UPSTREAM/$subtree" ] || rc_die "collateral subtree '$subtree' not found"
-        COLLATERAL_DIRS+=("$subtree")
+        rc_check_relpath "$dst"
+        COLLATERAL_DIRS+=("$dst")
         while IFS= read -r src; do
-            rel="$subtree/${src#$UPSTREAM/$subtree/}"
+            rel="$dst/${src#$UPSTREAM/$subtree/}"
             base="$(basename "$src")"
             skip=0
             for glob in "${ARTIFACT_GLOBS[@]}" "${EXCLUDE_GLOBS[@]}"; do
@@ -381,7 +393,11 @@ rc_stage_collateral() {
 
             mkdir -p "$STAGE/$(dirname "$rel")"
             cp "$src" "$STAGE/$rel"
-            printf '%s  %s\n' "$(sha256sum "$src" | cut -d' ' -f1)" "$rel" >> "$SRC_MANIFEST"
+            # The manifest is a record of what was *taken*, so it is keyed by
+            # the upstream path even when the file is installed elsewhere.
+            # roundtrip_check.sh maps it back through collateral_subtrees.
+            printf '%s  %s\n' "$(sha256sum "$src" | cut -d' ' -f1)" \
+                   "$subtree/${src#$UPSTREAM/$subtree/}" >> "$SRC_MANIFEST"
             # Text files take the identifier map; anything else is carried
             # through byte-for-byte (PDFs, reference diagrams, ...).
             if grep -Iq . "$src" 2>/dev/null; then
@@ -390,7 +406,11 @@ rc_stage_collateral() {
                 COLLATERAL_BINARIES+=("$rel"); n_bin=$((n_bin+1))
             fi
         done < <(find "$UPSTREAM/$subtree" -type f | sort)
-        rc_log "  collateral $subtree"
+        if [ "$dst" != "$subtree" ]; then
+            rc_log "  collateral $subtree -> $dst"
+        else
+            rc_log "  collateral $subtree"
+        fi
     done
     rc_log "staged $n_txt collateral text file(s), $n_bin binary, $n_art artifact(s) skipped"
 }
@@ -628,8 +648,14 @@ rc_rename_collateral_files() {
         # src/hmac_drbg/ are block directories that happen to share a name with
         # a module; renaming them would break the mirrored hierarchy, and the
         # directory name is already a separate knob (BLOCK_DIR/DEST_SUBTREES).
+        # $f is a *destination* path, so the roots to match against are the
+        # destination subtrees. For every block but ABR those are the upstream
+        # paths unchanged; for ABR they are not, and matching the upstream list
+        # found no root at all -- which made the whole path eligible, and renamed
+        # the adams-bridge unit directories (ntt_top/, decompose/, ...) after the
+        # modules they happen to share a name with.
         root=""
-        for st in "${COLLATERAL_SUBTREES[@]}"; do
+        for st in "${COLLATERAL_DIRS[@]}"; do
             case "$f" in "$st"/*) [ "${#st}" -gt "${#root}" ] && root="$st" ;; esac
         done
         newdir="$root"
@@ -907,12 +933,37 @@ rc_emit_revinfo() {
         printf '  commit_date: "%s"\n' "$UPSTREAM_DATE"
         printf '  commit_subject: "%s"\n' "$(printf '%s' "$UPSTREAM_DESC" | sed 's/"/\\"/g')"
         printf '  working_tree_dirty: %s\n' "$UPSTREAM_DIRTY"
+        if [ "${#SUBMODULE_PATHS[@]}" -gt 0 ]; then
+            printf '  submodules:  # vendored from a different repository than the one above\n'
+            local sp surl ssha sdate ssubj sdirty
+            for sp in "${SUBMODULE_PATHS[@]}"; do
+                surl="$(git -C "$UPSTREAM/$sp" config --get remote.origin.url 2>/dev/null || echo unknown)"
+                ssha="$(git -C "$UPSTREAM/$sp" rev-parse HEAD)"
+                sdate="$(git -C "$UPSTREAM/$sp" log -1 --format=%cI)"
+                ssubj="$(git -C "$UPSTREAM/$sp" log -1 --format=%s | sed 's/"/\\"/g')"
+                if [ -n "$(git -C "$UPSTREAM/$sp" status --porcelain)" ]; then sdirty=true; else sdirty=false; fi
+                printf '    - path: "%s"\n' "$sp"
+                printf '      repo: "%s"\n' "$surl"
+                printf '      commit: "%s"\n' "$ssha"
+                printf '      commit_date: "%s"\n' "$sdate"
+                printf '      commit_subject: "%s"\n' "$ssubj"
+                printf '      working_tree_dirty: %s\n' "$sdirty"
+            done
+        fi
         printf '  subtrees:  # upstream path -> ARCA path\n'
         local i
         for i in "${!UPSTREAM_SUBTREES[@]}"; do
             printf '    - { upstream: "%s", arca: "%s" }\n' \
                    "${UPSTREAM_SUBTREES[$i]}" "${DEST_SUBTREES[$i]}"
         done
+        if [ "${#COLLATERAL_SUBTREES[@]}" -gt 0 ]; then
+            printf '  collateral_subtrees:  # upstream path -> ARCA path\n'
+            for i in "${!COLLATERAL_SUBTREES[@]}"; do
+                [ -n "${COLLATERAL_SUBTREES[$i]}" ] || continue
+                printf '    - { upstream: "%s", arca: "%s" }\n' \
+                       "${COLLATERAL_SUBTREES[$i]}" "${COLLATERAL_DEST_SUBTREES[$i]:-${COLLATERAL_SUBTREES[$i]}}"
+            done
+        fi
         if [ -n "${VF_FILELIST:-}" ]; then
             printf '  compile_order_from: %s\n' "$VF_FILELIST"
         fi
