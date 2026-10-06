@@ -6,7 +6,7 @@
 block: ecc
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T14:20:12Z"
+imported_at: "2026-10-06T14:29:14Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -22,8 +22,8 @@ upstream:
 
 importer:
   script: tools/scripts/rename/rename_ecc.sh
-  library_version: "2.0.1"
-  toolchain_fingerprint: "8d113ed021097a2da22f63ee8323d1b6109f54a562bd8e6655b658a4ac5043e1"
+  library_version: "2.0.2"
+  toolchain_fingerprint: "08e0e4f1c1d9a576aea09215f5c00a5c039c74ab5f78f10200affec815b4b0a1"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 

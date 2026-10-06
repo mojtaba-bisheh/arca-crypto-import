@@ -88,7 +88,7 @@ set -euo pipefail
 # happened to run it.
 export LC_ALL=C
 
-RC_SCRIPT_VERSION="2.0.1"
+RC_SCRIPT_VERSION="2.0.2"
 
 rc_log()  { printf '[%s] %s\n' "${BLOCK:-rename}" "$*"; }
 rc_warn() { printf '[%s] WARNING: %s\n' "${BLOCK:-rename}" "$*" >&2; }
@@ -102,6 +102,8 @@ usage: $(basename "$0") --upstream <caliptra-rtl-checkout> [options]
   --dest      <dir>   ARCA repo root (default: repo root of this script)
   --prefix    <str>   identifier prefix, lowercase, trailing underscore
                       (default: \$ARCA_PREFIX or "arca_")
+  --branch    <name>  upstream branch this block tracks, recorded in revinfo
+                      so you know what to diff against later (default: main)
   --keep-work         do not delete the temporary staging directory
   --help              show this message
 EOF
@@ -180,6 +182,7 @@ rc_init() {
             --upstream) UPSTREAM="${2:?--upstream needs a value}"; shift 2 ;;
             --dest)     DEST="${2:?--dest needs a value}";         shift 2 ;;
             --prefix)   PREFIX="${2:?--prefix needs a value}";     shift 2 ;;
+            --branch)   UPSTREAM_BRANCH="${2:?--branch needs a value}"; shift 2 ;;
             --keep-work) KEEP_WORK=1; shift ;;
             --no-collateral) WITH_COLLATERAL=0; shift ;;
             --help|-h)  rc_usage; exit 0 ;;
@@ -258,7 +261,18 @@ rc_init() {
     UPSTREAM_SHA="$(git -C "$UPSTREAM" rev-parse HEAD)"
     UPSTREAM_DESC="$(git -C "$UPSTREAM" log -1 --format='%s' HEAD)"
     UPSTREAM_DATE="$(git -C "$UPSTREAM" log -1 --format='%cI' HEAD)"
-    UPSTREAM_BRANCH="$(git -C "$UPSTREAM" rev-parse --abbrev-ref HEAD)"
+    # The branch is declared, not observed. Its only job is to tell a future
+    # maintainer what to diff the pinned commit against ("what landed upstream
+    # since we imported"), which is a property of the tracking policy, not of
+    # whatever the local clone happens to have checked out. Observing it made
+    # the import unreproducible: a CI job checks the pinned sha out detached,
+    # so `rev-parse --abbrev-ref HEAD` returned "HEAD".
+    UPSTREAM_BRANCH="${UPSTREAM_BRANCH:-main}"
+    local on_branch
+    on_branch="$(git -C "$UPSTREAM" rev-parse --abbrev-ref HEAD)"
+    if [ "$on_branch" != "HEAD" ] && [ "$on_branch" != "$UPSTREAM_BRANCH" ]; then
+        rc_warn "upstream clone is on '$on_branch' but recording branch '$UPSTREAM_BRANCH'; pass --branch to change"
+    fi
     if [ -n "$(git -C "$UPSTREAM" status --porcelain -- $(printf '%s ' "${UPSTREAM_SUBTREES[@]}"))" ]; then
         UPSTREAM_DIRTY="true"
         rc_warn "upstream working tree is dirty for the imported subtrees"
