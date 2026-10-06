@@ -45,6 +45,5 @@ ${ARCA_ROOT}/src/aes/rtl/arca_aes.sv
 ${ARCA_ROOT}/src/aes/rtl/arca_aes_clp_reg.sv
 ${ARCA_ROOT}/src/aes/rtl/arca_aes_clp_wrapper.sv
 ${ARCA_ROOT}/src/aes/rtl/arca_aes_ghash_wrap.sv
-${ARCA_ROOT}/src/aes/rtl/arca_aes_rev_info
 ${ARCA_ROOT}/src/aes/coverage/aes_cov_bind.sv
 ${ARCA_ROOT}/src/aes/coverage/aes_cov_if.sv

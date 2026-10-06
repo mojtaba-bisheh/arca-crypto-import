@@ -1,6 +1,7 @@
 # arca-crypto-import
 
 Caliptra crypto engines vendored into ARCA, with a rename script per block.
+Run every command below from the repository root.
 
 ## Pulling the latest update from caliptra-rtl / adams-bridge
 

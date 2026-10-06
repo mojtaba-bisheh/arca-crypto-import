@@ -99,7 +99,9 @@ jobs:
             envsubst < "$vf" > /tmp/block.f
             slang --lint-only --single-unit \
               -I "$UP/keyvault/rtl" -I "$UP/libs/rtl" -I "$UP/caliptra_prim/rtl" \
+              -I "$UP/integration/rtl/caliptra_reg" -I "$UP/integration/rtl" \
               "$UP/libs/rtl/caliptra_sva.svh" \
+              "$UP/integration/rtl/caliptra_reg/caliptra_reg_field_defines.svh" \
               "$UP/keyvault/rtl/kv_defines_pkg.sv" \
               -f /tmp/block.f
           done

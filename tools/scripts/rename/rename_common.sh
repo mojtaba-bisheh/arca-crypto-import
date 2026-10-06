@@ -897,7 +897,12 @@ rc_emit_filelist() {
         ordered=("$ENV_HEADER" "${ordered[@]}")
     fi
 
+    # Anything staged but not named upstream is appended -- but only if it is
+    # actually a source. A block's rtl/ can hold non-HDL files (aes ships an
+    # `aes_rev_info` text file recording the OpenTitan commit it came from) and
+    # handing those to a parser is a syntax error.
     for f in "${STAGED_FILES[@]}"; do
+        case "$f" in *.sv|*.svh|*.v|*.vh) ;; *) continue ;; esac
         case " ${ordered[*]} " in *" $f "*) continue ;; esac
         ordered+=("$f")
     done

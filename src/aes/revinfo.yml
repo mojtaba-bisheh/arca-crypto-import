@@ -6,7 +6,7 @@
 block: aes
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T16:07:50Z"
+imported_at: "2026-10-06T16:20:09Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -23,7 +23,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_aes.sh
   library_version: "2.0.2"
-  toolchain_fingerprint: "92cbefb9ef4bb4151a89bebb07977488c1f0118d4c3b0c1a337b3064e09215f9"
+  toolchain_fingerprint: "e59c023a6a8233b9087815d85abebfd02071c5332fd729566374969a455f015a"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -115,7 +115,7 @@ source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "82bb6b4ce63f2e90e7f3577bcc11c8ac9d93708c9af777cb87df734865fdd197", path: "src/aes/coverage/aes_cov_if.sv" }
 
 renamed_manifest:  # sha256 of the committed, renamed files
-  - { sha256: "6ce7dc7cd5762539368f16a758ee34d2a0120287e76de76a039b2748395f1e65", path: "src/aes/config/arca_aes.vf" }
+  - { sha256: "070a22f9cb4613c94927db419d6cba746a24b3839a25e7b1ba6373a9a0eac22c", path: "src/aes/config/arca_aes.vf" }
   - { sha256: "086544f5bc2f15e4ed579640c0ba98f491a394dd00c631fcd2bcc333a4c26295", path: "src/aes/coverage/aes_cov_bind.sv" }
   - { sha256: "d0a952c5e59af4ccdea4784aae4d217d08fb6d9a673f7a7c13ba81b8a16dab24", path: "src/aes/coverage/aes_cov_if.sv" }
   - { sha256: "019280d0c59150f8135886979ce2706f99b9367dc542dd9f60fc89198f71ab43", path: "src/aes/rtl/arca_aes.sv" }
