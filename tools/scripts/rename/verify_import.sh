@@ -259,10 +259,36 @@ verify_block() {
             [ -f "$DEST/$line" ] || { fail "filelist entry not found: $line"; bad=1; }
             n=$((n + 1))
         done < <(grep -vE '^\s*(//|\+|$)' "$DEST/$filelist")
+
+        # Every synthesizable source has to be reachable from the filelist, but
+        # "reachable" means two different things. A .sv/.v is a compilation unit
+        # and must be listed outright, in compile order. A .svh/.vh is an
+        # include target: it is reached through a +incdir+ line, and listing it
+        # as a unit of its own is actively wrong for headers that only parse
+        # inside the tier that includes them (hmac256_reg_sample.svh is a UVM
+        # register-model fragment -- upstream keeps it out of the RTL compile
+        # order for exactly this reason). So headers are checked against the
+        # +incdir+ set instead, and check 7 above has already proved that every
+        # `include target resolves.
+        local incdirs=() hdrs=0 d
+        while IFS= read -r line; do
+            incdirs+=("${line#+incdir+\$\{ARCA_ROOT\}/}")
+        done < <(grep -E '^\+incdir\+' "$DEST/$filelist")
         for f in "${files[@]}"; do
-            grep -q "/$f\$" "$DEST/$filelist" || { fail "source not in filelist: $f"; bad=1; }
+            case "$f" in
+                *.svh|*.vh)
+                    d="$(dirname "$f")"
+                    case " ${incdirs[*]-} " in
+                        *" $d "*) hdrs=$((hdrs + 1)) ;;
+                        *) grep -q "/$f\$" "$DEST/$filelist" \
+                               || { fail "header neither listed nor on a +incdir+ path: $f"; bad=1; } ;;
+                    esac
+                    ;;
+                *)  grep -q "/$f\$" "$DEST/$filelist" \
+                        || { fail "source not in filelist: $f"; bad=1; } ;;
+            esac
         done
-        [ "$bad" -eq 0 ] && ok "filelist covers $n file(s), all resolve"
+        [ "$bad" -eq 0 ] && ok "filelist covers $n file(s) and $hdrs header(s) via +incdir+, all resolve"
     fi
 
     # 9. committed files still match the revinfo manifest (drift detection)

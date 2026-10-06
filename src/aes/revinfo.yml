@@ -6,7 +6,7 @@
 block: aes
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T20:04:37Z"
+imported_at: "2026-10-06T20:22:16Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -22,8 +22,8 @@ upstream:
 
 importer:
   script: tools/scripts/rename/rename_aes.sh
-  library_version: "2.1.0"
-  toolchain_fingerprint: "be03bda323bd036215e5190412f061946f8f137f8c3ac533868ba599bb87ed18"
+  library_version: "2.1.1"
+  toolchain_fingerprint: "e913b68d18b149e40a65ff1fa863abcf06345ba57f49d88925eaac82d43820bb"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 

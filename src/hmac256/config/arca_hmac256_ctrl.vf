@@ -9,7 +9,5 @@ ${ARCA_ROOT}/src/hmac256/rtl/arca_hmac256_ctrl.sv
 ${ARCA_ROOT}/src/hmac256/rtl/arca_hmac256.sv
 ${ARCA_ROOT}/src/hmac256/rtl/arca_hmac256_core.sv
 ${ARCA_ROOT}/src/hmac256/rtl/arca_hmac256_reg.sv
-${ARCA_ROOT}/src/hmac256/rtl/arca_hmac256_reg_covergroups.svh
-${ARCA_ROOT}/src/hmac256/rtl/arca_hmac256_reg_sample.svh
 ${ARCA_ROOT}/src/hmac256/coverage/hmac256_ctrl_cov_bind.sv
 ${ARCA_ROOT}/src/hmac256/coverage/hmac256_ctrl_cov_if.sv

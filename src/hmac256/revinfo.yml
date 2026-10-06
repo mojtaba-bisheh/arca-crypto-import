@@ -6,7 +6,7 @@
 block: hmac256
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T20:04:52Z"
+imported_at: "2026-10-06T20:22:30Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -27,8 +27,8 @@ upstream:
 
 importer:
   script: tools/scripts/rename/rename_hmac256.sh
-  library_version: "2.1.0"
-  toolchain_fingerprint: "771a5697780024d14fcff795f79e6640987945f34af42272c9715963ffa49acd"
+  library_version: "2.1.1"
+  toolchain_fingerprint: "acdcb10addcaa3cb3dbaa963d9c722470be4577fd949bb561985de4c260e7df7"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -224,7 +224,7 @@ source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "a23720904ddfc89eb85eee34e449be1fe79205628e279dfd9c62775b9f1ad669", path: "src/hmac256/uvmf_hmac256/uvmf_template_output/verification_ip/interface_packages/HMAC256_rst_pkg/yaml/HMAC256_rst_interface.yaml" }
 
 renamed_manifest:  # sha256 of the committed, renamed files
-  - { sha256: "db784304f89f0ba3b706a8a0033d266c6534976b507dcd623f26818ca6ab0580", path: "src/hmac256/config/arca_hmac256_ctrl.vf" }
+  - { sha256: "b55beaf2af8b53605db37f8d9c9730493e33b978b7c09fb78f36460819e4a35d", path: "src/hmac256/config/arca_hmac256_ctrl.vf" }
   - { sha256: "60db3b9d2102e06fdb26afae64468f762aa5aa2ad5362115d317bf8c0c1007ce", path: "src/hmac256/coverage/config/hmac256_cm_hier.cfg" }
   - { sha256: "4a48be7a99d8104155b8b840c9689b58256db9d62a0d38a2a867aeed48a81482", path: "src/hmac256/coverage/hmac256_ctrl_cov_bind.sv" }
   - { sha256: "96832d9e413fdca5571343060067bcce83445478982f31159ba54462e1ea9cdc", path: "src/hmac256/coverage/hmac256_ctrl_cov_if.sv" }

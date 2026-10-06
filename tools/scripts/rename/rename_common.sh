@@ -97,7 +97,7 @@ set -euo pipefail
 # happened to run it.
 export LC_ALL=C
 
-RC_SCRIPT_VERSION="2.1.0"
+RC_SCRIPT_VERSION="2.1.1"
 
 # ---------------------------------------------------------------------------
 # Stem policy -- a second, repo-wide knob layered on top of the prefix.
@@ -1011,11 +1011,21 @@ rc_emit_filelist() {
     fi
 
     # Anything staged but not named upstream is appended -- but only if it is
-    # actually a source. A block's rtl/ can hold non-HDL files (aes ships an
-    # `aes_rev_info` text file recording the OpenTitan commit it came from) and
-    # handing those to a parser is a syntax error.
+    # actually a compilation unit. Two kinds of staged file are not:
+    #
+    #   * non-HDL. A block's rtl/ can hold plain data (aes ships an
+    #     `aes_rev_info` text file recording the OpenTitan commit it came from)
+    #     and handing that to a parser is a syntax error.
+    #   * headers. A .svh/.vh is an include target, reached through the
+    #     +incdir+ lines above, not a file to compile on its own. Upstream's
+    #     filelist is the authority on which ones are an exception -- hmac256
+    #     ships hmac256_reg_sample.svh, a UVM register-model fragment whose
+    #     class bodies only resolve inside the UVM tier, and upstream
+    #     deliberately leaves it out of the RTL compile order. If we append it
+    #     anyway the block no longer elaborates. ENV_HEADER is the one header
+    #     we add ourselves, and it is prepended above rather than appended.
     for f in "${STAGED_FILES[@]}"; do
-        case "$f" in *.sv|*.svh|*.v|*.vh) ;; *) continue ;; esac
+        case "$f" in *.sv|*.v) ;; *) continue ;; esac
         case " ${ordered[*]} " in *" $f "*) continue ;; esac
         ordered+=("$f")
     done

@@ -6,7 +6,7 @@
 block: abr
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T20:04:20Z"
+imported_at: "2026-10-06T20:21:58Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -100,8 +100,8 @@ upstream:
 
 importer:
   script: tools/scripts/rename/rename_abr.sh
-  library_version: "2.1.0"
-  toolchain_fingerprint: "b609ef6320129b0519a01b8452ec7cfbdab97ea4b02ca5ecee954b7aba8eff63"
+  library_version: "2.1.1"
+  toolchain_fingerprint: "d4f333d322e070eec5239ee4b3fe44edd5a3d803b46ae499378d8485a8c7c207"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -1262,7 +1262,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "fe1fd4e895961b59f07dc8f45352babea44bbc578c3292d04710b9aafdbc771f", path: "src/abr/compress/rtl/arca_compress_top.sv" }
   - { sha256: "10069454ef643cc5ac0d512daea96d8f72af8f9b76d62267be48b8adf9abd7c7", path: "src/abr/compress/stimulus/tests/directed/compress_normal_test.yml" }
   - { sha256: "d4bb040526a532f41b83e5d24c7bd74f21892af1319d9f3192f20ed5066c649c", path: "src/abr/compress/tb/compress_tb.sv" }
-  - { sha256: "69a7dc5b4ed080246169de2ee4c61a06953b25fa93103477273c1406af01f16b", path: "src/abr/config/arca_abr_top.vf" }
+  - { sha256: "e4a961d447f83f1117605b89199987f84507bda390a3f4b0eea170cce00bfbb7", path: "src/abr/config/arca_abr_top.vf" }
   - { sha256: "27f2827eda4a15f4387a10efcb1f33fbd091480b765c373f11210780e0c2f02c", path: "src/abr/coverage/clp_abr_top_cov_bind.sv" }
   - { sha256: "099a8444411524d3896151fd9770611db03a9c02eaaab72e004bc0adcde493c4", path: "src/abr/coverage/clp_abr_top_cov_if.sv" }
   - { sha256: "b8c9f240ce2b60c9f7538617a96c062bc097083ac72f7b7f9e2615985b3435a3", path: "src/abr/coverage/config/abr_cm_hier.cfg" }

@@ -6,7 +6,7 @@
 block: sha256_masked
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T20:04:55Z"
+imported_at: "2026-10-06T20:22:42Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -23,8 +23,8 @@ upstream:
 
 importer:
   script: tools/scripts/rename/rename_sha256_masked.sh
-  library_version: "2.1.0"
-  toolchain_fingerprint: "c8db12f5547b9867ce031a05a90362765b0cc2997ba009fe06bdb0af6473edfe"
+  library_version: "2.1.1"
+  toolchain_fingerprint: "74a3a27451e5bbccebea06a2af815a56e40de29a586e51d574eac0f693ba7f60"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 

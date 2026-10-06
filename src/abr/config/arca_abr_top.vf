@@ -172,15 +172,9 @@ ${ARCA_ROOT}/src/abr/abr_top/rtl/arca_abr_seq.sv
 ${ARCA_ROOT}/src/abr/abr_top/rtl/arca_abr_ctrl.sv
 ${ARCA_ROOT}/src/abr/abr_top/rtl/arca_abr_top.sv
 ${ARCA_ROOT}/src/abr/abr_top/rtl/arca_abr_reg.sv
-${ARCA_ROOT}/src/abr/abr_libs/rtl/arca_abr_macros.svh
 ${ARCA_ROOT}/src/abr/abr_prim/rtl/arca_abr_prim_assert.sv
-${ARCA_ROOT}/src/abr/abr_prim/rtl/arca_abr_prim_assert_dummy_macros.svh
-${ARCA_ROOT}/src/abr/abr_prim/rtl/arca_abr_prim_assert_sec_cm.svh
-${ARCA_ROOT}/src/abr/abr_prim/rtl/arca_abr_prim_assert_standard_macros.svh
-${ARCA_ROOT}/src/abr/abr_prim/rtl/arca_abr_prim_assert_yosys_macros.svh
 ${ARCA_ROOT}/src/abr/abr_prim/rtl/arca_abr_prim_flop_macros.sv
 ${ARCA_ROOT}/src/abr/abr_prim/rtl/arca_abr_prim_lc_sync.sv
-${ARCA_ROOT}/src/abr/abr_top/rtl/arca_abr_config_defines.svh
 ${ARCA_ROOT}/src/abr/coverage/clp_abr_top_cov_bind.sv
 ${ARCA_ROOT}/src/abr/coverage/clp_abr_top_cov_if.sv
 ${ARCA_ROOT}/src/abr/abr_top/coverage/abr_top_cov_bind.sv
