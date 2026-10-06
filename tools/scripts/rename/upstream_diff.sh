@@ -32,7 +32,11 @@ while [ $# -gt 0 ]; do
 done
 
 [ -n "$UPSTREAM" ] || UPSTREAM="$DEST/.upstream-cache/caliptra-rtl"
-[ -d "$UPSTREAM/.git" ] || { echo "need --upstream <caliptra-rtl checkout>" >&2; exit 2; }
+# a linked worktree has .git as a file, and a worktree is how you check out a
+# second branch of the same clone -- which blocks that only exist on `future`
+# need.
+git -C "$UPSTREAM" rev-parse --git-dir >/dev/null 2>&1 \
+    || { echo "need --upstream <caliptra-rtl checkout>" >&2; exit 2; }
 
 git -C "$UPSTREAM" fetch --quiet --tags --prune origin || true
 

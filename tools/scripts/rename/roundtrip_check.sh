@@ -35,7 +35,11 @@ done
 if [ -z "$UPSTREAM" ]; then
     UPSTREAM="$DEST/.upstream-cache/caliptra-rtl"
 fi
-[ -d "$UPSTREAM/.git" ] || { echo "need --upstream <caliptra-rtl checkout>" >&2; exit 2; }
+# a linked worktree has .git as a file, and a worktree is how you check out a
+# second branch of the same clone -- which blocks that only exist on `future`
+# need.
+git -C "$UPSTREAM" rev-parse --git-dir >/dev/null 2>&1 \
+    || { echo "need --upstream <caliptra-rtl checkout>" >&2; exit 2; }
 
 blocks=()
 if [ -n "$BLOCK" ]; then

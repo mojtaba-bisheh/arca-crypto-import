@@ -1,19 +1,19 @@
 # ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
 #
 # To review what changed upstream since this import:
-#   git -C <caliptra-rtl> log --oneline 9d6585080a35f7819ffc05be12b71a128c85ead1..origin/main -- src/ecc/rtl src/ecc/coverage 
+#   git -C <caliptra-rtl> log --oneline b9ac0e466758d6ba8eac562d8acc3bc5483a2f6a..origin/main -- src/ecc/rtl src/ecc/coverage 
 #
 block: ecc
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T15:22:04Z"
+imported_at: "2026-10-06T16:08:02Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
   branch: "main"
-  commit: "9d6585080a35f7819ffc05be12b71a128c85ead1"
-  commit_date: "2026-09-29T12:11:24-07:00"
-  commit_subject: "[VAL] Fix es_csrng_tb read sampling race (#1418)"
+  commit: "b9ac0e466758d6ba8eac562d8acc3bc5483a2f6a"
+  commit_date: "2026-10-06T08:53:38-07:00"
+  commit_subject: "Feat/stash bank rfc 673 (#1395)"
   working_tree_dirty: false
   subtrees:  # upstream path -> ARCA path
     - { upstream: "src/ecc/rtl", arca: "src/ecc/rtl" }
@@ -28,7 +28,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_ecc.sh
   library_version: "2.0.2"
-  toolchain_fingerprint: "9148e76f663e832708cae7bf6bb9031a1c66d149d2f9a3311ce38eeac8e22bfc"
+  toolchain_fingerprint: "e1a15d2cd4dae145eb3412ee389d072b46e70031034bd6d9ee3a25e824846d78"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -90,7 +90,7 @@ source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "5149b937d7e93057bb013cd6cd26fcf2e50e9801998aa6a85b8a5093d6782c29", path: "src/ecc/rtl/ecc_dsa_sequencer.sv" }
   - { sha256: "dd90a78fdfe20f61e8f9af45e51339f7ddeaccb87efbaec9d691b1a2ec6670a2", path: "src/ecc/rtl/ecc_dsa_uop_pkg.sv" }
   - { sha256: "4b6f235f6126e854f80a0e64d6d1261c10598eff24406748383b56b945485a25", path: "src/ecc/rtl/ecc_fau.sv" }
-  - { sha256: "ae387f44ebaa421eeb252532a54dc21a827a25b6d2098e37974c4e578ce2917a", path: "src/ecc/rtl/ecc_hmac_drbg_interface.sv" }
+  - { sha256: "2d9852ef7188c0305b4dab50ccd17d5fb689fa407a127592e58aec842e7f03a1", path: "src/ecc/rtl/ecc_hmac_drbg_interface.sv" }
   - { sha256: "d2a23e5298e3ca148ed8fe72459a64cbbf6658123648fc04040dd9b1db1b0e67", path: "src/ecc/rtl/ecc_montgomerymultiplier.sv" }
   - { sha256: "a3ba8bddf137f445ac0587197877f87daf326c2d5e8dc4421659996bdb824911", path: "src/ecc/rtl/ecc_mult_dsp.sv" }
   - { sha256: "392c2fb72fc42634cf06c687652f28c95e26fea6c836aee0e0924b2ed706acfb", path: "src/ecc/rtl/ecc_params_pkg.sv" }
@@ -286,7 +286,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "6b49c9d0831bf7f85cc2df70d5e86c945fdc6adefb05dcfdee3a5d2fc6990dca", path: "src/ecc/rtl/arca_ecc_dsa_sequencer.sv" }
   - { sha256: "36867376b901a5946b35e88b79ff390752f7e95346d13dd7e90262d4bb4af37b", path: "src/ecc/rtl/arca_ecc_dsa_uop_pkg.sv" }
   - { sha256: "d02c58822420165d89c8f26b82361acfe5ec36efe8db543082b29315b4a421be", path: "src/ecc/rtl/arca_ecc_fau.sv" }
-  - { sha256: "cc3a689b2d8de3b7251e1da8a18fab189531aad0c210d99ba66a77870482aa5f", path: "src/ecc/rtl/arca_ecc_hmac_drbg_interface.sv" }
+  - { sha256: "d8e1b3ccdcd7fe431548c8870700f06a9a10a7cff8dd83bcf0eab48d772faab9", path: "src/ecc/rtl/arca_ecc_hmac_drbg_interface.sv" }
   - { sha256: "53373c949d18c18f57c45ea80acafb09ed1458080a23547c5cf88e5aedd36be4", path: "src/ecc/rtl/arca_ecc_montgomerymultiplier.sv" }
   - { sha256: "a55b8d69020d7a318d8e7198989718b077b2d4c81bcb47f0e2e0f12f9522dd6a", path: "src/ecc/rtl/arca_ecc_mult_dsp.sv" }
   - { sha256: "2277891770122995468099baa360bdd52d855746bec3425f00a4d85bd96a226c", path: "src/ecc/rtl/arca_ecc_params_pkg.sv" }

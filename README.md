@@ -1,314 +1,68 @@
 # arca-crypto-import
 
-Worked example of vendoring Caliptra crypto engines from
-[`chipsalliance/caliptra-rtl`](https://github.com/chipsalliance/caliptra-rtl)
-into ARCA under an `arca_` namespace, modelled on VeeR-EL2's
-`tools/prefix_macros.sh`.
+Caliptra crypto engines vendored into ARCA, with a rename script per block.
 
-Eight blocks are imported for real — **ECC**, **HMAC** (which carries
-`hmac_drbg` with it), **SHA3**, **SHA512**, **SHA512_MASKED**, **SHA256**,
-**AES** and **ABR** (Adams Bridge, ML-DSA/ML-KEM) — so the flow is exercised
-against actual edge cases rather than described in the abstract.
+## Pulling the latest update from caliptra-rtl / adams-bridge
 
-This repo exists to agree on the methodology. It is not a product deliverable.
+Everything is done by `tools/scripts/rename/import_block.sh`. It clones (or
+reuses) the upstream repo, checks out the branch recorded in the block's
+`revinfo.yml`, re-copies the block, re-applies the `arca_` prefix and rewrites
+`src/<block>/revinfo.yml` with the new upstream commit.
 
-## What it does
+```sh
+# one block
+./tools/scripts/rename/import_block.sh ecc
 
-1. Copy the block's folder out of a caliptra-rtl checkout, mirroring the
-   upstream hierarchy (`src/ecc/rtl` → `src/ecc/rtl`).
-2. Apply `arca_` / `ARCA_` prefixes to **synthesized design material**.
-3. Record the originating upstream commit, so you can read the changelog
-   before pulling updates.
-4. Commit the renamed fileset plus that record.
+# every block
+./tools/scripts/rename/import_block.sh all
 
-```bash
-git clone https://github.com/chipsalliance/caliptra-rtl.git ../caliptra-rtl
-
+# reuse a clone you already have instead of cloning again
 ./tools/scripts/rename/import_block.sh all --upstream ../caliptra-rtl
-./tools/scripts/rename/import_block.sh ecc --upstream ../caliptra-rtl --commit
 
-./tools/scripts/rename/verify_import.sh                        # structural checks
-./tools/scripts/rename/roundtrip_check.sh --upstream ../caliptra-rtl
-./tools/scripts/rename/upstream_diff.sh  --upstream ../caliptra-rtl   # what changed upstream
+# pin a specific upstream commit/tag instead of the branch tip
+./tools/scripts/rename/import_block.sh ecc --ref v2.1.0
 ```
 
-## Layout
+Then review and commit:
 
-```
-src/ecc/              mirrors caliptra-rtl's src/ecc/
-  rtl/                synthesizable -- renamed (arca_*)
-  coverage/ tb/ stimulus/ uvmf_ecc/
-                      verification collateral -- upstream names kept
-  config/arca_ecc_top.vf     generated, compile-ordered filelist
-  revinfo.yml         provenance: upstream commit, subtrees, policy, sha256 manifest
-  revinfo.map         identifier rename map
-
-src/hmac/  src/hmac_drbg/    same shape; one import owns both
-src/sha3/  src/aes/          no collateral upstream: rtl/ only
-src/sha512/ src/sha512_masked/ src/sha256/
-src/abr/              25 unit folders, each with its own rtl/
-  <unit>/rtl/ <unit>/tb/ ...
-
-tools/scripts/rename/
-  rename_common.sh    shared engine
-  rename_ecc.sh       per-block driver: subtrees, filelist, quirks
-  rename_hmac.sh      ... one per block, eight in total
-  rename_abr.sh       two-repo provenance (caliptra-rtl + adams-bridge)
-  import_block.sh     runs a driver, then verifies
-  verify_import.sh    13 structural checks
-  roundtrip_check.sh  strips the prefix, diffs against the upstream blobs
-  check_filelists.sh  resolves every path in every .f/.F
-  upstream_diff.sh    changelog since the recorded commit
+```sh
+git diff --stat
+git add -A && git commit -m "Update ecc from caliptra-rtl"
 ```
 
-`revinfo` lives **inside** the block it describes, so copying `src/ecc/`
-anywhere carries the record of where it came from.
+`import_block.sh` runs the checks itself; if it prints `all checks passed`
+the import is good.
 
-## ABR: a block with two upstreams
+Blocks: `abr` `aes` `ecc` `hmac` `hmac256` `sha256` `sha3` `sha512`
+`sha512_masked`. `abr` comes from the `adams-bridge` submodule and `hmac256`
+from caliptra-rtl's `future` branch — both are handled automatically.
 
-In caliptra-rtl `src/abr/` holds four files; the ~160 RTL sources live in the
-`submodules/adams-bridge` submodule, spread over 25 units that each have their
-own `rtl/`. ARCA keeps ABR as a normal block under `src/abr/`, so the import
-reads from two repositories at two commits and `revinfo.yml` records both:
+## Seeing what changed upstream first
 
-```yaml
-upstream: { repo: ..., commit: 9d6585080a35..., branch: main }
-submodules:
-  - { path: "submodules/adams-bridge", commit: 2f15ffb1a2e9..., ... }
+```sh
+./tools/scripts/rename/upstream_diff.sh --block ecc --upstream ../caliptra-rtl
+./tools/scripts/rename/upstream_diff.sh            # all blocks
 ```
 
-`roundtrip_check.sh` resolves each file against whichever repo it came from, so
-the guarantee is the same as for every other block.
+Lists the upstream commits and files that changed since the commit in
+`src/<block>/revinfo.yml`. `--upstream` can be omitted once
+`import_block.sh` has populated `.upstream-cache/caliptra-rtl`.
 
-The 25 unit directories are **not** collapsed into one `src/abr/rtl/`: the
-per-unit `+incdir+` set is load-bearing — sources `` `include `` across unit
-boundaries by bare filename, so flattening would change which file wins.
+## Other scripts
 
-## Rename scope: synthesized design material only
+| Script | Purpose |
+| --- | --- |
+| `import_block.sh` | the one you run — copy + rename + verify |
+| `rename_<block>.sh` | per-block rules; called by `import_block.sh` |
+| `rename_common.sh` | shared engine behind the per-block scripts |
+| `upstream_diff.sh` | what changed upstream since the last import |
+| `verify_import.sh` | structural checks on the imported tree |
+| `roundtrip_check.sh` | proves the copy differs from upstream by naming only |
+| `check_filelists.sh` | every path in the filelists resolves |
 
-The prefix exists to keep ARCA's design namespace from colliding with an SoC
-that also integrates upstream Caliptra. Collisions happen in the **netlist**.
-Verification collateral is never synthesized, so renaming it buys no safety and
-diverges the vendored copy from upstream on every file.
+## Rename policy
 
-> Rename what is **declared** in synthesizable RTL.
-> Rewrite **references** to it everywhere. Rename nothing else.
-
-The two halves are easy to conflate, and the second is why the rename map is
-still applied to every vendored file:
-
-| | Declares design names? | Names renamed? | References rewritten? |
-|---|---|---|---|
-| `rtl/` | yes — the synth tier | **yes** | yes |
-| `coverage/` | no — bind code | no | yes (`bind arca_ecc_top`) |
-| `tb/` | no | no | yes |
-| `uvmf_*/uvmf_template_output/` | no | no | yes (`arca_ecc_top` in `hdl_top.sv`) |
-| `uvmf_*/<BLOCK>_*.yaml` | no — names UVM *classes* | no | nothing to rewrite |
-
-`hdl_top.sv` keeps its upstream name and instantiates `arca_ecc_top`;
-`ecc_top_cov_bind` keeps its name and binds into `arca_ecc_top`. The benches
-still drive the vendored RTL without being renamed themselves.
-
-`SYNTH_SUBTREES` defaults to every delivery subtree whose basename is `rtl`,
-matching the `VF_FILTER` each driver already declares.
-
-**Payoff: 319 of 380 imported files are byte-identical to upstream**, so the
-next merge from caliptra-rtl is a small review rather than a whole-tree one.
-
-### Why the UVMF tree is vendored at all
-
-It looks like a derived artifact you could regenerate. It is not: `hdl_top.sv`
-instantiates the DUT inside a `// pragma uvmf custom dut_instantiation`
-region, which UVMF *preserves* across regeneration. 152 files across the import
-carry such regions. It is generated-then-hand-edited source, so it is vendored,
-and its references are rewritten.
-
-The generator inputs (`uvmf_*/<BLOCK>_*.yaml`) need **no exclusion rule**: all
-5 per block were scanned against the full rename map (231 ECC / 177 HMAC
-identifiers) with the engine's own identifier-boundary regex — zero matches.
-They name only UVM classes, which are package-scoped and never enter the map.
-`GENERATOR_INPUTS` asserts they stay byte-identical, because the round-trip
-strips the prefix before diffing and so cannot see a wrongly-prefixed one.
-
-## The rename engine
-
-`\b` is **not** a correct SystemVerilog identifier boundary — identifiers may
-contain `_` and `$`, and escaped identifiers start with `\`. The engine uses
-explicit look-around:
-
-```perl
-(?<![A-Za-z0-9_$\\]) (ident1|ident2|...) (?![A-Za-z0-9_$])
-```
-
-* `` `HMAC_PARAM_PKG `` **is** matched — the backtick is outside the class, so
-  macro usages need no separate pass.
-* `arca_hmac` is **not** re-matched — the preceding `_` blocks the look-behind,
-  making the transform idempotent by construction.
-* Renaming module `hmac` never touches `hmac_reg_pkg`, `hmac_core` or
-  `hmac_drbg_init`.
-* One pass per file, alternation sorted by descending length, so no token is
-  rewritten twice.
-
-Two narrower passes follow, because an identifier pass cannot express either:
-
-* `rc_fix_file_references` rewrites references to renamed **file** names
-  (`arca_ecc_top.sv` in `.f` lists, `compile.do`, Makefiles). A file stem is not
-  an identifier and is not in the map.
-* `rc_fix_path_components` reverts the opposite error — a prefixed **directory**
-  component in a path string. Several blocks name their top module after their
-  folder, so a text pass cannot tell the module `hmac_drbg` from the directory
-  `src/hmac_drbg/`, and emits dangling paths:
-
-  ```
-  ${CALIPTRA_ROOT}/src/arca_hmac_drbg/rtl/arca_hmac_drbg.sv
-                       ^^^^ no such directory   ^^^^ correct
-  ```
-
-  It reverts only when the unprefixed directory exists and the prefixed one does
-  not, driven by the directory tree rather than the rename map, so a directory
-  that genuinely was renamed is left alone. This repaired 48 references.
-
-## Deliberately not prefixed
-
-`kv_defines_pkg`, `kv_read_t`, `kv_write_t`, `kv_error_code_e`,
-`` `CALIPTRA_ASSERT_* ``, `caliptra_prim_assert.sv` are **shared platform**
-identifiers: ARCA must supply one compatible copy, and prefixing them per-block
-would fork the platform. Listed explicitly in each driver's `KEEP_IDENTS` so
-the decision is visible rather than implicit.
-
-Build and simulation outputs (`*.ucdb *.vcd *.fsdb *.o *.so *.pyc` …) are
-skipped, as are `*_reg_uvm.sv` and `*.rdl` (regenerated from the register spec).
-
-## Not imported
-
-**`config/`** is read, not copied. Upstream it holds build-system metadata that
-only means something inside caliptra-rtl: `compile.yml` is in a Microsoft-internal
-schema whose `requires:` names caliptra-rtl build targets (`libs`, `keyvault`,
-`caliptra_top_defines`) and whose lint waivers resolve against `$MSFT_REPO_ROOT`;
-the `*_tb.vf` filelists point at `${CALIPTRA_ROOT}` trees we are not vendoring.
-Copying any of it would import a dependency on a build system ARCA does not have.
-
-What the importer does instead is *consume* one file -- `config/ecc_top.vf`,
-`config/hmac_ctrl.vf` -- purely to recover upstream's compile order, and emit a
-single filelist (`config/arca_ecc_top.vf`) listing the vendored sources in that
-order under their new names. So `config/` in ARCA is generated output, not a copy.
-
-**ABR's `config/`, `tools/` and `docs/`**, and the `lint/` and `data/` folders
-some OpenTitan-derived blocks carry, are skipped for the same reason: tool
-configuration that only resolves inside its originating repo.
-
-**`formal/`** is not imported. The formal properties are a caliptra-rtl
-verification asset rather than part of the deliverable, and ARCA has no formal
-flow to run them in; vendoring them would mean rebasing 42 files of bound
-properties on every upstream bump for no benefit.
-
-## Verification
-
-`verify_import.sh` — 13 structural checks, no SV parser needed:
-
-1. every synthesizable file name carries the prefix
-1b. the ARCA layout mirrors the caliptra-rtl hierarchy
-2. every `module`/`package`/`interface`/`program` declared under
-   `synth_subtrees` carries the prefix
-2b. no declaration **outside** those subtrees carries it — the converse, so the
-   scope cannot silently re-widen
-3. every `` `define `` in the synth tier carries the macro prefix
-4. no double prefixing (`arca_arca_`) — idempotency
-5. no original, unprefixed block identifier survives anywhere — the
-   load-bearing proof that *references* followed the rename
-6. the rename map is injective
-7. every `` `include `` resolves, locally or from the platform header list
-8. the generated filelist sits in the block's `config/`, covers every source
-9. every file still matches the sha256 in revinfo (detects hand-edits)
-10. no collateral file name carries the prefix
-11. every prefixed path component names a directory that exists
-12. collateral-tier summary; checks 2b/4/5 applied there too
-
-`roundtrip_check.sh` is the strongest check: strip the prefix back off and diff
-against the upstream git blobs. Anything beyond naming — a dropped line, a
-corrupted file, an over-eager substitution — shows up as a diff. Binary files
-are compared byte-for-byte; generator inputs are compared **without** stripping.
-
-`check_filelists.sh` resolves every path in every `.f`/`.F`, expanding
-`$UVMF_VIP_LIBRARY_HOME` and `$UVMF_PROJECT_DIR` the way the UVMF run scripts
-do. The round-trip cannot subsume this: a filelist whose paths all moved can
-still round-trip cleanly while pointing at nothing.
-
-CI (`.github/workflows/checks.yml`) runs all of the above, re-runs the import at
-the recorded commit and requires a bit-identical tree, and elaborates the
-delivery tier with `slang`.
-
-The re-import runs on a different machine than the one that produced the commit,
-which makes it a real reproducibility test rather than a self-consistency one.
-Two things had to be fixed to pass it: the sorts that order the rename map and
-the sha256 manifest are run under `LC_ALL=C`, because glibc's default collation
-ignores punctuation and orders `hmac.sv` after `hmac_param_pkg.sv`; and the
-upstream branch is declared (`--branch`, default `main`) rather than read from
-the clone, which CI has in detached HEAD. `imported_at`, `bash` and `perl`
-describe the importing machine and are allowed to differ; nothing else is.
-
-| block | delivery | collateral | byte-identical to upstream |
-|---|---|---|---|
-| `ecc` (+ `hmac_drbg` refs) | 26 files | 165 files, 4 dirs | 158 of 191 |
-| `hmac` (+ `hmac_drbg`) | 14 files | 172 files, 7 dirs | 164 of 186 |
-| `sha3` | 19 files | — | 0 of 19 |
-| `sha512` | 12 files | 160 files, 4 dirs | 154 of 172 |
-| `sha512_masked` | 3 files | 1 file, 1 dir | 0 of 4 |
-| `sha256` | 11 files | 10 files, 3 dirs | 7 of 21 |
-| `aes` | 45 files | — | 0 of 45 |
-| `abr` | 158 files | 433 files, 45 dirs | 380 of 591 |
-| **total** | **288** | **941** | **863 of 1229 (70%)** |
-
-Structural, round-trip, filelist and re-import checks pass for all eight;
-`slang` elaborates every delivery tier with 0 errors and 0 warnings.
-The delivery tier is where every file is renamed by construction, so a block
-with no collateral (`sha3`, `aes`) shows 0 byte-identical — that is the policy
-working, not a defect.
-
-## Updating a block
-
-```bash
-./tools/scripts/rename/upstream_diff.sh --upstream ../caliptra-rtl   # review the changelog
-git -C ../caliptra-rtl checkout <new-sha>
-./tools/scripts/rename/import_block.sh ecc --upstream ../caliptra-rtl --commit
-```
-
-The import is idempotent and reproducible, so the diff of that commit is exactly
-the upstream delta expressed in ARCA names. Local edits to vendored files are
-caught by check 9 — carry them as patches in the driver instead.
-
-## Adding a block
-
-1. `cp tools/scripts/rename/rename_ecc.sh tools/scripts/rename/rename_<block>.sh`
-2. Edit `BLOCK`, `UPSTREAM_SUBTREES`, `COLLATERAL_SUBTREES` (plus `DEST_SUBTREES`
-   / `BLOCK_DIR` only if ARCA must deviate from the upstream path),
-   `VF_FILELIST` / `VF_FILTER`, `EXCLUDE_GLOBS`, `EXTRA_RENAME_IDENTS`,
-   `GENERATOR_INPUTS`, `ENV_MACRO_SPECS`, `KEEP_IDENTS`. Document the block's
-   quirks in the header comment.
-3. `./tools/scripts/rename/import_block.sh <block> --upstream ../caliptra-rtl --commit`
-
-`rename_common.sh` should not need changes for a well-behaved block; if it does,
-add a `block_pre_rename` / `block_post_rename` hook in the driver rather than
-special-casing the shared engine.
-
-## Known gaps
-
-* No SV parser locally — semantic checking is `slang` in CI only.
-* The shared platform library (`kv_*`, `caliptra_prim_*`) is assumed to exist
-  once in ARCA at a compatible version. Two blocks needing different versions
-  of it is not solved here.
-* `src/ecc/coverage/config/*.cfg` name RTL hierarchy paths; they are renamed by
-  the identifier pass but not semantically validated.
-* Generated `.vf` filelists resolve *cross-block* dependencies against
-  `${CALIPTRA_ROOT}` (unprefixed upstream), not against the ARCA copy. This
-  concealed a real defect once: ECC imported `hmac_param_pkg` unprefixed while
-  ARCA's HMAC declares `arca_hmac_param_pkg`, and nothing caught it until the
-  dependency matrix was written down by hand. Cross-block identifiers must be
-  listed in the dependant's `EXTRA_RENAME_IDENTS`:
-
-  ```
-  ecc           -> hmac           module:hmac_drbg, package:hmac_param_pkg
-  hmac          -> sha512_masked  module:sha512_masked_core
-  sha512_masked -> sha512         module:sha512_core, sha512_h/k_constants, sha512_w_mem
-  sha3, sha256, aes, abr          no cross-block dependencies
-  ```
+Rename what is **declared** in synthesizable RTL (modules, packages,
+environment config macros). Rewrite **references** to those names everywhere.
+Rename nothing else — testbench and UVMF generator inputs keep their upstream
+names so they stay comparable with upstream.

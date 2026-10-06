@@ -1,0 +1,18 @@
+# ARCA identifier rename map for block 'hmac256' (prefix: arca_)
+macro	HMAC256_PARAM_PKG	ARCA_HMAC256_PARAM_PKG
+macro	HMAC256_REG_COVERGROUPS	ARCA_HMAC256_REG_COVERGROUPS
+macro	HMAC256_REG_SAMPLE	ARCA_HMAC256_REG_SAMPLE
+module	hmac256	arca_hmac256
+module	hmac256_core	arca_hmac256_core
+module	hmac256_ctrl	arca_hmac256_ctrl
+module	hmac256_reg	arca_hmac256_reg
+package	hmac256_param_pkg	arca_hmac256_param_pkg
+package	hmac256_reg_pkg	arca_hmac256_reg_pkg
+file	src/hmac256/rtl/hmac256.sv	arca_src/hmac256/rtl/hmac256.sv
+file	src/hmac256/rtl/hmac256_core.sv	arca_src/hmac256/rtl/hmac256_core.sv
+file	src/hmac256/rtl/hmac256_ctrl.sv	arca_src/hmac256/rtl/hmac256_ctrl.sv
+file	src/hmac256/rtl/hmac256_param_pkg.sv	arca_src/hmac256/rtl/hmac256_param_pkg.sv
+file	src/hmac256/rtl/hmac256_reg.sv	arca_src/hmac256/rtl/hmac256_reg.sv
+file	src/hmac256/rtl/hmac256_reg_covergroups.svh	arca_src/hmac256/rtl/hmac256_reg_covergroups.svh
+file	src/hmac256/rtl/hmac256_reg_pkg.sv	arca_src/hmac256/rtl/hmac256_reg_pkg.sv
+file	src/hmac256/rtl/hmac256_reg_sample.svh	arca_src/hmac256/rtl/hmac256_reg_sample.svh

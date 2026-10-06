@@ -23,6 +23,14 @@ jobs:
       - uses: actions/checkout@v4
       - name: Clone upstream caliptra-rtl
         run: git clone --filter=blob:none https://github.com/chipsalliance/caliptra-rtl.git .upstream-cache/caliptra-rtl
+      - name: Fetch the adams-bridge submodule ABR was taken from
+        run: |
+          # ABR's sources live in a submodule, so the round-trip needs that
+          # repository too -- at the commit src/abr/revinfo.yml records, which
+          # is the gitlink of the caliptra-rtl commit it was imported from.
+          sha=$(sed -nE 's/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/\1/p' src/abr/revinfo.yml | head -1)
+          git -C .upstream-cache/caliptra-rtl checkout --quiet --detach "$sha"
+          git -C .upstream-cache/caliptra-rtl submodule update --init --recursive
       - name: Strip prefixes and diff against the recorded upstream commit
         run: ./tools/scripts/rename/roundtrip_check.sh
 
@@ -39,8 +47,13 @@ jobs:
           for r in src/*/revinfo.yml; do
             b=$(sed -nE 's/^block:[[:space:]]*(.+)$/\1/p' "$r" | head -1)
             sha=$(sed -nE 's/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/\1/p' "$r" | head -1)
+            # The branch is recorded, not observed: this checkout is detached,
+            # and not every block is on main (hmac256 is on future).
+            br=$(sed -nE 's/^[[:space:]]*branch:[[:space:]]*"?([^",]+)"?.*/\1/p' "$r" | head -1)
             git -C .upstream-cache/caliptra-rtl checkout --quiet --detach "$sha"
-            ./tools/scripts/rename/rename_$b.sh --upstream .upstream-cache/caliptra-rtl --dest .
+            # no-op for blocks that vendor nothing from a submodule
+            git -C .upstream-cache/caliptra-rtl submodule update --init --recursive --quiet
+            ./tools/scripts/rename/rename_$b.sh --upstream .upstream-cache/caliptra-rtl --dest . --branch "${br:-main}"
           done
           # Everything but the provenance records must be bit-identical.
           git diff --stat -- src/ ':(exclude)src/*/revinfo.yml' | tee /tmp/rtl.diff

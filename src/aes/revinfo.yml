@@ -1,19 +1,19 @@
 # ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
 #
 # To review what changed upstream since this import:
-#   git -C <caliptra-rtl> log --oneline 9d6585080a35f7819ffc05be12b71a128c85ead1..origin/main -- src/aes/rtl src/aes/coverage 
+#   git -C <caliptra-rtl> log --oneline b9ac0e466758d6ba8eac562d8acc3bc5483a2f6a..origin/main -- src/aes/rtl src/aes/coverage 
 #
 block: aes
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T15:22:46Z"
+imported_at: "2026-10-06T16:07:50Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
   branch: "main"
-  commit: "9d6585080a35f7819ffc05be12b71a128c85ead1"
-  commit_date: "2026-09-29T12:11:24-07:00"
-  commit_subject: "[VAL] Fix es_csrng_tb read sampling race (#1418)"
+  commit: "b9ac0e466758d6ba8eac562d8acc3bc5483a2f6a"
+  commit_date: "2026-10-06T08:53:38-07:00"
+  commit_subject: "Feat/stash bank rfc 673 (#1395)"
   working_tree_dirty: false
   subtrees:  # upstream path -> ARCA path
     - { upstream: "src/aes/rtl", arca: "src/aes/rtl" }
@@ -23,7 +23,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_aes.sh
   library_version: "2.0.2"
-  toolchain_fingerprint: "b3df9dffd22e50950e986a49d273ff97cca5a6b840c4f4b9315803eb5e1ab029"
+  toolchain_fingerprint: "92cbefb9ef4bb4151a89bebb07977488c1f0118d4c3b0c1a337b3064e09215f9"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -76,7 +76,7 @@ source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "e3a178f8988f2a93b50abb39c12c3c1b68247e21564222f022a5a16bc6f1f849", path: "src/aes/rtl/aes_cipher_core.sv" }
   - { sha256: "648a9e8e8137426e541b3d91c869b3b5a9f6e1489b7c17cb95ddc6bff5fd02f9", path: "src/aes/rtl/aes_clp_reg.sv" }
   - { sha256: "2ecb127376c296cddea4f6aa5093298f3744579dd34f0c3834197b824b8c8307", path: "src/aes/rtl/aes_clp_reg_pkg.sv" }
-  - { sha256: "f4658235d1b80c0639d91d4da4cde8d837272c8392e5ac04b085a68cd8b6de98", path: "src/aes/rtl/aes_clp_wrapper.sv" }
+  - { sha256: "5c2eae0dfa593339bf167ede0059fe6310c7cb24b62f09eccf905d9e2df857f2", path: "src/aes/rtl/aes_clp_wrapper.sv" }
   - { sha256: "ab5713918eb376713959457caf24280baa2ee4f80e194c0a67be025eebb6b0b8", path: "src/aes/rtl/aes_control.sv" }
   - { sha256: "d99efe69dd81b475d60acacdc3a295f1450e747af1b42b2db8f769572a84c83c", path: "src/aes/rtl/aes_control_fsm.sv" }
   - { sha256: "1b563a9138337e7f06c9ffe1ed3de30b82fcd018da4d153ba49c963aafe45d2e", path: "src/aes/rtl/aes_control_fsm_n.sv" }
@@ -126,7 +126,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "755c545b2b3683e6c70ac4f8e3c7369533c62633dc72f5ec414095a4f6b9ac79", path: "src/aes/rtl/arca_aes_cipher_core.sv" }
   - { sha256: "5020cd5a7bfb9bbbab36e1cbbe9f5d53dcb3d656f743759f080aa4fca41a60ce", path: "src/aes/rtl/arca_aes_clp_reg.sv" }
   - { sha256: "a1a95253029c71a4dcd059680fa4823f4a9a23a874c3ddac0c975cf225ad7aa7", path: "src/aes/rtl/arca_aes_clp_reg_pkg.sv" }
-  - { sha256: "932255eca871d7cfbd3e4969a66a7690e4f0866c99b1fc33d7e3cd066b8bdf64", path: "src/aes/rtl/arca_aes_clp_wrapper.sv" }
+  - { sha256: "7b577fd8a05d60d549c67680021955b6202a04115c0fbd1a7b1a5724163c9107", path: "src/aes/rtl/arca_aes_clp_wrapper.sv" }
   - { sha256: "62cacd15c5fe3d12669b49a53b52a3d9022c621c90c6f91b8711959c21999cd9", path: "src/aes/rtl/arca_aes_control.sv" }
   - { sha256: "0ffba15f8da5d0354d8bb29cdc80c0b4889fbb41e6bfcb4a106a2dc17072baee", path: "src/aes/rtl/arca_aes_control_fsm.sv" }
   - { sha256: "bf52d13d20012b5dce3da4bda416788c95ee03fb0dd0db4e3da5418145b920f4", path: "src/aes/rtl/arca_aes_control_fsm_n.sv" }

@@ -1,19 +1,19 @@
 # ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
 #
 # To review what changed upstream since this import:
-#   git -C <caliptra-rtl> log --oneline 9d6585080a35f7819ffc05be12b71a128c85ead1..origin/main -- src/sha3/rtl 
+#   git -C <caliptra-rtl> log --oneline b9ac0e466758d6ba8eac562d8acc3bc5483a2f6a..origin/main -- src/sha3/rtl 
 #
 block: sha3
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T15:22:24Z"
+imported_at: "2026-10-06T16:08:46Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
   branch: "main"
-  commit: "9d6585080a35f7819ffc05be12b71a128c85ead1"
-  commit_date: "2026-09-29T12:11:24-07:00"
-  commit_subject: "[VAL] Fix es_csrng_tb read sampling race (#1418)"
+  commit: "b9ac0e466758d6ba8eac562d8acc3bc5483a2f6a"
+  commit_date: "2026-10-06T08:53:38-07:00"
+  commit_subject: "Feat/stash bank rfc 673 (#1395)"
   working_tree_dirty: false
   subtrees:  # upstream path -> ARCA path
     - { upstream: "src/sha3/rtl", arca: "src/sha3/rtl" }
@@ -22,7 +22,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_sha3.sh
   library_version: "2.0.2"
-  toolchain_fingerprint: "1a1d29ac3287067c208f9d51d35731795aa5de5b4b989983ecae18181047e636"
+  toolchain_fingerprint: "d90b3bd5c01e3999801ea347e516e6519dd9ca5528b5292f6f8131d8f910aaf0"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 

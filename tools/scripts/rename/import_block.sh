@@ -80,6 +80,7 @@ fi
 if [ -n "$REF" ]; then
     echo "== checking out upstream ref '$REF' =="
     git -C "$UPSTREAM" checkout --quiet --detach "$REF"
+    git -C "$UPSTREAM" submodule update --init --recursive --quiet 2>/dev/null || true
 fi
 
 echo "== upstream: $(git -C "$UPSTREAM" rev-parse HEAD) =="
@@ -89,7 +90,26 @@ for b in "${BLOCKS[@]}"; do
     echo "======================================================================"
     echo " importing block: $b"
     echo "======================================================================"
-    "$RENAME_DIR/rename_$b.sh" --upstream "$UPSTREAM" --dest "$REPO_ROOT" --prefix "$PREFIX"
+
+    # Not every block lives on the same branch: hmac256 is only on `future`.
+    # The branch each block tracks is recorded in its revinfo, so re-importing
+    # "all" puts every block back on the branch it was taken from instead of
+    # silently failing on the ones that are not on main. An explicit --ref
+    # overrides this, because then the caller has pinned the tree deliberately.
+    branch="main"
+    if rev="$(ri_path "$REPO_ROOT" "$b" 2>/dev/null)" && [ -f "$rev" ]; then
+        branch="$(sed -nE 's/^[[:space:]]*branch:[[:space:]]*"?([^",]+)"?.*/\1/p' "$rev" | head -1)"
+        [ -n "$branch" ] || branch="main"
+    fi
+    if [ -z "$REF" ]; then
+        echo "-- upstream branch: $branch"
+        git -C "$UPSTREAM" checkout --quiet --detach "origin/$branch" 2>/dev/null \
+            || git -C "$UPSTREAM" checkout --quiet --detach "$branch"
+        git -C "$UPSTREAM" submodule update --init --recursive --quiet 2>/dev/null || true
+    fi
+
+    "$RENAME_DIR/rename_$b.sh" --upstream "$UPSTREAM" --dest "$REPO_ROOT" \
+        --prefix "$PREFIX" --branch "$branch"
 done
 
 echo

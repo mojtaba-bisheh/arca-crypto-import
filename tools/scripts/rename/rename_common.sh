@@ -201,7 +201,11 @@ rc_init() {
     done
 
     [ -n "$UPSTREAM" ] || { rc_usage >&2; rc_die "--upstream is required"; }
-    [ -d "$UPSTREAM/.git" ] || rc_die "'$UPSTREAM' is not a git checkout"
+    # not -d "$UPSTREAM/.git": in a linked worktree .git is a file, and a
+    # worktree is how you check out a second branch of the same clone -- which
+    # is exactly what importing a block that only exists on `future` needs.
+    git -C "$UPSTREAM" rev-parse --git-dir >/dev/null 2>&1 \
+        || rc_die "'$UPSTREAM' is not a git checkout"
 
     RC_LIB_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     if [ -z "$DEST" ]; then
@@ -512,13 +516,67 @@ rc_build_map() {
 }
 
 # ---------------------------------------------------------------------------
+# rc_hold_out_generator_inputs / rc_restore_generator_inputs
+#
+# Move the generator inputs aside for the duration of a content pass and put
+# them back afterwards. Filtering them out of the file lists instead would mean
+# touching three call sites and getting the collateral path mapping right in
+# each; moving the files is one mechanism that covers every pass, present and
+# future, and fails loudly if a path is wrong.
+# ---------------------------------------------------------------------------
+rc_is_generator_input() {
+    local f="$1" gi
+    [ "${#GENERATOR_INPUTS[@]}" -gt 0 ] || return 1
+    for gi in "${GENERATOR_INPUTS[@]}"; do
+        [ "$gi" = "$f" ] && return 0
+    done
+    return 1
+}
+
+RC_GI_HELD=()
+rc_hold_out_generator_inputs() {
+    RC_GI_HELD=()
+    [ "${#GENERATOR_INPUTS[@]}" -gt 0 ] || return 0
+    local gi
+    for gi in "${GENERATOR_INPUTS[@]}"; do
+        [ -n "$gi" ] || continue
+        [ -f "$STAGE/$gi" ] || continue
+        mv "$STAGE/$gi" "$STAGE/$gi.rc-held"
+        RC_GI_HELD+=("$gi")
+    done
+    [ "${#RC_GI_HELD[@]}" -gt 0 ] && \
+        rc_log "  holding ${#RC_GI_HELD[@]} generator input(s) out of the content pass"
+    return 0
+}
+
+rc_restore_generator_inputs() {
+    [ "${#RC_GI_HELD[@]}" -gt 0 ] || return 0
+    local gi
+    for gi in "${RC_GI_HELD[@]}"; do
+        mv "$STAGE/$gi.rc-held" "$STAGE/$gi"
+    done
+    RC_GI_HELD=()
+}
+
+# ---------------------------------------------------------------------------
 # rc_apply -- one perl pass per file using the full map
 # ---------------------------------------------------------------------------
 rc_apply() {
     local f
     rc_log "applying rename map"
+    # Generator inputs are held out of every content pass. They are read by a
+    # code generator, not compiled, and the names in them are UVM class names
+    # that merely happen to spell the same string as a design name: HMAC256's
+    # bench yaml names an environment "hmac256", which is also the module.
+    # Rewriting it would make the committed bench disagree with what the
+    # generator would next produce from it.
+    local pass=()
+    for f in "${STAGED_FILES[@]}" "${COLLATERAL_FILES[@]}"; do
+        rc_is_generator_input "$f" && continue
+        pass+=("$f")
+    done
     pushd "$STAGE" >/dev/null
-    perl "$RC_LIB_DIR/lib/apply_map.pl" "$MAP" "${STAGED_FILES[@]}" "${COLLATERAL_FILES[@]}"
+    perl "$RC_LIB_DIR/lib/apply_map.pl" "$MAP" "${pass[@]}"
     popd >/dev/null
 
     # Idempotency guard: a double prefix means the map was applied twice or an
@@ -1080,8 +1138,10 @@ rc_run() {
     # end of the collateral pass, which meant a block with no collateral (sha3,
     # aes) silently skipped them -- and those are exactly the OpenTitan-derived
     # blocks whose comments cite upstream paths like hw/ip/aes/pre_sca.
+    rc_hold_out_generator_inputs
     rc_fix_file_references
     rc_fix_path_components
+    rc_restore_generator_inputs
     rc_emit_filelist
     rc_install
     rc_check_generator_inputs
