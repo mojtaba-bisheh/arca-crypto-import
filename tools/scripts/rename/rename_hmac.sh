@@ -59,12 +59,10 @@ UPSTREAM_SUBTREES=(
 COLLATERAL_SUBTREES=(
     "src/hmac/tb"
     "src/hmac/coverage/config"
-    "src/hmac/formal"
     "src/hmac/stimulus"
     "src/hmac/uvmf_2022"
     "src/hmac_drbg/tb"
     "src/hmac_drbg/coverage/config"
-    "src/hmac_drbg/formal"
     "src/hmac_drbg/stimulus"
 )
 

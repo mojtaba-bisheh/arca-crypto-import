@@ -6,7 +6,7 @@
 block: hmac
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T14:29:28Z"
+imported_at: "2026-10-06T14:46:15Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -25,7 +25,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_hmac.sh
   library_version: "2.0.2"
-  toolchain_fingerprint: "40a442442e1360dd482662e206b2b2adc43dedef00b3b1d6c59b633feba5b73f"
+  toolchain_fingerprint: "522774eaa896fa060ca734e112e4d880dab7bb071e57616454bcf88e76b717e4"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -75,12 +75,10 @@ artifacts:
   collateral_dirs:  # imported whole, looser rename contract
     - src/hmac/tb
     - src/hmac/coverage/config
-    - src/hmac/formal
     - src/hmac/stimulus
     - src/hmac/uvmf_2022
     - src/hmac_drbg/tb
     - src/hmac_drbg/coverage/config
-    - src/hmac_drbg/formal
     - src/hmac_drbg/stimulus
   filelist: src/hmac/config/arca_hmac_ctrl.vf
   rename_map: src/hmac/revinfo.map
@@ -102,22 +100,6 @@ source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "03b1b62b37935341d0a052d76b9c2993d5130c07139347e5fd8a1e9055523813", path: "src/hmac/tb/hmac_vectors_singleblk.txt" }
   - { sha256: "ea91ed5f5b481e69c8840e3b4f3ac8bfeed37ab0552d070f9ddf7e0d3501399b", path: "src/hmac/tb/test_gen.py" }
   - { sha256: "743d94ae90a0891bcc04f317c7be479f195f166c10685561955ceb87a53c23c1", path: "src/hmac/coverage/config/hmac_cm_hier.cfg" }
-  - { sha256: "d9d10515f9d14ee468292ae2f1b2ac76ea2bed875cc97aa262654f9fae5b6b18", path: "src/hmac/formal/model/hmac_core.h" }
-  - { sha256: "0e4d21cfde995a65f7178d7d8c3d2dbcdec67c674159e803963608138a697036", path: "src/hmac/formal/model/simulation_model/hmac_sha_join.h" }
-  - { sha256: "c61fc7454dc3e2c0138f20bb1fa5094b8a590de40a63693f4bdc52763307e072", path: "src/hmac/formal/model/simulation_model/sha_algo.h" }
-  - { sha256: "ed95edf87be9b997c8afa8b3fa1765d5b54e0a996d4a8cde06d020af93d2cb0d", path: "src/hmac/formal/model/simulation_model/sha_algo_masked.h" }
-  - { sha256: "64f0b7f54b4eaab74441028f4b8325ea34edff6d678df8bdde3d83d39a57c152", path: "src/hmac/formal/model/simulation_model/simulation/CMakeLists.txt" }
-  - { sha256: "9a044498fca1d7162b8188bc0e4369893dfc940b6e9f5862ec489cd056e78ee9", path: "src/hmac/formal/model/simulation_model/simulation/hmac_main.cpp" }
-  - { sha256: "3b8f6fc47c4a466c0593202f267a111fc7c96422ea820e7a5c981653922856f9", path: "src/hmac/formal/model/simulation_model/simulation/hmac_tests.h" }
-  - { sha256: "eb52cef9c56f873a237bf391436aef0a1b29b5dd69ee43a7cfe58fa40ad98eb6", path: "src/hmac/formal/model/simulation_model/simulation/hmac_vectors_singleblk.txt" }
-  - { sha256: "6d22021a4ce83c4f583cf4f9d9c59a1f9c62dee8327a426b77816bbf75b71d74", path: "src/hmac/formal/model/simulation_model/top.h" }
-  - { sha256: "6a3773b83575b9ce940e30fe0aab26a02bc2312459a5b350561862e206962781", path: "src/hmac/formal/properties/fv_constraints.sv" }
-  - { sha256: "59bbbd24362b6e7b9192da2b2ae5cf677c00a19c77a9fa7ba8b7faffca9fc793", path: "src/hmac/formal/properties/fv_constraints_wip.sv" }
-  - { sha256: "9304a56020a9c184aa64522a39833216d6ead73f7a7d6bc80be8d9133e38c298", path: "src/hmac/formal/properties/fv_coverpoints.sv" }
-  - { sha256: "6548274b543814e479802e26d366369ab0a1a1cc7d5950d215e8f976c9084d6a", path: "src/hmac/formal/properties/fv_hmac_core.sv" }
-  - { sha256: "1776a4697bfaece71cb19842d52f88fb55d923b44ccf1713216a155707f19df2", path: "src/hmac/formal/properties/fv_hmac_pkg.sv" }
-  - { sha256: "75bf3bec3a82901560bdef0ffa9eb2eafe9b7b00dbc1e32208135b08e8828606", path: "src/hmac/formal/properties/fv_key_stable_top.sv" }
-  - { sha256: "52bdcebe3ec3fbbbf2be2c068c5c4babe121788d21b491f9742587fe85d1dfe9", path: "src/hmac/formal/readme.md" }
   - { sha256: "082aa2f600b131bd820e83237a96c34a2cb2739a7ac8e4b790a2cf5edec0f22e", path: "src/hmac/stimulus/tests/directed/hmac_normal_test.yml" }
   - { sha256: "ea0f5cbd97aaa43827b77aed95fea2bdffcd92d88b3e5c6798bce08b1ba31da8", path: "src/hmac/stimulus/testsuites/hmac_nightly_directed_regression.yml" }
   - { sha256: "212bc76210ea0a6a45b97b14154dc6586641fa347a305c75da03fa67c8e7cdb4", path: "src/hmac/stimulus/testsuites/hmac_nightly_random_regression.yml" }
@@ -281,11 +263,6 @@ source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "ddcdf5f0cf2aa83d55cfd0477f6c9bfa63c9484806b0e9576abb2b068ba8b590", path: "src/hmac_drbg/tb/hmac_drbg_tb.sv" }
   - { sha256: "177c05aeaa4b28719f7bb6b663088308487051b7586efa0c3d6421c3982307b2", path: "src/hmac_drbg/tb/test_vectors/hmac_drbg_tb.hex" }
   - { sha256: "67c0c0f7dfd27f7c4d66848691db76751bc97d4ea9d954de459816165b6a928e", path: "src/hmac_drbg/coverage/config/hmac_drbg_cm_hier.cfg" }
-  - { sha256: "e767035c1a227ca30bfd466c115ffa975346b2726ae23f05006b5c26fb16999f", path: "src/hmac_drbg/formal/properties/fv_constraints_m.sv" }
-  - { sha256: "383df52f86e55ad602e8c5b775c1d726df22fcbb24f056b76c24cc0c747040c6", path: "src/hmac_drbg/formal/properties/fv_cover_points.sv" }
-  - { sha256: "681e78150a4ca3a55855e689020a476de622e1bc0be350fdf8206d9eddfce6a1", path: "src/hmac_drbg/formal/properties/fv_hmac_drbg.sv" }
-  - { sha256: "be4e5fc053645b8fcc5d244f832d96d8b1071b9ba64c23326741993632fe2cea", path: "src/hmac_drbg/formal/properties/fv_hmac_drbg_pkg.sv" }
-  - { sha256: "b6ccf15743ccd805047e1d582c52dc4de1b09f8c7fca061f1fbca3cec3d2431a", path: "src/hmac_drbg/formal/readme.md" }
   - { sha256: "7579a3e6aefa170a14a89a24bea6cd40a8fc192a3eac4a04b5d7ccda27e83eba", path: "src/hmac_drbg/stimulus/tests/directed/hmac_drbg_directed_test.yml" }
   - { sha256: "5634846ab592b79d721f18ee9e2249c37c94fd83fea8ee3c2453abef7fb69550", path: "src/hmac_drbg/stimulus/tests/randomized/hmac_drbg_randomized_test.yml" }
   - { sha256: "a211d8f6f5b7e4c5379ad91979244bbaa3d699000212d45095716a58fff86497", path: "src/hmac_drbg/stimulus/testsuites/hmac_drbg_nightly_directed_regression.yml" }
@@ -296,22 +273,6 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "743d94ae90a0891bcc04f317c7be479f195f166c10685561955ceb87a53c23c1", path: "src/hmac/coverage/config/hmac_cm_hier.cfg" }
   - { sha256: "523db6cb8854aae55c798a62ee577d8742ebee4f3e1418c48905eaf23d3e2c39", path: "src/hmac/coverage/hmac_ctrl_cov_bind.sv" }
   - { sha256: "f8165cbb7f8e378bb3299b5f7816a160b231358a40889884c586e7fd029ae507", path: "src/hmac/coverage/hmac_ctrl_cov_if.sv" }
-  - { sha256: "c51ca6ea24362ff8df5a22316e2ae9ace8a847721f156891a69c2453eb7f4d75", path: "src/hmac/formal/model/hmac_core.h" }
-  - { sha256: "b5eaf966cff54718c6f832e0f4ce63f66aee3147b94219304514a8ac8334662a", path: "src/hmac/formal/model/simulation_model/hmac_sha_join.h" }
-  - { sha256: "17e1d0b8d791a096f1ea8ef058188cafaaee817458530103f17573e856a1401d", path: "src/hmac/formal/model/simulation_model/sha_algo.h" }
-  - { sha256: "b681e0386109ad333942a1be6789b7ff6513a682fc4c362ffbe8a5a4fce1743c", path: "src/hmac/formal/model/simulation_model/sha_algo_masked.h" }
-  - { sha256: "64f0b7f54b4eaab74441028f4b8325ea34edff6d678df8bdde3d83d39a57c152", path: "src/hmac/formal/model/simulation_model/simulation/CMakeLists.txt" }
-  - { sha256: "f25435d0c42681d1a0bbca2066bf4039bc935b978c1fae61a386eac8ea06a1ff", path: "src/hmac/formal/model/simulation_model/simulation/hmac_main.cpp" }
-  - { sha256: "e9c860bb84d8dc3608448028379ababbeb63d80b7878d31806f457d348f96a60", path: "src/hmac/formal/model/simulation_model/simulation/hmac_tests.h" }
-  - { sha256: "eb52cef9c56f873a237bf391436aef0a1b29b5dd69ee43a7cfe58fa40ad98eb6", path: "src/hmac/formal/model/simulation_model/simulation/hmac_vectors_singleblk.txt" }
-  - { sha256: "65e38dffe771cb896e9664bf6d3ecf1fbfce6083ea44f0a7c6274db2dbb2280c", path: "src/hmac/formal/model/simulation_model/top.h" }
-  - { sha256: "078e975ca657911c0d7d9e5b9df069c5cf808425e68c5f9c605c949aa90b89ca", path: "src/hmac/formal/properties/fv_constraints.sv" }
-  - { sha256: "a54b7f91ba2ee158f662a1199e61e2a0dd7265bd2ad2e40cd812b0f4867e85d9", path: "src/hmac/formal/properties/fv_constraints_wip.sv" }
-  - { sha256: "c0c4cc468a50bc22a5f4d6bd3d5c9ba6deaad889dce2178eb87fdea991d01da9", path: "src/hmac/formal/properties/fv_coverpoints.sv" }
-  - { sha256: "e0aefc803a019e21e9f6805d60e66b39df7289cf42fbd4fe131eea90bf2945fe", path: "src/hmac/formal/properties/fv_hmac_core.sv" }
-  - { sha256: "1776a4697bfaece71cb19842d52f88fb55d923b44ccf1713216a155707f19df2", path: "src/hmac/formal/properties/fv_hmac_pkg.sv" }
-  - { sha256: "9880fe754c42c641b25ab628961c3fc74e575c02155fb41f6ff63742f59a2787", path: "src/hmac/formal/properties/fv_key_stable_top.sv" }
-  - { sha256: "9d42d69b7784a62e1ff643b2c4ba3fb3ad16b1adb1b005100e2c8699e5936b04", path: "src/hmac/formal/readme.md" }
   - { sha256: "1d377849de38b8379a492df6eb7478e8ad8093841e8b65892595aa059ab44826", path: "src/hmac/rtl/arca_hmac.sv" }
   - { sha256: "269d103fc85d1b8aafc7b0cb468ca7354243d8f083c8dd1e8d445e43f38a2943", path: "src/hmac/rtl/arca_hmac_config.svh" }
   - { sha256: "96cbd74a77911cff2f2b7f38ea0b2741386294b7d62b1f33a88f34073531bf4f", path: "src/hmac/rtl/arca_hmac_core.sv" }
@@ -485,11 +446,6 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "67c0c0f7dfd27f7c4d66848691db76751bc97d4ea9d954de459816165b6a928e", path: "src/hmac_drbg/coverage/config/hmac_drbg_cm_hier.cfg" }
   - { sha256: "b49f172e5455c11daa7cc31fd2c49c2ca4f0f2bb49da92e1b356f7d73da3bfb3", path: "src/hmac_drbg/coverage/hmac_drbg_cov_bind.sv" }
   - { sha256: "87aa70387f444472442b467ad631beab3906e02a6d1388651aba9feb0e6416da", path: "src/hmac_drbg/coverage/hmac_drbg_cov_if.sv" }
-  - { sha256: "51eec58c267cfbe3fe6f4277440003cdcb1a6a22ca6b64a2e9258c15538a7e2b", path: "src/hmac_drbg/formal/properties/fv_constraints_m.sv" }
-  - { sha256: "5a8826f4e37dff8d5c7a192edf4b31452e975bd1fbaae6fef6304074f0af39dd", path: "src/hmac_drbg/formal/properties/fv_cover_points.sv" }
-  - { sha256: "dd1c0e924b61a6cc6219c7d14a0e250597483fac68ce616b0ab5d631c14be3a7", path: "src/hmac_drbg/formal/properties/fv_hmac_drbg.sv" }
-  - { sha256: "be4e5fc053645b8fcc5d244f832d96d8b1071b9ba64c23326741993632fe2cea", path: "src/hmac_drbg/formal/properties/fv_hmac_drbg_pkg.sv" }
-  - { sha256: "a1cdd7a5cd56fd5370f73e0d768b08d4537ebffe38641ce2e254803acd63bda0", path: "src/hmac_drbg/formal/readme.md" }
   - { sha256: "028594557a793ab268694309919c7c8bc060a54946bc651b9cc0c1239e4e0c68", path: "src/hmac_drbg/rtl/arca_hmac_drbg.sv" }
   - { sha256: "7579a3e6aefa170a14a89a24bea6cd40a8fc192a3eac4a04b5d7ccda27e83eba", path: "src/hmac_drbg/stimulus/tests/directed/hmac_drbg_directed_test.yml" }
   - { sha256: "5634846ab592b79d721f18ee9e2249c37c94fd83fea8ee3c2453abef7fb69550", path: "src/hmac_drbg/stimulus/tests/randomized/hmac_drbg_randomized_test.yml" }

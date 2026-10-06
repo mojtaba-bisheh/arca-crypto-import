@@ -36,7 +36,7 @@ git clone https://github.com/chipsalliance/caliptra-rtl.git ../caliptra-rtl
 ```
 src/ecc/              mirrors caliptra-rtl's src/ecc/
   rtl/                synthesizable -- renamed (arca_*)
-  coverage/ tb/ formal/ stimulus/ uvmf_ecc/
+  coverage/ tb/ stimulus/ uvmf_ecc/
                       verification collateral -- upstream names kept
   config/arca_ecc_top.vf     generated, compile-ordered filelist
   revinfo.yml         provenance: upstream commit, subtrees, policy, sha256 manifest
@@ -75,7 +75,7 @@ still applied to every vendored file:
 |---|---|---|---|
 | `rtl/` | yes — the synth tier | **yes** | yes |
 | `coverage/` | no — bind code | no | yes (`bind arca_ecc_top`) |
-| `tb/` `formal/` | no | no | yes |
+| `tb/` | no | no | yes |
 | `uvmf_*/uvmf_template_output/` | no | no | yes (`arca_ecc_top` in `hdl_top.sv`) |
 | `uvmf_*/<BLOCK>_*.yaml` | no — names UVM *classes* | no | nothing to rewrite |
 
@@ -86,7 +86,7 @@ still drive the vendored RTL without being renamed themselves.
 `SYNTH_SUBTREES` defaults to every delivery subtree whose basename is `rtl`,
 matching the `VF_FILTER` each driver already declares.
 
-**Payoff: 324 of 427 imported files are byte-identical to upstream**, so the
+**Payoff: 319 of 380 imported files are byte-identical to upstream**, so the
 next merge from caliptra-rtl is a small review rather than a whole-tree one.
 
 ### Why the UVMF tree is vendored at all
@@ -153,6 +153,25 @@ the decision is visible rather than implicit.
 Build and simulation outputs (`*.ucdb *.vcd *.fsdb *.o *.so *.pyc` …) are
 skipped, as are `*_reg_uvm.sv` and `*.rdl` (regenerated from the register spec).
 
+## Not imported
+
+**`config/`** is read, not copied. Upstream it holds build-system metadata that
+only means something inside caliptra-rtl: `compile.yml` is in a Microsoft-internal
+schema whose `requires:` names caliptra-rtl build targets (`libs`, `keyvault`,
+`caliptra_top_defines`) and whose lint waivers resolve against `$MSFT_REPO_ROOT`;
+the `*_tb.vf` filelists point at `${CALIPTRA_ROOT}` trees we are not vendoring.
+Copying any of it would import a dependency on a build system ARCA does not have.
+
+What the importer does instead is *consume* one file -- `config/ecc_top.vf`,
+`config/hmac_ctrl.vf` -- purely to recover upstream's compile order, and emit a
+single filelist (`config/arca_ecc_top.vf`) listing the vendored sources in that
+order under their new names. So `config/` in ARCA is generated output, not a copy.
+
+**`formal/`** is not imported. The formal properties are a caliptra-rtl
+verification asset rather than part of the deliverable, and ARCA has no formal
+flow to run them in; vendoring them would mean rebasing 42 files of bound
+properties on every upstream bump for no benefit.
+
 ## Verification
 
 `verify_import.sh` — 13 structural checks, no SV parser needed:
@@ -201,8 +220,8 @@ describe the importing machine and are allowed to differ; nothing else is.
 | | ECC | HMAC (+ HMAC_DRBG) |
 |---|---|---|
 | delivery tier | 25 files | 12 files |
-| collateral tier | 191 files, 5 dirs | 193 files, 9 dirs |
-| byte-identical to upstream | 158 of 219 | 166 of 208 |
+| collateral tier | 165 files, 4 dirs | 172 files, 7 dirs |
+| byte-identical to upstream | 157 of 193 | 162 of 187 |
 | structural / round-trip / re-import | pass | pass |
 | `slang` elaboration | 0 errors, 0 warnings | 0 errors, 0 warnings |
 

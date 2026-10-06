@@ -14,14 +14,18 @@
 #   src/ecc/coverage/ecc_top_cov_if.sv -> src/ecc/coverage/arca_ecc_top_cov_if.sv
 #   src/ecc/config/ecc_top.vf         ->  src/ecc/config/arca_ecc_top.vf (generated)
 #   src/ecc/tb/ecc_top_tb.sv          ->  src/ecc/tb/arca_ecc_top_tb.sv
-#   src/ecc/formal/...                ->  src/ecc/formal/...
 #   src/ecc/stimulus/...              ->  src/ecc/stimulus/...
 #   src/ecc/uvmf_ecc/...              ->  src/ecc/uvmf_ecc/...
 #
 # The whole src/ecc folder is imported. rtl/ + coverage/ are the *delivery*
-# (strict contract, elaborated in CI); tb/, formal/, stimulus/ and uvmf_ecc/
-# are *collateral* (same identifier map, looser contract) -- see the "Two
-# tiers" section in rename_common.sh.
+# (strict contract, elaborated in CI); tb/, stimulus/ and uvmf_ecc/ are
+# *collateral* (same identifier map, looser contract) -- see the "Two tiers"
+# section in rename_common.sh.
+#
+# src/ecc/formal/ is deliberately not imported: the formal properties are a
+# caliptra-rtl verification asset, not part of the deliverable, and ARCA has no
+# formal flow to run them in. Vendoring them would mean maintaining 42 files of
+# bound properties through every upstream bump for no benefit.
 #
 # Block-specific notes
 # --------------------
@@ -53,8 +57,6 @@
 # * src/ecc/tb/ecc_secp384r1.exe and the three uvmf .ucdb coverage databases are
 #   build/simulation *outputs* checked into upstream. They are skipped by
 #   ARTIFACT_GLOBS -- vendoring them would commit stale results.
-# * src/ecc/formal/fv_ecc_block_overview.pdf is binary but is documentation,
-#   not an output, so it is carried through byte-for-byte.
 # * ECC needs no environment configuration macros.
 
 set -euo pipefail
@@ -71,7 +73,6 @@ UPSTREAM_SUBTREES=(
 COLLATERAL_SUBTREES=(
     "src/ecc/tb"
     "src/ecc/coverage/config"
-    "src/ecc/formal"
     "src/ecc/stimulus"
     "src/ecc/uvmf_ecc"
 )

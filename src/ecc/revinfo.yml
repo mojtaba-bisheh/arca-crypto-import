@@ -6,7 +6,7 @@
 block: ecc
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T14:29:14Z"
+imported_at: "2026-10-06T14:46:02Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -23,7 +23,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_ecc.sh
   library_version: "2.0.2"
-  toolchain_fingerprint: "08e0e4f1c1d9a576aea09215f5c00a5c039c74ab5f78f10200affec815b4b0a1"
+  toolchain_fingerprint: "d2a8719f5a349e964016ac7dcf158bc33a4a2058f45ead52654b35adca726281"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -70,7 +70,6 @@ artifacts:
   collateral_dirs:  # imported whole, looser rename contract
     - src/ecc/tb
     - src/ecc/coverage/config
-    - src/ecc/formal
     - src/ecc/stimulus
     - src/ecc/uvmf_ecc
   filelist: src/ecc/config/arca_ecc_top.vf
@@ -110,32 +109,6 @@ source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "83de75e0319c47dc9d0acfa73d3416cb1f2e03d6baa8a79c1a904e7e4e93a6a2", path: "src/ecc/tb/test_vectors/mm_test_vectors_2_key_16_word_4.hex" }
   - { sha256: "9ab8affc7e76a31374d79aa4e9f02e448f06d937ee6c7bf4118143b3717aa13d", path: "src/ecc/tb/test_vectors/mm_test_vectors_5_key_16_word_4.hex" }
   - { sha256: "149d85b1fbd817ce369dc92748cdfcfa5b89d32bfdb0db09470ccf64cc7d12e4", path: "src/ecc/coverage/config/ecc_cm_hier.cfg" }
-  - { sha256: "480ba416c95c20381ed168a7096cf92ed4416155da8489fb27efa7d7ec56af24", path: "src/ecc/formal/fv_ecc_block_overview.pdf" }
-  - { sha256: "46cacc11f4e7b952359b67056973abe48d5b2c1d9b3ab3c672b5a8e8c2021653", path: "src/ecc/formal/properties/coverpoints/fv_add_sub_alter_coverpoints.sv" }
-  - { sha256: "b8d8cf145943f6719aedb33790004612621d91aaaa4adc36ab200a0554b70993", path: "src/ecc/formal/properties/coverpoints/fv_arith_unit_coverpoints.sv" }
-  - { sha256: "9e9f7a7a0eaba0d1786f147b42f16c88c0999649f7fcb44d4f49112fc0d17a83", path: "src/ecc/formal/properties/coverpoints/fv_ecc_dsa_ctrl_coverpoints.sv" }
-  - { sha256: "372bc2343d8c01f1e204ad3df97e2b29843415ab0e020dc0f2a0c84831063f07", path: "src/ecc/formal/properties/coverpoints/fv_ecc_montgomerymultiplier_coverpoints.sv" }
-  - { sha256: "553ae1cde6d40beb7afe76ba88c646587cc4ff738bbf3c026ec7e3907260b0ae", path: "src/ecc/formal/properties/coverpoints/fv_ecc_pm_ctrl_coverpoints_m.sv" }
-  - { sha256: "fe08e7a23870da53e98308c63e1e488a4be0f8a7a046b00ad992b610d8291ed0", path: "src/ecc/formal/properties/ecc_reduced_instantiations.sv" }
-  - { sha256: "c54cfe3206bffb89de8fa85144c44da9bf81b5bd41edf5a354ef54294830b1be", path: "src/ecc/formal/properties/fv_add_sub_alter.sv" }
-  - { sha256: "c44a92f25e9e58eeb96e238ec23f1d8a2f8c8eb3d25e72b267c123205d93c25e", path: "src/ecc/formal/properties/fv_add_sub_constraints.sv" }
-  - { sha256: "f7f2ff1035f8aa9e446a52ef552e2f8caf648f6bfe678a64aed963597a217a17", path: "src/ecc/formal/properties/fv_dsa_ctrl_constraints.sv" }
-  - { sha256: "df6d89b4f46cb6d22bdb1f4f136e2d46be636aff8bacc4e5ebd227bf148ca0ac", path: "src/ecc/formal/properties/fv_ecc_arith_unit.sv" }
-  - { sha256: "4d1dddaffd973eab828bf3c37425617f0ce71f52e355edcc35daae517bf785cc", path: "src/ecc/formal/properties/fv_ecc_dsa_ctrl.sv" }
-  - { sha256: "4143a3996e438e29409f8d866ee31385efbdacbc0a74ab6b5614ea73fb9a5a57", path: "src/ecc/formal/properties/fv_ecc_dsa_sequencer.sv" }
-  - { sha256: "7659b75039d12e8080fd282aa1a7d9da2551aae2ebee97fefedde4c5f6cf48a4", path: "src/ecc/formal/properties/fv_ecc_fau.sv" }
-  - { sha256: "85eb26aaa01df38f12b29a860e4d990b5dad73978dbbb839f66e457b5e2cd578", path: "src/ecc/formal/properties/fv_ecc_hmac_drbg_interface.sv" }
-  - { sha256: "3dd21dc899d0bf76d2234b5d26a30bc68f6c1b9731bee552fdd592f8049fff5f", path: "src/ecc/formal/properties/fv_ecc_hmac_drbg_interface_constraints.sv" }
-  - { sha256: "e936681a752763f0709d12f0baead5082d3f197b7c04c2128765f683a7f45882", path: "src/ecc/formal/properties/fv_ecc_pm_ctrl_abstract.sv" }
-  - { sha256: "91622bb3516878883fa98765da85144291a3343573f0777ee1bfdb550ca8fe9c", path: "src/ecc/formal/properties/fv_ecc_pm_sequencer.sv" }
-  - { sha256: "12dd106ac19d984060ce384815d85e2bae799c8b2e5c6eba98fdb79e1cd322ae", path: "src/ecc/formal/properties/fv_ecc_ram_tdp_file.sv" }
-  - { sha256: "2a2495d589d48230c87b952720d146eb1a1f3359722a61d96efce7afe4e6288a", path: "src/ecc/formal/properties/fv_montmultiplier.sv" }
-  - { sha256: "c5817a03129d49c5e7fc396812eb70ac5b0b6c7b801fba3b03c64ded45d1d156", path: "src/ecc/formal/properties/fv_montmultiplier_glue.sv" }
-  - { sha256: "e1a949abc802aa3e617332afa85f56d92dc1b43a2cef1f28e033b8484255dbb0", path: "src/ecc/formal/properties/fv_pe.sv" }
-  - { sha256: "7abe39261b496a82711b489f471be7638c07ee5ae83d5468aff19ca70ab4b89f", path: "src/ecc/formal/properties/fv_pe_final.sv" }
-  - { sha256: "6ff525b2af08cb10d625c02b149e21ba85c3ba58e53ce3a7848d8d37c0a339e9", path: "src/ecc/formal/properties/fv_pe_first.sv" }
-  - { sha256: "813d9a7c08d0ccc4c90e8b6a40668bcee6f2754fab5c555e22bca1b6aae27d6f", path: "src/ecc/formal/properties/fv_scalar_blinding.sv" }
-  - { sha256: "74ce44794210e260f576cb8b1434c12daf58927706ca5992439c7f9062d213e0", path: "src/ecc/formal/readme.md" }
   - { sha256: "cc77248380374fd26696f9b2d9d3879b27128ca4adb4a77704cb4454f7f00453", path: "src/ecc/stimulus/tests/directed/ecc_normal_test.yml" }
   - { sha256: "3ac589b8d14b6d4bcaff439478e8f7a2b95257e97771f0758f55e913f9f7978a", path: "src/ecc/stimulus/tests/directed/ecc_otf_reset_test.yml" }
   - { sha256: "b35b6fc00ffd65bbb7450753267d2c85ee15a898375bbc608642b6a8cf892fac", path: "src/ecc/stimulus/tests/directed/ecc_sca_config_test.yml" }
@@ -299,32 +272,6 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "149d85b1fbd817ce369dc92748cdfcfa5b89d32bfdb0db09470ccf64cc7d12e4", path: "src/ecc/coverage/config/ecc_cm_hier.cfg" }
   - { sha256: "ac111a6173a70841184c67174ee5d14231912e8f240d4c7609bf87eb00bc70a3", path: "src/ecc/coverage/ecc_top_cov_bind.sv" }
   - { sha256: "7618ecf1458a8046ec975b79714e46f4e8cadf1e738fb38f178176cfe8da8f26", path: "src/ecc/coverage/ecc_top_cov_if.sv" }
-  - { sha256: "480ba416c95c20381ed168a7096cf92ed4416155da8489fb27efa7d7ec56af24", path: "src/ecc/formal/fv_ecc_block_overview.pdf" }
-  - { sha256: "150fd5ef88d7d6107d254817f8a30454dec4a1e2bf7d5f7803569b6e3c9e04f9", path: "src/ecc/formal/properties/coverpoints/fv_add_sub_alter_coverpoints.sv" }
-  - { sha256: "7f5e8f760dbd18ae880813bfb02aa78e83d154c7a3023f870a160163c3bd5347", path: "src/ecc/formal/properties/coverpoints/fv_arith_unit_coverpoints.sv" }
-  - { sha256: "10e3628fdccee47116a29cf62e40a99809b8a6d5bd55ef6057279b4b35ead5ec", path: "src/ecc/formal/properties/coverpoints/fv_ecc_dsa_ctrl_coverpoints.sv" }
-  - { sha256: "f3b9552f1f469210f1cd88b7fcb2924d9bf69719cd5a9b611d61de380f583c71", path: "src/ecc/formal/properties/coverpoints/fv_ecc_montgomerymultiplier_coverpoints.sv" }
-  - { sha256: "c0e95cebb8b22c8bc53a8a1bc8152efa86ec9406c666736557b09da9ec946c4d", path: "src/ecc/formal/properties/coverpoints/fv_ecc_pm_ctrl_coverpoints_m.sv" }
-  - { sha256: "4cd78b41359054cb8fbdf650cd988d91d8bf2de72df2d6d6abf19f93cc22b1f3", path: "src/ecc/formal/properties/ecc_reduced_instantiations.sv" }
-  - { sha256: "2fd3d97ea98fe90c84f053d6031cc8565a7f60cf0eed13a1950c5b7fc2d606da", path: "src/ecc/formal/properties/fv_add_sub_alter.sv" }
-  - { sha256: "bba5a6c7f7f2c39907a6ea4d42522679aa3b904e7628e0c080d62a24553ae1ff", path: "src/ecc/formal/properties/fv_add_sub_constraints.sv" }
-  - { sha256: "e7623f03092be62b876bb915c26343a5a80ed090adf56fac02f013cf5f0f53ca", path: "src/ecc/formal/properties/fv_dsa_ctrl_constraints.sv" }
-  - { sha256: "abdf923e2e1f929fb2b8a12e0807dc3748a583673f0ca354130b4380f6d96d00", path: "src/ecc/formal/properties/fv_ecc_arith_unit.sv" }
-  - { sha256: "301959f0ef0511c122ee8ab63688b8967d9b17dfd2fb01e1ac8646bb5e210a75", path: "src/ecc/formal/properties/fv_ecc_dsa_ctrl.sv" }
-  - { sha256: "41829cd29629c63c8a020792f6644ef91509f1669c63e4fab3ceff6c46944a65", path: "src/ecc/formal/properties/fv_ecc_dsa_sequencer.sv" }
-  - { sha256: "3d3196fc8cb63fedf4b0c86b2085a9b37264b60b2ef65c064cc126cd2ce6c653", path: "src/ecc/formal/properties/fv_ecc_fau.sv" }
-  - { sha256: "43ee64ebe58c3f2b427fb10c01bc13ac2671be9003c7f88d84e83a148f9a50cc", path: "src/ecc/formal/properties/fv_ecc_hmac_drbg_interface.sv" }
-  - { sha256: "f2a5993148ac96f35a888c3f9465941ae70fc4bda3f0375720ff1b6158ffd2ab", path: "src/ecc/formal/properties/fv_ecc_hmac_drbg_interface_constraints.sv" }
-  - { sha256: "a4aeffcab35be62503604bbcd70760b42e04da8b70a0bc42533c7f2bef0b7f60", path: "src/ecc/formal/properties/fv_ecc_pm_ctrl_abstract.sv" }
-  - { sha256: "4662f8d7ae7a4ff157addd1aafafe82df8fccc3f13f7c33da273a19c483aa3ac", path: "src/ecc/formal/properties/fv_ecc_pm_sequencer.sv" }
-  - { sha256: "1df6f025e631f5cd063c516cc568a916b58aeec4b70679314e1e59e6fa618ea6", path: "src/ecc/formal/properties/fv_ecc_ram_tdp_file.sv" }
-  - { sha256: "174e64937706aed1eb41af3660b898645ead0dd6df922d86efb775bafe79dd19", path: "src/ecc/formal/properties/fv_montmultiplier.sv" }
-  - { sha256: "9017a2ed92cf23c9d3ab216783cf10183454c35805fd971f956cf76516fb880d", path: "src/ecc/formal/properties/fv_montmultiplier_glue.sv" }
-  - { sha256: "9622670f2833c4361b933db760acf5d19e2a8ec69138e4a7a13ca86f6483143f", path: "src/ecc/formal/properties/fv_pe.sv" }
-  - { sha256: "7cbd7a98195c735a3493a1fc539f3bb043cce0956cfd2fdc17820bfb577e63cf", path: "src/ecc/formal/properties/fv_pe_final.sv" }
-  - { sha256: "5ae5ff25f8c86a2d8d7821285c30dc43c68d2bf658084a0e78d94a17cddaa62e", path: "src/ecc/formal/properties/fv_pe_first.sv" }
-  - { sha256: "31618519d2176320aaa465a8fd32ddfa253c306086bd991092cad8453e62ae19", path: "src/ecc/formal/properties/fv_scalar_blinding.sv" }
-  - { sha256: "1b4c7984afe1e3177f15860560ba196d34952cbf40e584794444ba9292198088", path: "src/ecc/formal/readme.md" }
   - { sha256: "33c1ce076bd39c62f509cc95c6f6b5520d4f4dddfad279bee48869f2ce09c269", path: "src/ecc/rtl/arca_ecc_add_sub_mod_alter.sv" }
   - { sha256: "b61abeae97d1ec0eca5d41d52d0eb47b5739ba9d17948cda4442ccc99bcbec51", path: "src/ecc/rtl/arca_ecc_adder.sv" }
   - { sha256: "a2ee45252664915f3438ead9a981f18b95b30a3399d0593e6e1fdab90600ecda", path: "src/ecc/rtl/arca_ecc_arith_unit.sv" }
