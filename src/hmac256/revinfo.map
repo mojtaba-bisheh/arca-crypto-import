@@ -6,6 +6,7 @@ module	hmac256	arca_hmac256
 module	hmac256_core	arca_hmac256_core
 module	hmac256_ctrl	arca_hmac256_ctrl
 module	hmac256_reg	arca_hmac256_reg
+module	sha256_masked_core	arca_sha256_masked_core
 package	hmac256_param_pkg	arca_hmac256_param_pkg
 package	hmac256_reg_pkg	arca_hmac256_reg_pkg
 file	src/hmac256/rtl/hmac256.sv	arca_src/hmac256/rtl/hmac256.sv

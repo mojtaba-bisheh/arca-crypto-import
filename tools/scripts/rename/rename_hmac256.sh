@@ -22,13 +22,14 @@
 #   what tells you which changelog to read when pulling an update.
 #
 # * hmac256 instantiates `sha256_masked_core`, which lives in src/sha256_masked/
-#   -- a block ARCA does not vendor. It is therefore left unprefixed, exactly
-#   as `sha512_masked_core` was in rename_hmac.sh until sha512_masked was
-#   imported. If sha256_masked is ever imported, add
-#       EXTRA_RENAME_IDENTS=("module:sha256_masked_core")
-#   here, or hmac256 will instantiate the upstream module while ARCA declares
-#   the prefixed one. That failure mode is invisible to the generated filelist,
-#   which resolves cross-block names against ${CALIPTRA_ROOT}.
+#   -- now its own ARCA block (rename_sha256_masked.sh), so the identifier is
+#   declared as arca_sha256_masked_core and this import has to rewrite its
+#   reference to match. That is what the EXTRA_RENAME_IDENTS entry below does.
+#   Leaving it out is the failure mode worth naming: hmac256 would instantiate
+#   the upstream module while ARCA declares the prefixed one, and that is
+#   invisible to the generated filelist, which resolves cross-block names
+#   against ${CALIPTRA_ROOT} rather than against the vendored tree.
+#   sha256_masked is on `future` too, so the two blocks move together.
 #
 # * hmac256 also sits on top of src/sha256/, which ARCA *does* vendor -- but it
 #   names no identifier from it (only sha256_masked_core), so there is nothing
@@ -73,7 +74,11 @@ EXCLUDE_GLOBS=(
     "*.rdl"
 )
 
-EXTRA_RENAME_IDENTS=()
+# Declared by rename_sha256_masked.sh, instantiated by hmac256_core.
+EXTRA_RENAME_IDENTS=(
+    "module:sha256_masked_core"
+)
+
 ENV_MACRO_SPECS=()
 ENV_HEADER_REPLACE=()
 

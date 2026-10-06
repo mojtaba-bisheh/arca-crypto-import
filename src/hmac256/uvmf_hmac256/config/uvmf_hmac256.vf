@@ -140,7 +140,7 @@ ${CALIPTRA_ROOT}/src/sha256/rtl/sha256_k_constants.v
 ${CALIPTRA_ROOT}/src/sha256/rtl/sha256_w_mem.v
 ${CALIPTRA_ROOT}/src/sha256/rtl/sha256_reg.sv
 ${CALIPTRA_ROOT}/src/sha256_masked/rtl/sha256_masked_defines_pkg.sv
-${CALIPTRA_ROOT}/src/sha256_masked/rtl/sha256_masked_core.sv
+${CALIPTRA_ROOT}/src/sha256_masked/rtl/arca_sha256_masked_core.sv
 ${CALIPTRA_ROOT}/src/sha256_masked/rtl/sha256_masked_w_mem.sv
 ${CALIPTRA_ROOT}/src/hmac256/rtl/arca_hmac256_param_pkg.sv
 ${CALIPTRA_ROOT}/src/hmac256/rtl/arca_hmac256_reg_pkg.sv

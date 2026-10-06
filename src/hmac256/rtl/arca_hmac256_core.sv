@@ -140,7 +140,7 @@ module arca_hmac256_core
   //----------------------------------------------------------------
   // core instantiation.
   //----------------------------------------------------------------
-  sha256_masked_core u_sha256_core_h1
+  arca_sha256_masked_core u_sha256_core_h1
                      (
                      .clk(clk),
                      .reset_n(reset_n),
