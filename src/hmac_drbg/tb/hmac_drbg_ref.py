@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import arca_hmac
+import arca_hmac512
 import hashlib
 import os
 
@@ -34,8 +34,8 @@ class HMAC_DRBG:
        """ Computes HMAC. """
     #    print("key=", key.hex())
     #    print("val=", data.hex())
-    #    print("dig=", arca_hmac.new(key, data, self.hash_function).digest().hex(),'\n')
-       return arca_hmac.new(key, data, self.hash_function).digest()
+    #    print("dig=", arca_hmac512.new(key, data, self.hash_function).digest().hex(),'\n')
+       return arca_hmac512.new(key, data, self.hash_function).digest()
    def update(self, seed_material=b""):
        """
        Updates the internal state with new seed material.

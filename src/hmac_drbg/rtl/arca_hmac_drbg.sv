@@ -142,7 +142,7 @@ module arca_hmac_drbg
   //----------------------------------------------------------------
   // HMAC module instantiation.
   //----------------------------------------------------------------
-  arca_hmac_core
+  arca_hmac512_core
     HMAC_K 
     (
     .clk(clk),

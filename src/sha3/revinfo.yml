@@ -6,7 +6,7 @@
 block: sha3
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T16:32:44Z"
+imported_at: "2026-10-06T20:05:01Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -21,13 +21,17 @@ upstream:
 
 importer:
   script: tools/scripts/rename/rename_sha3.sh
-  library_version: "2.0.2"
-  toolchain_fingerprint: "a6a949ffae3655eff3448734ebc312eb176944cd8c0c2a7ef3175599747a9a51"
+  library_version: "2.1.0"
+  toolchain_fingerprint: "b98e9fbd93de00ef2463b224db04638e96959c52d9e09dfea07e835f276d4246"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
 policy:
   rename_scope: "synthesized design material only"
+  stem_renames:  # block-name stems rewritten under the prefix (repo-wide)
+    - "hmac=hmac512"
+  stem_keep:  # names that merely share the leading token and keep it
+    - "hmac_drbg"
   synth_subtrees:  # identifiers declared here are renamed; everything else only references them
     - "src/sha3/rtl"
   excluded_globs:

@@ -7,6 +7,6 @@ module	sha512_masked_core	arca_sha512_masked_core
 module	sha512_masked_w_mem	arca_sha512_masked_w_mem
 module	sha512_w_mem	arca_sha512_w_mem
 package	sha512_masked_defines_pkg	arca_sha512_masked_defines_pkg
-file	src/sha512_masked/rtl/sha512_masked_core.sv	arca_src/sha512_masked/rtl/sha512_masked_core.sv
-file	src/sha512_masked/rtl/sha512_masked_defines_pkg.sv	arca_src/sha512_masked/rtl/sha512_masked_defines_pkg.sv
-file	src/sha512_masked/rtl/sha512_masked_w_mem.sv	arca_src/sha512_masked/rtl/sha512_masked_w_mem.sv
+file	src/sha512_masked/rtl/sha512_masked_core.sv	src/sha512_masked/rtl/arca_sha512_masked_core.sv
+file	src/sha512_masked/rtl/sha512_masked_defines_pkg.sv	src/sha512_masked/rtl/arca_sha512_masked_defines_pkg.sv
+file	src/sha512_masked/rtl/sha512_masked_w_mem.sv	src/sha512_masked/rtl/arca_sha512_masked_w_mem.sv

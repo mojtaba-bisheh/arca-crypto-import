@@ -32,8 +32,15 @@
 # * ECC lives in a single upstream directory (src/ecc/rtl) but instantiates
 #   `hmac_drbg`, which lives in src/hmac_drbg/rtl and is owned by the HMAC
 #   import. Ownership policy: hmac_drbg is imported exactly once, by
-#   rename_hmac.sh. ECC only rewrites the *reference* so both imports link
+#   rename_hmac512.sh. ECC only rewrites the *reference* so both imports link
 #   against the same `<prefix>hmac_drbg` module. See EXTRA_RENAME_IDENTS.
+# * Those two cross-block names are renamed under *different* policies, and
+#   neither policy is stated here. hmac_param_pkg belongs to the SHA-512 HMAC
+#   engine, which ARCA shelves as hmac512, so it becomes arca_hmac512_param_pkg;
+#   hmac_drbg is on the stem keep list and stays arca_hmac_drbg. Both follow
+#   from the repo-wide stem policy in rename_common.sh, which is exactly why
+#   that policy is declared there and not in rename_hmac512.sh -- two drivers
+#   holding two copies of the same naming decision is how they drift apart.
 # * ECC guards its packages with hand-written include guards whose names do not
 #   follow one pattern (CALIPTRA_ECC_DEFINES, CALIPTRA_ECC_PARAMS_PKG,
 #   CALIPTRA_ECC_PM_UOP_PKG, ECC_DSA_UOP_PKG). They are discovered from the
@@ -95,9 +102,9 @@ EXCLUDE_GLOBS=(
 )
 
 # Cross-block dependency: declared elsewhere, renamed here so the reference
-# resolves to the module that rename_hmac.sh publishes.
+# resolves to the module that rename_hmac512.sh publishes.
 # Declared by other imports, referenced here. ECC instantiates hmac_drbg and
-# imports hmac_param_pkg, both owned by rename_hmac.sh; this block must rewrite
+# imports hmac_param_pkg, both owned by rename_hmac512.sh; this block must rewrite
 # its references to them even though it does not own them. Omitting the package
 # left ARCA's ECC importing an hmac_param_pkg that no longer existed under that
 # name -- it did not fail CI because the generated filelist still resolved the

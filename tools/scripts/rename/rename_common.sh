@@ -3,7 +3,7 @@
 # rename_common.sh -- shared library for the ARCA crypto-block import/rename flow.
 #
 # This file is NOT executable on its own. Each crypto block has its own driver
-# script (rename_ecc.sh, rename_hmac.sh, ...) that declares the block-specific
+# script (rename_ecc.sh, rename_hmac512.sh, ...) that declares the block-specific
 # configuration and then calls `rc_run`.
 #
 # The blocks are similar but not identical: different directory hierarchies,
@@ -97,7 +97,34 @@ set -euo pipefail
 # happened to run it.
 export LC_ALL=C
 
-RC_SCRIPT_VERSION="2.0.2"
+RC_SCRIPT_VERSION="2.1.0"
+
+# ---------------------------------------------------------------------------
+# Stem policy -- a second, repo-wide knob layered on top of the prefix.
+#
+# The prefix answers "could this collide in an ARCA netlist". It does not
+# answer "can a reader tell these two blocks apart". caliptra-rtl calls its
+# HMAC-SHA512 engine plain `hmac` and its HMAC-SHA256 engine `hmac256`, so a
+# faithful import gives ARCA arca_hmac_core next to arca_hmac256_core and the
+# shorter name is the *less* obvious one. ARCA shelves the SHA-512 engine as
+# hmac512 instead, both as a directory and as an identifier stem.
+#
+# Why this lives here and not in rename_hmac512.sh: identifiers cross block
+# boundaries. ECC instantiates hmac_drbg and imports hmac_param_pkg, so ECC
+# has to spell the renamed package exactly the way the HMAC import minted it.
+# Two drivers holding two copies of the same naming decision is how they drift.
+# One declaration, applied by every driver, cannot.
+#
+# Entries are "<from>=<to>", matched against a whole identifier or the leading
+# component of one ("hmac" and "hmac_core", not "hmac256" and not
+# "ecc_hmac_drbg_interface"). RC_STEM_KEEP exempts names that merely begin with
+# the same token: hmac_drbg is a DRBG shared with ECC, not a SHA-512 HMAC, and
+# it keeps its upstream name and its own src/hmac_drbg/ directory.
+#
+# A driver may override both arrays before sourcing this file.
+# ---------------------------------------------------------------------------
+RC_DEFAULT_STEM_RENAMES=( "hmac=hmac512" )
+RC_DEFAULT_STEM_KEEP=( "hmac_drbg" )
 
 rc_log()  { printf '[%s] %s\n' "${BLOCK:-rename}" "$*"; }
 rc_warn() { printf '[%s] WARNING: %s\n' "${BLOCK:-rename}" "$*" >&2; }
@@ -178,8 +205,10 @@ rc_init() {
                      ENV_HEADER_REPLACE KEEP_IDENTS DEST_SUBTREES \
                      COLLATERAL_SUBTREES ARTIFACT_GLOBS GENERATOR_INPUTS \
                      SYNTH_SUBTREES EXTRA_PATH_DIRS SUBMODULE_PATHS \
-                     COLLATERAL_DEST_SUBTREES
+                     COLLATERAL_DEST_SUBTREES STEM_RENAMES STEM_KEEP
     [ "${#ARTIFACT_GLOBS[@]}" -gt 0 ] || ARTIFACT_GLOBS=("${RC_DEFAULT_ARTIFACT_GLOBS[@]}")
+    [ "${#STEM_RENAMES[@]}" -gt 0 ]   || STEM_RENAMES=("${RC_DEFAULT_STEM_RENAMES[@]}")
+    [ "${#STEM_KEEP[@]}" -gt 0 ]      || STEM_KEEP=("${RC_DEFAULT_STEM_KEEP[@]}")
     WITH_COLLATERAL=1
 
     UPSTREAM=""
@@ -238,6 +267,12 @@ rc_init() {
     done
     BLOCK_DIR="${BLOCK_DIR:-$(dirname "${DEST_SUBTREES[0]}")}"
     rc_check_relpath "$BLOCK_DIR"
+
+    GENERATOR_INPUTS_DEST=()
+    local gi
+    for gi in "${GENERATOR_INPUTS[@]}"; do
+        GENERATOR_INPUTS_DEST+=("$(rc_gi_dest "$gi")")
+    done
     CONFIG_DIR="$BLOCK_DIR/config"
 
     # Synthesized design material. Default: every delivery subtree called
@@ -297,6 +332,8 @@ rc_init() {
     rc_log "upstream : $UPSTREAM @ $UPSTREAM_SHA"
     rc_log "dest     : $DEST"
     rc_log "prefix   : $PREFIX (macros: $MACRO_PREFIX)"
+    [ "${#STEM_RENAMES[@]}" -gt 0 ] && \
+        rc_log "stems    : $(printf '%s ' "${STEM_RENAMES[@]}")(keep: $(printf '%s ' "${STEM_KEEP[@]}"))"
 }
 
 # ---------------------------------------------------------------------------
@@ -431,6 +468,54 @@ rc_assert_unique_basename() {
 # rc_build_map -- collect every identifier this block owns and build the
 #                 original -> renamed mapping table.
 # ---------------------------------------------------------------------------
+# rc_stem -- apply the stem policy to one lowercase name.
+#
+# Operates on identifiers and on file basenames alike: "hmac" -> "hmac512",
+# "hmac_core" -> "hmac512_core", "hmac.sv" -> "hmac512.sv". A name that merely
+# starts with the same characters is untouched ("hmac256"), and a name on the
+# keep list is untouched together with everything derived from it
+# ("hmac_drbg", "hmac_drbg.sv", "hmac_drbg_pkg").
+# ---------------------------------------------------------------------------
+rc_stem() {
+    local n="$1" r from to
+    for r in "${STEM_KEEP[@]}"; do
+        [ -n "$r" ] || continue
+        case "$n" in "$r"|"$r"_*|"$r".*) printf '%s' "$n"; return 0 ;; esac
+    done
+    for r in "${STEM_RENAMES[@]}"; do
+        [ -n "$r" ] || continue
+        from="${r%%=*}"; to="${r#*=}"
+        [ -n "$from" ] && [ "$from" != "$r" ] || rc_die "malformed STEM_RENAMES entry '$r' (want <from>=<to>)"
+        case "$n" in
+            "$from"|"$from"_*|"$from".*) printf '%s%s' "$to" "${n#"$from"}"; return 0 ;;
+        esac
+    done
+    printf '%s' "$n"
+}
+
+# Same policy over an upper-case macro name: HMAC_PARAM_PKG -> HMAC512_PARAM_PKG.
+rc_stem_macro() {
+    local n="$1" low out
+    low="$(printf '%s' "$n" | tr '[:upper:]' '[:lower:]')"
+    out="$(rc_stem "$low")"
+    [ "$out" = "$low" ] && { printf '%s' "$n"; return 0; }
+    printf '%s' "$out" | tr '[:lower:]' '[:upper:]'
+}
+
+# The two public entry points. Every site that mints a new name goes through
+# one of these, so the prefix and the stem can never disagree about a name.
+rc_renamed_ident() {
+    local kind="$1" name="$2"
+    if [ "$kind" = "macro" ]; then
+        printf '%s%s' "$MACRO_PREFIX" "$(rc_stem_macro "$name")"
+    else
+        printf '%s%s' "$PREFIX" "$(rc_stem "$name")"
+    fi
+}
+
+rc_renamed_basename() { printf '%s%s' "$PREFIX" "$(rc_stem "$1")"; }
+
+# ---------------------------------------------------------------------------
 # rc_is_synth -- is this staged path inside a synthesizable subtree?
 rc_is_synth() {
     local p="$1" d
@@ -497,17 +582,16 @@ rc_build_map() {
                 rc_warn "'$name' already carries the prefix; skipped"
                 continue ;;
         esac
-        if [ "$kind" = "macro" ]; then
-            printf '%s\t%s\t%s%s\n' "$kind" "$name" "$MACRO_PREFIX" "$name" >> "$MAP"
-        else
-            printf '%s\t%s\t%s%s\n' "$kind" "$name" "$PREFIX" "$name" >> "$MAP"
-        fi
+        printf '%s\t%s\t%s\n' "$kind" "$name" "$(rc_renamed_ident "$kind" "$name")" >> "$MAP"
     done < <(sort -u "$MAP.raw")
 
     # File renames are recorded for traceability; apply_map.pl ignores them.
+    # Recorded as full repo-relative paths on both sides, so the row stays
+    # readable for a block whose directory moved as well as its file names.
     for f in "${STAGED_FILES[@]}"; do
         rc_is_synth "$f" || continue
-        printf 'file\t%s\t%s%s\n' "$f" "$PREFIX" "$f" >> "$MAP"
+        printf 'file\t%s\t%s/%s\n' "$f" "$(dirname "$f")" \
+               "$(rc_renamed_basename "$(basename "$f")")" >> "$MAP"
     done
 
     hit="$(grep -cvE '^\s*(#|$)' "$MAP" || true)"
@@ -524,10 +608,34 @@ rc_build_map() {
 # each; moving the files is one mechanism that covers every pass, present and
 # future, and fails loudly if a path is wrong.
 # ---------------------------------------------------------------------------
+# GENERATOR_INPUTS are declared as *upstream* paths, because that is the only
+# name the file has that is stable across a re-import -- and the only one
+# roundtrip_check.sh can hand to `git show`. For every block but a relocating
+# one the ARCA path is the same string; ABR's is not, and nor is hmac512's.
+# Translate once, here, through the same collateral dirmap rc_stage_collateral
+# uses, instead of leaving three call sites to each get it right.
+rc_gi_dest() {
+    local gi="$1" i up ar best="" bestlen=0
+    for i in "${!COLLATERAL_SUBTREES[@]}"; do
+        up="${COLLATERAL_SUBTREES[$i]}"
+        [ -n "$up" ] || continue
+        case "$gi" in "$up"/*)
+            [ "${#up}" -gt "$bestlen" ] && { bestlen="${#up}"; best="$i"; } ;;
+        esac
+    done
+    if [ -n "$best" ]; then
+        up="${COLLATERAL_SUBTREES[$best]}"
+        ar="${COLLATERAL_DEST_SUBTREES[$best]:-$up}"
+        printf '%s%s' "$ar" "${gi#"$up"}"
+    else
+        printf '%s' "$gi"
+    fi
+}
+
 rc_is_generator_input() {
     local f="$1" gi
-    [ "${#GENERATOR_INPUTS[@]}" -gt 0 ] || return 1
-    for gi in "${GENERATOR_INPUTS[@]}"; do
+    [ "${#GENERATOR_INPUTS_DEST[@]}" -gt 0 ] || return 1
+    for gi in "${GENERATOR_INPUTS_DEST[@]}"; do
         [ "$gi" = "$f" ] && return 0
     done
     return 1
@@ -536,9 +644,9 @@ rc_is_generator_input() {
 RC_GI_HELD=()
 rc_hold_out_generator_inputs() {
     RC_GI_HELD=()
-    [ "${#GENERATOR_INPUTS[@]}" -gt 0 ] || return 0
+    [ "${#GENERATOR_INPUTS_DEST[@]}" -gt 0 ] || return 0
     local gi
-    for gi in "${GENERATOR_INPUTS[@]}"; do
+    for gi in "${GENERATOR_INPUTS_DEST[@]}"; do
         [ -n "$gi" ] || continue
         [ -f "$STAGE/$gi" ] || continue
         mv "$STAGE/$gi" "$STAGE/$gi.rc-held"
@@ -649,7 +757,7 @@ rc_env_macros() {
 #                    is already prefixed).
 # ---------------------------------------------------------------------------
 rc_rename_files() {
-    local f dir base new out=() n=0
+    local f dir base newbase new out=() n=0
     for f in "${STAGED_FILES[@]}"; do
         dir="$(dirname "$f")"
         base="$(basename "$f")"
@@ -658,10 +766,11 @@ rc_rename_files() {
         case "$base" in
             "$PREFIX"*) out+=("$f"); continue ;;
         esac
-        new="$dir/${PREFIX}${base}"
+        newbase="$(rc_renamed_basename "$base")"
+        new="$dir/$newbase"
         [ -e "$STAGE/$new" ] && rc_die "rename collision: $new already exists"
         mv "$STAGE/$f" "$STAGE/$new"
-        printf '%s\t%s\n' "$base" "${PREFIX}${base}" >> "$FILE_RENAMES"
+        printf '%s\t%s\n' "$base" "$newbase" >> "$FILE_RENAMES"
         out+=("$new")
         n=$((n + 1))
     done
@@ -693,9 +802,13 @@ rc_rename_collateral_files() {
     local -A ident=() dirseen=()
     [ "${#COLLATERAL_FILES[@]}" -gt 0 ] || return 0
 
-    # one pass over the map instead of a grep per file/component
-    while IFS=$'\t' read -r kind orig _; do
-        case "$kind" in module|package|interface) ident["$orig"]=1 ;; esac
+    # one pass over the map instead of a grep per file/component. The value is
+    # the renamed identifier, not a flag: a directory that follows a renamed
+    # package has to follow it to the name the map actually minted, which the
+    # stem policy may have changed as well as the prefix.
+    local newname
+    while IFS=$'\t' read -r kind orig newname; do
+        case "$kind" in module|package|interface) ident["$orig"]="$newname" ;; esac
     done < "$MAP"
 
     for f in "${COLLATERAL_FILES[@]}" "${COLLATERAL_BINARIES[@]}"; do
@@ -722,7 +835,7 @@ rc_rename_collateral_files() {
             [ -n "$comp" ] || continue
             case "$comp" in
                 "$PREFIX"*) : ;;
-                *) [ -n "${ident[$comp]:-}" ] && comp="${PREFIX}${comp}" ;;
+                *) [ -n "${ident[$comp]:-}" ] && comp="${ident[$comp]}" ;;
             esac
             newdir="${newdir:+$newdir/}$comp"
         done
@@ -877,13 +990,13 @@ rc_emit_filelist() {
     local ordered=() f base line vf_base incdirs=() d
     vf_base="${VF_FILELIST:+$(basename "$VF_FILELIST")}"
     vf_base="${vf_base:-$BLOCK.vf}"
-    FILELIST="$CONFIG_DIR/${PREFIX}${vf_base}"
+    FILELIST="$CONFIG_DIR/$(rc_renamed_basename "$vf_base")"
 
     if [ -n "${VF_FILELIST:-}" ] && [ -f "$UPSTREAM/$VF_FILELIST" ]; then
         while IFS= read -r line; do
             base="$(basename "${line%%[[:space:]]*}")"
             # synthesizable sources were prefixed; anything else kept its name
-            f="$(rc_staged_path "${PREFIX}${base}")"
+            f="$(rc_staged_path "$(rc_renamed_basename "$base")")"
             [ -n "$f" ] || f="$(rc_staged_path "$base")"
             [ -n "$f" ] || continue
             case " ${ordered[*]} " in *" $f "*) continue ;; esac
@@ -1040,6 +1153,18 @@ rc_emit_revinfo() {
         printf '\n'
         printf 'policy:\n'
         printf '  rename_scope: "synthesized design material only"\n'
+        printf '  stem_renames:  # block-name stems rewritten under the prefix (repo-wide)\n'
+        if [ "${#STEM_RENAMES[@]}" -gt 0 ]; then
+            for tok in "${STEM_RENAMES[@]}"; do [ -n "$tok" ] && printf '    - "%s"\n' "$tok"; done
+        else
+            printf '    []\n'
+        fi
+        printf '  stem_keep:  # names that merely share the leading token and keep it\n'
+        if [ "${#STEM_KEEP[@]}" -gt 0 ]; then
+            for tok in "${STEM_KEEP[@]}"; do [ -n "$tok" ] && printf '    - "%s"\n' "$tok"; done
+        else
+            printf '    []\n'
+        fi
         printf '  synth_subtrees:  # identifiers declared here are renamed; everything else only references them\n'
         for tok in "${SYNTH_SUBTREES[@]}"; do [ -n "$tok" ] && printf '    - "%s"\n' "$tok"; done
         printf '  excluded_globs:\n'
@@ -1110,19 +1235,23 @@ rc_emit_revinfo() {
 # regeneration would emit names that disagree with what is committed, and the
 # round-trip check could not tell (it strips the prefix before comparing).
 #
-# Generator inputs live in the collateral tier, which preserves upstream paths
-# verbatim, so the ARCA path and the upstream path are the same string.
+# Generator inputs are declared by their upstream path; the committed copy is
+# at rc_gi_dest of that, which differs only for a block that relocates its
+# collateral.
 # ---------------------------------------------------------------------------
 rc_check_generator_inputs() {
     [ "${#GENERATOR_INPUTS[@]}" -gt 0 ] || return 0
     [ "$WITH_COLLATERAL" -eq 1 ] || return 0
-    local gi n=0
-    for gi in "${GENERATOR_INPUTS[@]}"; do
+    local gi dst n=0 i
+    for i in "${!GENERATOR_INPUTS[@]}"; do
+        gi="${GENERATOR_INPUTS[$i]}"
         [ -n "$gi" ] || continue
+        dst="${GENERATOR_INPUTS_DEST[$i]}"
         rc_check_relpath "$gi"
+        rc_check_relpath "$dst"
         [ -f "$UPSTREAM/$gi" ] || rc_die "generator input '$gi' not present upstream"
-        [ -f "$DEST/$gi" ] || rc_die "generator input '$gi' was not imported"
-        cmp -s "$UPSTREAM/$gi" "$DEST/$gi" || \
+        [ -f "$DEST/$dst" ] || rc_die "generator input '$gi' was not imported (expected at $dst)"
+        cmp -s "$UPSTREAM/$gi" "$DEST/$dst" || \
             rc_die "generator input '$gi' was modified; it must stay byte-identical to upstream"
         n=$((n + 1))
     done

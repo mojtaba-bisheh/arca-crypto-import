@@ -34,9 +34,23 @@ git add -A && git commit -m "Update ecc from caliptra-rtl"
 `import_block.sh` runs the checks itself; if it prints `all checks passed`
 the import is good.
 
-Blocks: `abr` `aes` `ecc` `hmac` `hmac256` `sha256` `sha3` `sha512`
-`sha512_masked`. `abr` comes from the `adams-bridge` submodule and `hmac256`
-from caliptra-rtl's `future` branch — both are handled automatically.
+Blocks: `abr` `aes` `ecc` `hmac512` `hmac256` `sha256` `sha256_masked` `sha3`
+`sha512` `sha512_masked`. `abr` comes from the `adams-bridge` submodule, and
+`hmac256` and `sha256_masked` from caliptra-rtl's `future` branch — both are
+handled automatically.
+
+`hmac512` is the one block whose ARCA name differs from its upstream one:
+caliptra-rtl calls the SHA-512 HMAC engine simply `hmac`, which reads as a
+generic name next to `hmac256`. The repo-wide *stem policy* in
+`rename_common.sh` (`RC_DEFAULT_STEM_RENAMES`) renames `hmac*` to `hmac512*`
+on top of the `arca_` prefix, so upstream `src/hmac/rtl/hmac_core.sv` lands as
+`src/hmac512/rtl/arca_hmac512_core.sv`. `hmac_drbg` is exempt
+(`RC_DEFAULT_STEM_KEEP`) — it is a shared DRBG, not a SHA-512 HMAC, and ECC
+imports it too. The policy lives in the shared engine rather than in
+`rename_hmac512.sh` because identifiers cross block boundaries: ECC also
+references `hmac_param_pkg`, and both imports have to spell the renamed
+package the same way. Each `revinfo.yml` records the policy that was in force
+under `policy.stem_renames` / `policy.stem_keep`.
 
 ## Seeing what changed upstream first
 

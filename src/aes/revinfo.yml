@@ -6,7 +6,7 @@
 block: aes
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T16:31:48Z"
+imported_at: "2026-10-06T20:04:37Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -22,13 +22,17 @@ upstream:
 
 importer:
   script: tools/scripts/rename/rename_aes.sh
-  library_version: "2.0.2"
-  toolchain_fingerprint: "e59c023a6a8233b9087815d85abebfd02071c5332fd729566374969a455f015a"
+  library_version: "2.1.0"
+  toolchain_fingerprint: "be03bda323bd036215e5190412f061946f8f137f8c3ac533868ba599bb87ed18"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
 policy:
   rename_scope: "synthesized design material only"
+  stem_renames:  # block-name stems rewritten under the prefix (repo-wide)
+    - "hmac=hmac512"
+  stem_keep:  # names that merely share the leading token and keep it
+    - "hmac_drbg"
   synth_subtrees:  # identifiers declared here are renamed; everything else only references them
     - "src/aes/rtl"
   excluded_globs:

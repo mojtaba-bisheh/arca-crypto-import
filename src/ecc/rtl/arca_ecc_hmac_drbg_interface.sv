@@ -69,7 +69,7 @@ module arca_ecc_hmac_drbg_interface#(
     output wire  [REG_SIZE-1 : 0]   drbg
     );
 
-    import arca_hmac_param_pkg::*;
+    import arca_hmac512_param_pkg::*;
 
     //----------------------------------------------------------------
     // Registers including update variables and write enable.

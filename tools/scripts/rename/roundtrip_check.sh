@@ -12,6 +12,12 @@
 # The only differences tolerated are `include redirections, which the import
 # performs on purpose when it captures environment configuration macros into a
 # block-private header.
+#
+# "Stripping the prefix" is not quite the whole inverse. A block may also carry
+# a *stem* rewrite (src/hmac -> src/hmac512, hmac_core -> hmac512_core), which
+# this has to undo as well or every file in that block reads as a difference.
+# The policy is read back out of the block's own revinfo.yml rather than
+# hard-coded, so the check stays an inverse of whatever the import declared.
 
 set -euo pipefail
 
@@ -56,6 +62,79 @@ for b in "${blocks[@]}"; do
     sha="$(sed -nE 's/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/\1/p' "$revinfo" | head -1)"
     prefix="$(sed -nE 's/^prefix:[[:space:]]*"(.*)"$/\1/p' "$revinfo" | head -1)"
     macro_prefix="$(printf '%s' "$prefix" | tr '[:lower:]' '[:upper:]')"
+
+    # policy.stem_renames / policy.stem_keep, as recorded at import time
+    stem_renames=()
+    while IFS= read -r tok; do [ -n "$tok" ] && stem_renames+=("$tok"); done \
+        < <(sed -nE '/^[[:space:]]*stem_renames:/,/^[[:space:]]*stem_keep:/ s/^[[:space:]]*-[[:space:]]*"([^"]+)".*/\1/p' "$revinfo")
+
+    # Undo the stem on one name: hmac512_core -> hmac_core, hmac512.sv -> hmac.sv.
+    # Only an exact match or a "<to>_" / "<to>." lead is inverted, which is the
+    # same shape rc_stem applied going the other way.
+    unstem() {
+        local n="$1" r from to
+        for r in "${stem_renames[@]}"; do
+            from="${r%%=*}"; to="${r#*=}"
+            case "$n" in
+                "$to"|"$to"_*|"$to".*) printf '%s%s' "$from" "${n#"$to"}"; return 0 ;;
+            esac
+        done
+        printf '%s' "$n"
+    }
+
+    stem_keep=()
+    while IFS= read -r tok; do [ -n "$tok" ] && stem_keep+=("$tok"); done \
+        < <(sed -nE '/^[[:space:]]*stem_keep:/,/^[[:space:]]*synth_subtrees:/ s/^[[:space:]]*-[[:space:]]*"([^"]+)".*/\1/p' "$revinfo")
+
+    # Forward direction, for the "guess the renamed path" fallbacks below.
+    restem() {
+        local n="$1" r from to
+        for r in "${stem_keep[@]}"; do
+            case "$n" in "$r"|"$r"_*|"$r".*) printf '%s' "$n"; return 0 ;; esac
+        done
+        for r in "${stem_renames[@]}"; do
+            from="${r%%=*}"; to="${r#*=}"
+            case "$n" in
+                "$from"|"$from"_*|"$from".*) printf '%s%s' "$to" "${n#"$from"}"; return 0 ;;
+            esac
+        done
+        printf '%s' "$n"
+    }
+
+    # The full inverse of the import, applied to file *content*: undo the stem,
+    # then drop the prefix. The stem half has to be *anchored*, because unlike
+    # "arca_" -- which can only ever be something this toolchain put there --
+    # the string "hmac512" occurs in upstream of its own accord (hmac512_op in
+    # the UVMF enums). Blindly inverting it would rewrite upstream's own names
+    # and report a difference that is not there.
+    #
+    # The rename only ever produces the stem in two shapes, so only those two
+    # are inverted:
+    #   1. directly behind the prefix   arca_hmac512_core -> hmac_core
+    #                                   ARCA_HMAC512_PARAM_PKG -> HMAC_PARAM_PKG
+    #   2. as a whole path component    src/hmac512/rtl -> src/hmac/rtl
+    #      (rc_fix_path_components strips the prefix back off these)
+    # Anything else -- hmac512_op, hmac512 in a comment upstream wrote -- is
+    # left exactly as found. Token boundaries make this perl rather than sed.
+    uninvert() {
+        perl -e '
+            my ($prefix, $mprefix, $nstem, @rest) = @ARGV;
+            my @stems = splice(@rest, 0, $nstem);
+            open(my $in, "<", $rest[0]) or die "$rest[0]: $!";
+            local $/; my $t = <$in>; close $in;
+            for my $s (@stems) {
+                my ($from, $to) = split /=/, $s, 2;
+                next unless defined $to and length $to;
+                my ($ufrom, $uto) = (uc $from, uc $to);
+                $t =~ s/\Q$prefix$to\E(?![A-Za-z0-9])/$from/g;
+                $t =~ s/\Q$mprefix$uto\E(?![A-Za-z0-9])/$ufrom/g;
+                $t =~ s{(?<=/)\Q$to\E(?![A-Za-z0-9_])}{$from}g;
+            }
+            $t =~ s/\Q$prefix\E//g;
+            $t =~ s/\Q$mprefix\E//g;
+            print $t;
+        ' "$prefix" "$macro_prefix" "${#stem_renames[@]}" ${stem_renames[@]+"${stem_renames[@]}"} "$1"
+    }
 
     git -C "$UPSTREAM" cat-file -e "$sha^{commit}" 2>/dev/null || {
         echo "upstream checkout does not contain $sha (fetch it first)" >&2; rc=1; continue; }
@@ -123,10 +202,31 @@ for b in "${blocks[@]}"; do
     # names may carry the prefix (UVMF names a directory after the package it
     # holds). Rather than re-deriving the rule, strip the prefix out of every
     # committed path and index by the result -- that is the upstream path.
+    #
+    # The stem is the second half of the inverse, and it has to be undone
+    # *below* the ARCA subtree root, never on the root itself: the key is
+    # compared against remap_path's output, which already speaks ARCA
+    # directories. For src/hmac512/rtl/arca_hmac512_core.sv the key wanted is
+    # src/hmac512/rtl/hmac_core.sv -- ARCA directory, upstream file name.
+    arca_key() {
+        local rp="${1//${prefix}/}" i best=-1 blen=0 root rest comp out
+        for i in "${!roots_arca[@]}"; do
+            case "$rp" in "${roots_arca[$i]}"/*)
+                [ "${#roots_arca[$i]}" -gt "$blen" ] && { blen="${#roots_arca[$i]}"; best="$i"; } ;;
+            esac
+        done
+        if [ "$best" -lt 0 ]; then printf '%s' "$rp"; return 0; fi
+        root="${roots_arca[$best]}"; rest="${rp#"$root"/}"; out="$root"
+        local -a comps=()
+        IFS='/' read -r -a comps <<< "$rest"
+        for comp in "${comps[@]}"; do out="$out/$(unstem "$comp")"; done
+        printf '%s' "$out"
+    }
+
     declare -A pathmap=()
     while read -r _ rpath; do
         [ -n "${rpath:-}" ] || continue
-        pathmap["${rpath//${prefix}/}"]="$rpath"
+        pathmap["$(arca_key "$rpath")"]="$rpath"
     done < <(sed -nE '/^renamed_manifest:/,$ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"(src\/[^"]+)".*/\1 \2/p' "$revinfo")
 
     checked=0
@@ -142,13 +242,13 @@ for b in "${blocks[@]}"; do
         renamed=""
         if [ -n "${pathmap[$mapped]:-}" ]; then
             renamed="$DEST/${pathmap[$mapped]}"
-        elif [ -f "$DEST/$(dirname "$mapped")/${prefix}${base}" ]; then
-            renamed="$DEST/$(dirname "$mapped")/${prefix}${base}"
+        elif [ -f "$DEST/$(dirname "$mapped")/${prefix}$(restem "$base")" ]; then
+            renamed="$DEST/$(dirname "$mapped")/${prefix}$(restem "$base")"
         elif [ -f "$DEST/$mapped" ]; then
             renamed="$DEST/$mapped"
         else
             arcadir="${dirmap[$updir]:-}"
-            [ -n "$arcadir" ] && renamed="$DEST/$arcadir/${prefix}${base}"
+            [ -n "$arcadir" ] && renamed="$DEST/$arcadir/${prefix}$(restem "$base")"
         fi
         [ -n "$renamed" ] && [ -f "$renamed" ] || { echo "  FAIL  missing renamed file for $upath"; rc=1; continue; }
 
@@ -165,7 +265,7 @@ for b in "${blocks[@]}"; do
         fi
 
         IFS=$'\t' read -r urepo usha urel < <(upstream_repo_for "$upath")
-        if diffout="$(diff <(sed "s/${prefix}//g; s/${macro_prefix}//g" "$renamed") \
+        if diffout="$(diff <(uninvert "$renamed") \
                           <(git -C "$urepo" show "$usha:$urel"))"; then
             checked=$((checked + 1))
             continue
@@ -191,10 +291,13 @@ for b in "${blocks[@]}"; do
     local_gi=0
     while IFS= read -r gi; do
         [ -n "$gi" ] || continue
-        if [ ! -f "$DEST/$gi" ]; then
-            printf '  FAIL  generator input %s declared but not imported\n' "$gi"; rc=1; continue
+        # declared by upstream path; committed at the ARCA path for that subtree
+        gi_arca="$(remap_path "$gi")"
+        if [ ! -f "$DEST/$gi_arca" ]; then
+            printf '  FAIL  generator input %s declared but not imported (looked for %s)\n' "$gi" "$gi_arca"
+            rc=1; continue
         fi
-        if git -C "$UPSTREAM" show "$sha:$gi" 2>/dev/null | cmp -s - "$DEST/$gi"; then
+        if git -C "$UPSTREAM" show "$sha:$gi" 2>/dev/null | cmp -s - "$DEST/$gi_arca"; then
             local_gi=$((local_gi + 1))
         else
             printf '  FAIL  generator input %s is not byte-identical to upstream\n' "$gi"

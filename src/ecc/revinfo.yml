@@ -6,7 +6,7 @@
 block: ecc
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T16:31:58Z"
+imported_at: "2026-10-06T20:04:45Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -27,13 +27,17 @@ upstream:
 
 importer:
   script: tools/scripts/rename/rename_ecc.sh
-  library_version: "2.0.2"
-  toolchain_fingerprint: "2c6ad2487c803b41c01c0fa213207b1be4951998ad3ca5a55ca518f6cccd27b6"
+  library_version: "2.1.0"
+  toolchain_fingerprint: "7ce9af1d9ad5fa58a4e487a374dc61c5c27c7ae2e6fe812d0341b450246e341e"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
 policy:
   rename_scope: "synthesized design material only"
+  stem_renames:  # block-name stems rewritten under the prefix (repo-wide)
+    - "hmac=hmac512"
+  stem_keep:  # names that merely share the leading token and keep it
+    - "hmac_drbg"
   synth_subtrees:  # identifiers declared here are renamed; everything else only references them
     - "src/ecc/rtl"
   excluded_globs:
@@ -286,7 +290,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "6b49c9d0831bf7f85cc2df70d5e86c945fdc6adefb05dcfdee3a5d2fc6990dca", path: "src/ecc/rtl/arca_ecc_dsa_sequencer.sv" }
   - { sha256: "36867376b901a5946b35e88b79ff390752f7e95346d13dd7e90262d4bb4af37b", path: "src/ecc/rtl/arca_ecc_dsa_uop_pkg.sv" }
   - { sha256: "d02c58822420165d89c8f26b82361acfe5ec36efe8db543082b29315b4a421be", path: "src/ecc/rtl/arca_ecc_fau.sv" }
-  - { sha256: "d8e1b3ccdcd7fe431548c8870700f06a9a10a7cff8dd83bcf0eab48d772faab9", path: "src/ecc/rtl/arca_ecc_hmac_drbg_interface.sv" }
+  - { sha256: "dde56745fca8a0dbf3fd4dc20af19ce6ff78720711c709dc15de02b10b3ce9ce", path: "src/ecc/rtl/arca_ecc_hmac_drbg_interface.sv" }
   - { sha256: "53373c949d18c18f57c45ea80acafb09ed1458080a23547c5cf88e5aedd36be4", path: "src/ecc/rtl/arca_ecc_montgomerymultiplier.sv" }
   - { sha256: "a55b8d69020d7a318d8e7198989718b077b2d4c81bcb47f0e2e0f12f9522dd6a", path: "src/ecc/rtl/arca_ecc_mult_dsp.sv" }
   - { sha256: "2277891770122995468099baa360bdd52d855746bec3425f00a4d85bd96a226c", path: "src/ecc/rtl/arca_ecc_params_pkg.sv" }
@@ -319,7 +323,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "48a2bcab90bf6a9c38867665e901988952a4565cae759e86e09ea5441d763df3", path: "src/ecc/uvmf_ecc/ECC_out_interface.yaml" }
   - { sha256: "f0179610a7ac2095c4650903676dd03ba68e6f9b92005d303dc7c719fb4a62a4", path: "src/ecc/uvmf_ecc/ECC_util_comp_ECC_predictor.yaml" }
   - { sha256: "4ce323862e642df135d27c6afde7e342877f4adabadd2b8476cd8bd2db464358", path: "src/ecc/uvmf_ecc/config/compile.yml" }
-  - { sha256: "ce0eae9844386ca570eaac112f126693d4145e77c38974fe391ed0eb739bf950", path: "src/ecc/uvmf_ecc/config/uvmf_ecc.vf" }
+  - { sha256: "fcea11f1894968adbd526454a7cd8368db118b3d022e50610b2256a4b478b121", path: "src/ecc/uvmf_ecc/config/uvmf_ecc.vf" }
   - { sha256: "b3de8ccf495493570ff2745b2c806e41d9c28d1c590de77ee0cd68df4ab6731d", path: "src/ecc/uvmf_ecc/coverage/config/uvmf_ecc_cm_hier.cfg" }
   - { sha256: "9cce826d0a7ab070904a9b352253898b0363f6d03ac8bd4aff9b87288ce5d702", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/.project" }
   - { sha256: "22e385bf168ca32deff0f4cc0f680ebb4dd26b24c4df7ccfda3aa4cd335ed06e", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/.svproject" }
@@ -329,11 +333,11 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "05e84cbd9875d35be4583e4bd3a1be37f8f8c3345efae54028cbf33fd020451c", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/rtl/verilog/verilog_dut.v" }
   - { sha256: "20a1f41839f8279b6dd44a548e763c95476e3cfbe641f081129bf0785ec66670", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/rtl/verilog/verilog_dut.vinfo" }
   - { sha256: "3abc11418d80deb00513af9cb911ef50d645dcaa95f10815fc92cedbc8e9632f", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/rtl/vhdl/vhdl_dut.vhd" }
-  - { sha256: "c240a69ebaabc459c7570f867023d295049eca47a3c2e57d2956329e193f6941", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/sim/Makefile" }
+  - { sha256: "2a5f02744910f7ce090aabc7de50a045195edd6e40c6efe76b709ddb4e796a53", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/sim/Makefile" }
   - { sha256: "2bf885c911e6e0a9031a29d79f0a2739fe884634377969864fa60cca062ca512", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/sim/bcr_testlist" }
   - { sha256: "c0cd67eec702ec8e6cc6f6483b0260bee6dcfd59541d760e3f344e18f0b48750", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/sim/bcr_testlist.yaml" }
   - { sha256: "e8a64a86a81c8cf9bfd9959d4017e995bed2f329bcbe9000726156fb683d4c42", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/sim/certe_dump.xml" }
-  - { sha256: "af5519b8e4285f1e85a434700fd888227da02d6d0c6644789f81c2e752a61a8d", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/sim/compile.do" }
+  - { sha256: "b91a504cd8668fc2780381de266b38356bf900fe25fcb15ce720068e4321c787", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/sim/compile.do" }
   - { sha256: "b111d546bac795087121faa64a31e4c4cc098ad4f6aac270d1e97dabc24b1bfa", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/sim/hdl.compile" }
   - { sha256: "4611b057c356303b720c84a55a2691654dca258d419dda6b0a333f5c0a602e82", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/sim/hdl.vinfo" }
   - { sha256: "2d3193f0811dfa165d8ac4d005554138f91ceba84f9b99d1717c463d2b598437", path: "src/ecc/uvmf_ecc/uvmf_template_output/project_benches/ECC/sim/hvl.compile" }
