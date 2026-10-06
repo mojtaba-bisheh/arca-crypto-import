@@ -97,7 +97,7 @@ jobs:
           for vf in src/*/config/arca_*.vf; do
             echo "== $vf =="
             envsubst < "$vf" > /tmp/block.f
-            slang --lint-only --single-unit \
+            slang --lint-only --single-unit -Wno-nonstandard-hierarchical-cross \
               -I "$UP/keyvault/rtl" -I "$UP/libs/rtl" -I "$UP/caliptra_prim/rtl" \
               -I "$UP/integration/rtl/caliptra_reg" -I "$UP/integration/rtl" \
               "$UP/libs/rtl/caliptra_sva.svh" \

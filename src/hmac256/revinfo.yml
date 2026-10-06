@@ -6,7 +6,7 @@
 block: hmac256
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T16:08:20Z"
+imported_at: "2026-10-06T16:32:19Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -28,7 +28,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_hmac256.sh
   library_version: "2.0.2"
-  toolchain_fingerprint: "66a9d43b502faabdf5147fce2974898defa0e0e332460fabd2ae2e0fed4017df"
+  toolchain_fingerprint: "a43f86415c352193afd03d9fa0fa74ad08c2a719210829598f9fd89e80edb5e7"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 

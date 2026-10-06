@@ -6,7 +6,7 @@
 block: abr
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T16:06:56Z"
+imported_at: "2026-10-06T16:30:55Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -101,7 +101,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_abr.sh
   library_version: "2.0.2"
-  toolchain_fingerprint: "23ec5ad7f698eec2ae45478187c235cf5f4b8ae290793f37766c341054bd02b1"
+  toolchain_fingerprint: "0c7dd4eca9abd779923b6cd2021d7c5996164cbc805327dc7ee24c3f138e4b52"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
