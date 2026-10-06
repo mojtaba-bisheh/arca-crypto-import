@@ -6,7 +6,7 @@
 block: hmac
 prefix: "arca_"
 macro_prefix: "ARCA_"
-imported_at: "2026-10-06T14:46:15Z"
+imported_at: "2026-10-06T15:02:29Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -25,7 +25,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_hmac.sh
   library_version: "2.0.2"
-  toolchain_fingerprint: "522774eaa896fa060ca734e112e4d880dab7bb071e57616454bcf88e76b717e4"
+  toolchain_fingerprint: "3a9bc5de33c48857a13ed3fe57969b3a966a323dfbf7925eb1e8cd0d5701dbc8"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -49,7 +49,7 @@ policy:
     - "*.vcd"
     - "*.fsdb"
   cross_block_identifiers:
-    []
+    - "module:sha512_masked_core"
   environment_config_macros:
     - "CLP_CSR_HMAC_KEY_DWORDS@src/libs/rtl/caliptra_macros.svh"
   generator_inputs:  # fed to a code generator, must stay byte-identical to upstream
@@ -275,7 +275,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "f8165cbb7f8e378bb3299b5f7816a160b231358a40889884c586e7fd029ae507", path: "src/hmac/coverage/hmac_ctrl_cov_if.sv" }
   - { sha256: "1d377849de38b8379a492df6eb7478e8ad8093841e8b65892595aa059ab44826", path: "src/hmac/rtl/arca_hmac.sv" }
   - { sha256: "269d103fc85d1b8aafc7b0cb468ca7354243d8f083c8dd1e8d445e43f38a2943", path: "src/hmac/rtl/arca_hmac_config.svh" }
-  - { sha256: "96cbd74a77911cff2f2b7f38ea0b2741386294b7d62b1f33a88f34073531bf4f", path: "src/hmac/rtl/arca_hmac_core.sv" }
+  - { sha256: "900a8ce4e1eacef07b0948891f58cdd4308ba94fab8e4406d3a5fa0544c0b72a", path: "src/hmac/rtl/arca_hmac_core.sv" }
   - { sha256: "577968b864362413c3344665feece512aec8db90814f749fe6a46272c2bc8bba", path: "src/hmac/rtl/arca_hmac_ctrl.sv" }
   - { sha256: "079dc53706bf82e0502620f34a10422a67af2dabb57cc8817d7c8bd3fba0876e", path: "src/hmac/rtl/arca_hmac_param_pkg.sv" }
   - { sha256: "6c8b12f217505fe1f46ecd94fe09136bf7a68bd069e12457d4dc5a3c982c549c", path: "src/hmac/rtl/arca_hmac_reg.sv" }
@@ -293,7 +293,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "974d86549467a8da9da72351025e53dc577befe92ec7c0b975e0dfa47735accc", path: "src/hmac/uvmf_2022/HMAC_out_interface.yaml" }
   - { sha256: "c5b36fe8f6bd6dd31616af8f668366b004405206d4fe3c4345c72f86657a78ca", path: "src/hmac/uvmf_2022/HMAC_util_comp_HMAC_predictor.yaml" }
   - { sha256: "6cd663907ac32055acc3e4145b0f2f10917ab4c6a53f24d5a90c4ff2724b7952", path: "src/hmac/uvmf_2022/config/compile.yml" }
-  - { sha256: "3c90f144df277a2c2c4b9b009f73c3bc8bae8b8a9b587d932ada5b2d1ee765cb", path: "src/hmac/uvmf_2022/config/uvmf_hmac.vf" }
+  - { sha256: "251726b5937c586631244e205f9072abc9f465bf0f614d2f6073d77671de4e1f", path: "src/hmac/uvmf_2022/config/uvmf_hmac.vf" }
   - { sha256: "b3de8ccf495493570ff2745b2c806e41d9c28d1c590de77ee0cd68df4ab6731d", path: "src/hmac/uvmf_2022/coverage/config/uvmf_hmac_cm_hier.cfg" }
   - { sha256: "40f065991dc0d6603bf08768c9591b3d0141e347e7ffbcc1d939d4a519154917", path: "src/hmac/uvmf_2022/run_yaml_uvmf_scripts.bat" }
   - { sha256: "b8b45258ac85affb982cf722b62482645374211e7e2383f3ea512e1d3bf39bbf", path: "src/hmac/uvmf_2022/uvmf_template_output/project_benches/HMAC/.project" }

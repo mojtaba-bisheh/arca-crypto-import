@@ -132,7 +132,7 @@ module arca_hmac_core
   //----------------------------------------------------------------
   // core instantiation.
   //----------------------------------------------------------------
-  sha512_masked_core u_sha512_core_h1
+  arca_sha512_masked_core u_sha512_core_h1
                      (
                      .clk(clk),
                      .reset_n(reset_n),

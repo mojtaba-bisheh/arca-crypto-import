@@ -81,7 +81,10 @@ EXCLUDE_GLOBS=(
     "*.rdl"
 )
 
-EXTRA_RENAME_IDENTS=()
+# Declared by rename_sha512_masked.sh, instantiated by hmac_core.
+EXTRA_RENAME_IDENTS=(
+    "module:sha512_masked_core"
+)
 
 # Macros the caliptra-rtl environment applies to configure this block.
 # Format: MACRO@<upstream path of the header that defines it>

@@ -1,0 +1,163 @@
+# ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
+#
+# To review what changed upstream since this import:
+#   git -C <caliptra-rtl> log --oneline 9d6585080a35f7819ffc05be12b71a128c85ead1..origin/main -- src/aes/rtl src/aes/coverage 
+#
+block: aes
+prefix: "arca_"
+macro_prefix: "ARCA_"
+imported_at: "2026-10-06T15:03:02Z"
+
+upstream:
+  repo: "https://github.com/chipsalliance/caliptra-rtl.git"
+  branch: "main"
+  commit: "9d6585080a35f7819ffc05be12b71a128c85ead1"
+  commit_date: "2026-09-29T12:11:24-07:00"
+  commit_subject: "[VAL] Fix es_csrng_tb read sampling race (#1418)"
+  working_tree_dirty: false
+  subtrees:  # upstream path -> ARCA path
+    - { upstream: "src/aes/rtl", arca: "src/aes/rtl" }
+    - { upstream: "src/aes/coverage", arca: "src/aes/coverage" }
+  compile_order_from: src/aes/config/aes.vf
+
+importer:
+  script: tools/scripts/rename/rename_aes.sh
+  library_version: "2.0.2"
+  toolchain_fingerprint: "ce36ecbeca1d48b2e36d31a39fa1af568d37b4dd5e8d7df6baed56601ccc1b85"
+  bash: "4.4.20(1)-release"
+  perl: "v5.26.3"
+
+policy:
+  rename_scope: "synthesized design material only"
+  synth_subtrees:  # identifiers declared here are renamed; everything else only references them
+    - "src/aes/rtl"
+  excluded_globs:
+    - "*_reg_uvm.sv"
+    - "*.rdl"
+  artifact_globs:  # build/sim outputs, regenerated not vendored
+    - "*.ucdb"
+    - "*.exe"
+    - "*.o"
+    - "*.a"
+    - "*.so"
+    - "*.pyc"
+    - "*.wlf"
+    - "*.vstf"
+    - "*.vcd"
+    - "*.fsdb"
+  cross_block_identifiers:
+    []
+  environment_config_macros:
+    []
+  generator_inputs:  # fed to a code generator, must stay byte-identical to upstream
+    []
+  keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed
+    - "kv_defines_pkg"
+    - "kv_read_t"
+    - "kv_write_t"
+    - "kv_error_code_e"
+    - "uvm_pkg"
+
+artifacts:
+  block_dir: src/aes
+  source_dirs:
+    - src/aes/rtl
+    - src/aes/coverage
+  collateral_dirs: []
+  filelist: src/aes/config/arca_aes.vf
+  rename_map: src/aes/revinfo.map
+
+source_manifest:  # sha256 of the upstream files as imported
+  - { sha256: "aa73e63bc1efe2c99d418f9c3c278e6d52d583fe5979319415908e4448f33d42", path: "src/aes/rtl/aes.sv" }
+  - { sha256: "98cff3e740d9a6136a00e1b0ae9073ec8f629616a014c36a7f263ae8a8c98d4f", path: "src/aes/rtl/aes_cipher_control.sv" }
+  - { sha256: "b1c7c2633fea211da3b8795ed5bde9b2ee1c35a9036cd6abb7c260585baecbd7", path: "src/aes/rtl/aes_cipher_control_fsm.sv" }
+  - { sha256: "fd69d1017b98ff85d948beaa21d64b40e29ad82e1f2af341dccd4f912683dfce", path: "src/aes/rtl/aes_cipher_control_fsm_n.sv" }
+  - { sha256: "3caa75ee73751642d2d7d8c9fe28aca297b885997bdb2bb58d01e68e5526afa8", path: "src/aes/rtl/aes_cipher_control_fsm_p.sv" }
+  - { sha256: "e3a178f8988f2a93b50abb39c12c3c1b68247e21564222f022a5a16bc6f1f849", path: "src/aes/rtl/aes_cipher_core.sv" }
+  - { sha256: "648a9e8e8137426e541b3d91c869b3b5a9f6e1489b7c17cb95ddc6bff5fd02f9", path: "src/aes/rtl/aes_clp_reg.sv" }
+  - { sha256: "2ecb127376c296cddea4f6aa5093298f3744579dd34f0c3834197b824b8c8307", path: "src/aes/rtl/aes_clp_reg_pkg.sv" }
+  - { sha256: "f4658235d1b80c0639d91d4da4cde8d837272c8392e5ac04b085a68cd8b6de98", path: "src/aes/rtl/aes_clp_wrapper.sv" }
+  - { sha256: "ab5713918eb376713959457caf24280baa2ee4f80e194c0a67be025eebb6b0b8", path: "src/aes/rtl/aes_control.sv" }
+  - { sha256: "d99efe69dd81b475d60acacdc3a295f1450e747af1b42b2db8f769572a84c83c", path: "src/aes/rtl/aes_control_fsm.sv" }
+  - { sha256: "1b563a9138337e7f06c9ffe1ed3de30b82fcd018da4d153ba49c963aafe45d2e", path: "src/aes/rtl/aes_control_fsm_n.sv" }
+  - { sha256: "dfe24f8901aead5c0da8a222222b32f3f208d68f9dd8d1c042a09cbf64833d58", path: "src/aes/rtl/aes_control_fsm_p.sv" }
+  - { sha256: "001080432c9b54babd80c028f60592000585ea4d3461564c17bc600dc8877219", path: "src/aes/rtl/aes_core.sv" }
+  - { sha256: "aaaf0f958ab89e1c23fbaf22073a22c051a3a3bdf06d29e417a5607d90aa3605", path: "src/aes/rtl/aes_ctr.sv" }
+  - { sha256: "6a8d4868a1e7b63107857fc6963f1b52e48328d364c8371f0b34d389a4ca9f1d", path: "src/aes/rtl/aes_ctr_fsm.sv" }
+  - { sha256: "e25a050e0f4904b9332dba5740c4af6104ccb2eabbdd6bf4bbfe1b71a9beb037", path: "src/aes/rtl/aes_ctr_fsm_n.sv" }
+  - { sha256: "d101c96a53567386e7a3a23864baece3c865e3cb04b73f4d2000c756335830ad", path: "src/aes/rtl/aes_ctr_fsm_p.sv" }
+  - { sha256: "c2d183e548dd3c60e0c98d3b87453573396f99ea7138da7d14c67b841d4b0e0d", path: "src/aes/rtl/aes_ctrl_gcm_reg_shadowed.sv" }
+  - { sha256: "934acc89a529fa89c5e655f48bdf9cec744cdd37b0148f7cfb2fc26f12e28162", path: "src/aes/rtl/aes_ctrl_reg_shadowed.sv" }
+  - { sha256: "35149a0b33e72391ef1f8e597b89b8692a921dc97682db0f2d39fe7a00751d14", path: "src/aes/rtl/aes_ghash.sv" }
+  - { sha256: "2773791c8aeed8608683ec21819ef42e01a202dabd249850205e9df8a4fba98c", path: "src/aes/rtl/aes_ghash_wrap.sv" }
+  - { sha256: "cfa11acb44051d9a7513a76671732b24f51fc35e2e57d73a5615ecc034fb6568", path: "src/aes/rtl/aes_key_expand.sv" }
+  - { sha256: "143498561818fcaf2c9eaa7a92a220c82440f2984a72a90efa8b4c6e44efd315", path: "src/aes/rtl/aes_mix_columns.sv" }
+  - { sha256: "9e1b9304e2213e9ab3ed3dabbbb8556417da69ccc883c8b697fc8179d7d0108d", path: "src/aes/rtl/aes_mix_single_column.sv" }
+  - { sha256: "a6bc21628a657e8bbba7a861f6c8c408bbf4200bec6e5e158bc89faf352bffe0", path: "src/aes/rtl/aes_pkg.sv" }
+  - { sha256: "a2a5802cb79e6810cf936baa5fac628f8ac3614fde2952ac579a5b25f217abd1", path: "src/aes/rtl/aes_prng_clearing.sv" }
+  - { sha256: "34a0389734e100d8c86dd3407f0fffb3c028b14eaa73449b15a254596374d194", path: "src/aes/rtl/aes_prng_masking.sv" }
+  - { sha256: "95892ed0a42be8507e1e492cfb9cda00f9c5565bd859c18853d0256fa2c1b42c", path: "src/aes/rtl/aes_reduced_round.sv" }
+  - { sha256: "61b2244006d8b22ab7e663d0ffde8795b3685f459b6bc84f88da9586bb5f076b", path: "src/aes/rtl/aes_reg_pkg.sv" }
+  - { sha256: "4a0570cd078be09436a1d30ac12c7021222080a63b49a205341fc17b3519b52c", path: "src/aes/rtl/aes_reg_status.sv" }
+  - { sha256: "907e7b08e4b787ee3e379d712f165bbbdec91ea7a7d6060f809777fa44f2d9fb", path: "src/aes/rtl/aes_reg_top.sv" }
+  - { sha256: "e388f34c0efe3ad41bbb3734dffe2d9dcfb571d5aa3ad0f6f728fe14e987229b", path: "src/aes/rtl/aes_rev_info" }
+  - { sha256: "45ce6020d0b84434e5861098113353de02b878508dd41e25e40395fb70b3420c", path: "src/aes/rtl/aes_sbox.sv" }
+  - { sha256: "547672776957389bed22fba0db2ae83fb5652080db05d7a12f030ef0570aa02c", path: "src/aes/rtl/aes_sbox_canright.sv" }
+  - { sha256: "b3e4a7143aeb1ea4cfe85e7b92b43c576f3f5b34404e4f11107d0bda33a9935b", path: "src/aes/rtl/aes_sbox_canright_masked.sv" }
+  - { sha256: "7eb691ea395ee88b85b602deafbeca73236d9fdfa1ddd19be421904c65d1e9c3", path: "src/aes/rtl/aes_sbox_canright_masked_noreuse.sv" }
+  - { sha256: "d219ccc068f6b5082a08bd49e744e1ad7b0f0b6732226280afa325fdd051cd8e", path: "src/aes/rtl/aes_sbox_canright_pkg.sv" }
+  - { sha256: "ec04dc9e9db311164f351224ea62464ce7960fce9763f165b97641d7e059754b", path: "src/aes/rtl/aes_sbox_dom.sv" }
+  - { sha256: "f13d9aee88a8bce94221a5efd9b8a4f08feaac6a674ba8ef97cba1f9fdecba81", path: "src/aes/rtl/aes_sbox_lut.sv" }
+  - { sha256: "ce946f934f88b85793be6759c45567f40d9f4ec7879d76923215885b89acbc82", path: "src/aes/rtl/aes_sel_buf_chk.sv" }
+  - { sha256: "b8c2550b5fcef566159dd89ae65674e5994d1568e8ea7c5b0193d7f53521d9c3", path: "src/aes/rtl/aes_shift_rows.sv" }
+  - { sha256: "dcd2890ad6334935a623cb4a6343a6e6847bcab632ade67b0dda238636414930", path: "src/aes/rtl/aes_sub_bytes.sv" }
+  - { sha256: "1a35f82ac83c460df1bc7bb051840b97706b9145a99d137c201c7ef0a546ce10", path: "src/aes/coverage/aes_cov_bind.sv" }
+  - { sha256: "82bb6b4ce63f2e90e7f3577bcc11c8ac9d93708c9af777cb87df734865fdd197", path: "src/aes/coverage/aes_cov_if.sv" }
+
+renamed_manifest:  # sha256 of the committed, renamed files
+  - { sha256: "6ce7dc7cd5762539368f16a758ee34d2a0120287e76de76a039b2748395f1e65", path: "src/aes/config/arca_aes.vf" }
+  - { sha256: "086544f5bc2f15e4ed579640c0ba98f491a394dd00c631fcd2bcc333a4c26295", path: "src/aes/coverage/aes_cov_bind.sv" }
+  - { sha256: "d0a952c5e59af4ccdea4784aae4d217d08fb6d9a673f7a7c13ba81b8a16dab24", path: "src/aes/coverage/aes_cov_if.sv" }
+  - { sha256: "019280d0c59150f8135886979ce2706f99b9367dc542dd9f60fc89198f71ab43", path: "src/aes/rtl/arca_aes.sv" }
+  - { sha256: "d2d65919487d6f7ac98fb8f8897bc84e0292674dd836c9057e67ea5a4e9d3cf1", path: "src/aes/rtl/arca_aes_cipher_control.sv" }
+  - { sha256: "0761259d8113bbba25b6924ef6aaff937727ff41bcb4c803292a823ceb8d4a11", path: "src/aes/rtl/arca_aes_cipher_control_fsm.sv" }
+  - { sha256: "32b4e54116252ba9b05326fb34bd294caaec2b3cd4ae753eb38519b1b369cb82", path: "src/aes/rtl/arca_aes_cipher_control_fsm_n.sv" }
+  - { sha256: "20bc4a69c2e12263f788280a29724bd7e55ea9308105e8b5e8ddb460d026bf9a", path: "src/aes/rtl/arca_aes_cipher_control_fsm_p.sv" }
+  - { sha256: "755c545b2b3683e6c70ac4f8e3c7369533c62633dc72f5ec414095a4f6b9ac79", path: "src/aes/rtl/arca_aes_cipher_core.sv" }
+  - { sha256: "5020cd5a7bfb9bbbab36e1cbbe9f5d53dcb3d656f743759f080aa4fca41a60ce", path: "src/aes/rtl/arca_aes_clp_reg.sv" }
+  - { sha256: "a1a95253029c71a4dcd059680fa4823f4a9a23a874c3ddac0c975cf225ad7aa7", path: "src/aes/rtl/arca_aes_clp_reg_pkg.sv" }
+  - { sha256: "932255eca871d7cfbd3e4969a66a7690e4f0866c99b1fc33d7e3cd066b8bdf64", path: "src/aes/rtl/arca_aes_clp_wrapper.sv" }
+  - { sha256: "62cacd15c5fe3d12669b49a53b52a3d9022c621c90c6f91b8711959c21999cd9", path: "src/aes/rtl/arca_aes_control.sv" }
+  - { sha256: "0ffba15f8da5d0354d8bb29cdc80c0b4889fbb41e6bfcb4a106a2dc17072baee", path: "src/aes/rtl/arca_aes_control_fsm.sv" }
+  - { sha256: "bf52d13d20012b5dce3da4bda416788c95ee03fb0dd0db4e3da5418145b920f4", path: "src/aes/rtl/arca_aes_control_fsm_n.sv" }
+  - { sha256: "5b7db771ddaa8e006ea3153dcc2623952a3cec40e9b48345f076d564dc746174", path: "src/aes/rtl/arca_aes_control_fsm_p.sv" }
+  - { sha256: "245b09a6d7512635b88396cc2577c5e84289844e6f8955651f48c29e6220fa4a", path: "src/aes/rtl/arca_aes_core.sv" }
+  - { sha256: "36f54aa9d35e94edd2e63bebabd4976e495524284d7d6aa5945eff3c6454716c", path: "src/aes/rtl/arca_aes_ctr.sv" }
+  - { sha256: "e3fcf7a7667dd36d7d518442822726ab8876494e193087535a5add5bcd61f786", path: "src/aes/rtl/arca_aes_ctr_fsm.sv" }
+  - { sha256: "6ae6e2ee91de9f8c3e6a64eaa19a5a678545bb51f4402175aeaadad9d28259ee", path: "src/aes/rtl/arca_aes_ctr_fsm_n.sv" }
+  - { sha256: "1c840ea4a366a93ddd04941b55700213545fbd0b5015eddba120a2b00e82971c", path: "src/aes/rtl/arca_aes_ctr_fsm_p.sv" }
+  - { sha256: "d5aa12184294ac76acf11267628e51fef7d69f33da368f5efa745bd00a126abb", path: "src/aes/rtl/arca_aes_ctrl_gcm_reg_shadowed.sv" }
+  - { sha256: "e58397c7d43ec8fb420e4e3bd23e3441b7693faacd23dced7cd631639be47443", path: "src/aes/rtl/arca_aes_ctrl_reg_shadowed.sv" }
+  - { sha256: "3e405159e19e9083cef2057b4b64b3855d805c68960b60c5d48def833ca3f5c9", path: "src/aes/rtl/arca_aes_ghash.sv" }
+  - { sha256: "408f0a1a1091e020095c992012504da354409cfb1675a61430db6bea644d6b6d", path: "src/aes/rtl/arca_aes_ghash_wrap.sv" }
+  - { sha256: "5ea1d970b5f50cffbb04f9fdc9779ed56cfff715c7cd8ac91f1635d8626f5772", path: "src/aes/rtl/arca_aes_key_expand.sv" }
+  - { sha256: "a63925b733b63a5a222a30a8d3d74e98e472cce1a0821498f4e4eae6601eac70", path: "src/aes/rtl/arca_aes_mix_columns.sv" }
+  - { sha256: "4f91ac5af921affb1d02998c7ec8400d965caa8170a2c7fc0eae47b9db168ac1", path: "src/aes/rtl/arca_aes_mix_single_column.sv" }
+  - { sha256: "405316a3657c6fe20f5767679536f0eac7d2a53dc5b8c0eaf41f1c9bef8c5777", path: "src/aes/rtl/arca_aes_pkg.sv" }
+  - { sha256: "1aee7b8c89fc2d90549c38a80c751a318ff48b3d09f6f9dba15b259f6e8bc4b0", path: "src/aes/rtl/arca_aes_prng_clearing.sv" }
+  - { sha256: "41b955085b6dde3fc1b04c3da61a1e52f1fb03ddf777f7dbf5fd65581e1ef0fc", path: "src/aes/rtl/arca_aes_prng_masking.sv" }
+  - { sha256: "a3367992fb68caabee48e982d13de6ef3a53148c2b42c65c726752c8017ad862", path: "src/aes/rtl/arca_aes_reduced_round.sv" }
+  - { sha256: "42bad0fb4592fbc8c66e6d247701a547d723eecaa2d9487cb20d9e91d78b1666", path: "src/aes/rtl/arca_aes_reg_pkg.sv" }
+  - { sha256: "1a4589a281c6eeacbe58bb960e0b3e64cc9b87972786d58815339dc45a591b5f", path: "src/aes/rtl/arca_aes_reg_status.sv" }
+  - { sha256: "8d018432fc8c6f2ecb63382d7f090c31964552c640c7795562304c06f0827b40", path: "src/aes/rtl/arca_aes_reg_top.sv" }
+  - { sha256: "5e6285fafd7bfcc4af992853937fcecfa03e6cff7ccee05e2453fbd9b8bb6f11", path: "src/aes/rtl/arca_aes_rev_info" }
+  - { sha256: "2bc38f2d544bde100d1ff40240c2c92f0bf65e728dc5a581f77077f1b8c74ef0", path: "src/aes/rtl/arca_aes_sbox.sv" }
+  - { sha256: "71b4442f0142d1d63b7cb54620507ccd46044330e1bf6b64d130d556952d005f", path: "src/aes/rtl/arca_aes_sbox_canright.sv" }
+  - { sha256: "b4a21357a7fab4b20fc10b0dbd8dc126193e89baca8587bbf2236d4765a0b5a6", path: "src/aes/rtl/arca_aes_sbox_canright_masked.sv" }
+  - { sha256: "c5e55cdb921923accc2db07b1e4cd07025f6aebdda572a0782b90d7affcc1d98", path: "src/aes/rtl/arca_aes_sbox_canright_masked_noreuse.sv" }
+  - { sha256: "0357fc71d8914de8aee7687af65b1a4784a14becf2e9b58929945244858f4568", path: "src/aes/rtl/arca_aes_sbox_canright_pkg.sv" }
+  - { sha256: "5a5d3a24889c27911862552b530a706755b70f0813763504b9afee6ecbc2573a", path: "src/aes/rtl/arca_aes_sbox_dom.sv" }
+  - { sha256: "84555576eef3657112817a3ca1fa395d55cbb7a2a4b19c02b05246d1c053773c", path: "src/aes/rtl/arca_aes_sbox_lut.sv" }
+  - { sha256: "6a4dfe0bb2e80ee2144ffd894b2d6de3683f90da8527fef4d28d777fede6c2f2", path: "src/aes/rtl/arca_aes_sel_buf_chk.sv" }
+  - { sha256: "127fe41cd9729fbf95ce26b12d96292afcd17abd42ccd4f625498e8b8cf53b38", path: "src/aes/rtl/arca_aes_shift_rows.sv" }
+  - { sha256: "8e98821f2bfd44898f1cbe9084d480f897c2b200ccec41d686f7b895b14d5f75", path: "src/aes/rtl/arca_aes_sub_bytes.sv" }

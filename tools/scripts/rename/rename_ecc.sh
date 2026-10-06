@@ -96,8 +96,15 @@ EXCLUDE_GLOBS=(
 
 # Cross-block dependency: declared elsewhere, renamed here so the reference
 # resolves to the module that rename_hmac.sh publishes.
+# Declared by other imports, referenced here. ECC instantiates hmac_drbg and
+# imports hmac_param_pkg, both owned by rename_hmac.sh; this block must rewrite
+# its references to them even though it does not own them. Omitting the package
+# left ARCA's ECC importing an hmac_param_pkg that no longer existed under that
+# name -- it did not fail CI because the generated filelist still resolved the
+# dependency against ${CALIPTRA_ROOT} rather than against the ARCA copy.
 EXTRA_RENAME_IDENTS=(
     "module:hmac_drbg"
+    "package:hmac_param_pkg"
 )
 
 # UVMF generator inputs. These describe the verification environment -- agents,

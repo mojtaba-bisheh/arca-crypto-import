@@ -127,7 +127,7 @@ $(UVMF_PROJECT_DIR)/../../../../../hmac_drbg/rtl/arca_hmac_drbg.v\
 $(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_core.v\
 $(UVMF_PROJECT_DIR)/../../../../../keyvault/rtl/kv_defines_pkg.sv\
 $(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_ctrl.sv\
-$(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_param_pkg.sv\
+$(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/arca_hmac_param_pkg.sv\
 $(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_intr_regs_pkg.sv\
 $(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac.sv\
 $(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_intr_regs.sv\

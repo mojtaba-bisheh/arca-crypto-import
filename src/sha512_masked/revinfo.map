@@ -1,0 +1,12 @@
+# ARCA identifier rename map for block 'sha512_masked' (prefix: arca_)
+macro	CALIPTRA_SHA512_MASKED_DEFINES_PKG	ARCA_CALIPTRA_SHA512_MASKED_DEFINES_PKG
+module	sha512_core	arca_sha512_core
+module	sha512_h_constants	arca_sha512_h_constants
+module	sha512_k_constants	arca_sha512_k_constants
+module	sha512_masked_core	arca_sha512_masked_core
+module	sha512_masked_w_mem	arca_sha512_masked_w_mem
+module	sha512_w_mem	arca_sha512_w_mem
+package	sha512_masked_defines_pkg	arca_sha512_masked_defines_pkg
+file	src/sha512_masked/rtl/sha512_masked_core.sv	arca_src/sha512_masked/rtl/sha512_masked_core.sv
+file	src/sha512_masked/rtl/sha512_masked_defines_pkg.sv	arca_src/sha512_masked/rtl/sha512_masked_defines_pkg.sv
+file	src/sha512_masked/rtl/sha512_masked_w_mem.sv	arca_src/sha512_masked/rtl/sha512_masked_w_mem.sv

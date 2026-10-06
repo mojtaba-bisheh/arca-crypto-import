@@ -27,6 +27,7 @@ package	ecc_dsa_uop_pkg	arca_ecc_dsa_uop_pkg
 package	ecc_params_pkg	arca_ecc_params_pkg
 package	ecc_pm_uop_pkg	arca_ecc_pm_uop_pkg
 package	ecc_reg_pkg	arca_ecc_reg_pkg
+package	hmac_param_pkg	arca_hmac_param_pkg
 file	src/ecc/rtl/ecc_add_sub_mod_alter.sv	arca_src/ecc/rtl/ecc_add_sub_mod_alter.sv
 file	src/ecc/rtl/ecc_adder.sv	arca_src/ecc/rtl/ecc_adder.sv
 file	src/ecc/rtl/ecc_arith_unit.sv	arca_src/ecc/rtl/ecc_arith_unit.sv

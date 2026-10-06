@@ -41,6 +41,8 @@ PLATFORM_HEADERS=(
     "kv_macros.svh"
     "kv_defines.svh"
     "caliptra_prim_assert.sv"
+    "caliptra_prim_module_name_macros.svh"
+    "caliptra_reg_field_defines.svh"
     "caliptra_sva.svh"
     "uvm_macros.svh"
 )

@@ -42,6 +42,10 @@
 #   ENV_HEADER_REPLACE    array of header basenames whose `include is redirected
 #                         to the generated block-private config header
 #   KEEP_IDENTS           array of identifiers that must NOT be prefixed
+#   EXTRA_PATH_DIRS       array of directory names that appear as path
+#                         components of foreign paths (doc URLs, upstream-repo
+#                         references) and must keep their unprefixed spelling
+#                         there even though the identifier itself is renamed
 #                         (shared platform libraries owned by ARCA, not by the block)
 #   COLLATERAL_SUBTREES   array of upstream dirs imported *recursively* as
 #                         verification collateral (tb/, formal/, stimulus/,
@@ -168,7 +172,7 @@ rc_init() {
     rc_default_array EXCLUDE_GLOBS EXTRA_RENAME_IDENTS ENV_MACRO_SPECS \
                      ENV_HEADER_REPLACE KEEP_IDENTS DEST_SUBTREES \
                      COLLATERAL_SUBTREES ARTIFACT_GLOBS GENERATOR_INPUTS \
-                     SYNTH_SUBTREES
+                     SYNTH_SUBTREES EXTRA_PATH_DIRS
     [ "${#ARTIFACT_GLOBS[@]}" -gt 0 ] || ARTIFACT_GLOBS=("${RC_DEFAULT_ARTIFACT_GLOBS[@]}")
     WITH_COLLATERAL=1
 
@@ -347,6 +351,9 @@ rc_stage() {
 # ---------------------------------------------------------------------------
 rc_stage_collateral() {
     COLLATERAL_FILES=()
+    # Declared here, not only assigned in rc_rename_collateral_files, so that a
+    # block with no collateral still has an empty array for the fixup passes.
+    COLLATERAL_INSTALLED=()
     COLLATERAL_BINARIES=()
     COLLATERAL_DIRS=()
     [ "${#COLLATERAL_SUBTREES[@]}" -gt 0 ] || return 0
@@ -657,8 +664,6 @@ rc_rename_collateral_files() {
     else
         rc_log "collateral: all ${#out[@]} file name(s) kept upstream"
     fi
-    rc_fix_file_references
-    rc_fix_path_components
 }
 
 # ---------------------------------------------------------------------------
@@ -741,6 +746,11 @@ rc_fix_path_components() {
         find "$STAGE" -type d -name "${PREFIX}${base}" -print -quit | grep -q . && continue
         keep+=("$base")
     done < <({ find "$STAGE" -type d; find "$UPSTREAM/src" -maxdepth 2 -type d; } | sort -u)
+    # Names that are directories somewhere *outside* both trees. OpenTitan-derived
+    # blocks cite their original home in comments and doc URLs -- sha3/rtl/kmac.sv
+    # links to .../hw/ip/kmac/doc/... -- and kmac is a module here, not a folder,
+    # so nothing in either checkout can tell the reverter to leave it alone.
+    keep+=("${EXTRA_PATH_DIRS[@]}")
     [ "${#keep[@]}" -gt 0 ] || return 0
     n="$(perl -e '
         my ($prefix, $nkeep, @rest) = @ARGV;
@@ -1014,6 +1024,13 @@ rc_run() {
     rc_env_macros
     if declare -F block_post_rename >/dev/null; then block_post_rename; fi
     rc_rename_files
+    # Both fixups undo over-reach of the identifier pass, and both apply to the
+    # delivery tier as much as to the collateral tier. They used to hang off the
+    # end of the collateral pass, which meant a block with no collateral (sha3,
+    # aes) silently skipped them -- and those are exactly the OpenTitan-derived
+    # blocks whose comments cite upstream paths like hw/ip/aes/pre_sca.
+    rc_fix_file_references
+    rc_fix_path_components
     rc_emit_filelist
     rc_install
     rc_check_generator_inputs

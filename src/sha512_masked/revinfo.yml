@@ -1,0 +1,83 @@
+# ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
+#
+# To review what changed upstream since this import:
+#   git -C <caliptra-rtl> log --oneline 9d6585080a35f7819ffc05be12b71a128c85ead1..origin/main -- src/sha512_masked/rtl 
+#
+block: sha512_masked
+prefix: "arca_"
+macro_prefix: "ARCA_"
+imported_at: "2026-10-06T15:02:40Z"
+
+upstream:
+  repo: "https://github.com/chipsalliance/caliptra-rtl.git"
+  branch: "main"
+  commit: "9d6585080a35f7819ffc05be12b71a128c85ead1"
+  commit_date: "2026-09-29T12:11:24-07:00"
+  commit_subject: "[VAL] Fix es_csrng_tb read sampling race (#1418)"
+  working_tree_dirty: false
+  subtrees:  # upstream path -> ARCA path
+    - { upstream: "src/sha512_masked/rtl", arca: "src/sha512_masked/rtl" }
+  compile_order_from: src/sha512_masked/config/sha512_masked_core.vf
+
+importer:
+  script: tools/scripts/rename/rename_sha512_masked.sh
+  library_version: "2.0.2"
+  toolchain_fingerprint: "840cb1b80b72496fc85fe3d7b9aa9fac737f1f7260910bf47045b516c395a4e5"
+  bash: "4.4.20(1)-release"
+  perl: "v5.26.3"
+
+policy:
+  rename_scope: "synthesized design material only"
+  synth_subtrees:  # identifiers declared here are renamed; everything else only references them
+    - "src/sha512_masked/rtl"
+  excluded_globs:
+    - "*_reg_uvm.sv"
+    - "*.rdl"
+  artifact_globs:  # build/sim outputs, regenerated not vendored
+    - "*.ucdb"
+    - "*.exe"
+    - "*.o"
+    - "*.a"
+    - "*.so"
+    - "*.pyc"
+    - "*.wlf"
+    - "*.vstf"
+    - "*.vcd"
+    - "*.fsdb"
+  cross_block_identifiers:
+    - "module:sha512_core"
+    - "module:sha512_h_constants"
+    - "module:sha512_k_constants"
+    - "module:sha512_w_mem"
+  environment_config_macros:
+    []
+  generator_inputs:  # fed to a code generator, must stay byte-identical to upstream
+    []
+  keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed
+    - "kv_defines_pkg"
+    - "kv_read_t"
+    - "kv_write_t"
+    - "kv_error_code_e"
+    - "uvm_pkg"
+
+artifacts:
+  block_dir: src/sha512_masked
+  source_dirs:
+    - src/sha512_masked/rtl
+  collateral_dirs:  # imported whole, looser rename contract
+    - src/sha512_masked/tb
+  filelist: src/sha512_masked/config/arca_sha512_masked_core.vf
+  rename_map: src/sha512_masked/revinfo.map
+
+source_manifest:  # sha256 of the upstream files as imported
+  - { sha256: "a43471a403e4040ff0cb2d87eb75e27d8ae1a231757387e8259cf6dee87f3365", path: "src/sha512_masked/rtl/sha512_masked_core.sv" }
+  - { sha256: "47d55de42873432556749c210264afc14925c9f950d4ffb38a928546a7932dae", path: "src/sha512_masked/rtl/sha512_masked_defines_pkg.sv" }
+  - { sha256: "033b5490f0fbf556a50f0b93d8f4b31e2e731e03fcdeb29cce0646ba28e02049", path: "src/sha512_masked/rtl/sha512_masked_w_mem.sv" }
+  - { sha256: "8624c2a1af296b3a31d201255dbe61da65bfbab93cd04d3422c8a55d633ef967", path: "src/sha512_masked/tb/sha512_masked_core_tb.sv" }
+
+renamed_manifest:  # sha256 of the committed, renamed files
+  - { sha256: "40d7afbbfa8a429a8f5aa86bff9979a7a28317023eafefd1e71f46d66c88aa7e", path: "src/sha512_masked/config/arca_sha512_masked_core.vf" }
+  - { sha256: "7ebec97f7a5961d5ca41b901c090fd02eabd88b2af270a89e247ed52ad1e9170", path: "src/sha512_masked/rtl/arca_sha512_masked_core.sv" }
+  - { sha256: "1c2c8e360748b707a16f7fcaa758fb86c06882b8958f4de2394120cc3eea0403", path: "src/sha512_masked/rtl/arca_sha512_masked_defines_pkg.sv" }
+  - { sha256: "85e3c1a23475fe6babb75699a8181b57aa8c1db39d76a33a4aeb7aa561897873", path: "src/sha512_masked/rtl/arca_sha512_masked_w_mem.sv" }
+  - { sha256: "5754f770f15c33e833ef250fcaba2bf045da9f650e9232c46b0102927110bbd1", path: "src/sha512_masked/tb/sha512_masked_core_tb.sv" }

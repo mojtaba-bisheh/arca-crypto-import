@@ -1,0 +1,116 @@
+# ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
+#
+# To review what changed upstream since this import:
+#   git -C <caliptra-rtl> log --oneline 9d6585080a35f7819ffc05be12b71a128c85ead1..origin/main -- src/sha256/rtl src/sha256/coverage 
+#
+block: sha256
+prefix: "arca_"
+macro_prefix: "ARCA_"
+imported_at: "2026-10-06T15:02:55Z"
+
+upstream:
+  repo: "https://github.com/chipsalliance/caliptra-rtl.git"
+  branch: "main"
+  commit: "9d6585080a35f7819ffc05be12b71a128c85ead1"
+  commit_date: "2026-09-29T12:11:24-07:00"
+  commit_subject: "[VAL] Fix es_csrng_tb read sampling race (#1418)"
+  working_tree_dirty: false
+  subtrees:  # upstream path -> ARCA path
+    - { upstream: "src/sha256/rtl", arca: "src/sha256/rtl" }
+    - { upstream: "src/sha256/coverage", arca: "src/sha256/coverage" }
+  compile_order_from: src/sha256/config/sha256_ctrl.vf
+
+importer:
+  script: tools/scripts/rename/rename_sha256.sh
+  library_version: "2.0.2"
+  toolchain_fingerprint: "9f4bcc177c6548f6362440cb0b328a8041661a5791c5ac3ba756f331692f6916"
+  bash: "4.4.20(1)-release"
+  perl: "v5.26.3"
+
+policy:
+  rename_scope: "synthesized design material only"
+  synth_subtrees:  # identifiers declared here are renamed; everything else only references them
+    - "src/sha256/rtl"
+  excluded_globs:
+    - "*_reg_uvm.sv"
+    - "*.rdl"
+  artifact_globs:  # build/sim outputs, regenerated not vendored
+    - "*.ucdb"
+    - "*.exe"
+    - "*.o"
+    - "*.a"
+    - "*.so"
+    - "*.pyc"
+    - "*.wlf"
+    - "*.vstf"
+    - "*.vcd"
+    - "*.fsdb"
+  cross_block_identifiers:
+    []
+  environment_config_macros:
+    []
+  generator_inputs:  # fed to a code generator, must stay byte-identical to upstream
+    []
+  keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed
+    - "kv_defines_pkg"
+    - "kv_read_t"
+    - "kv_write_t"
+    - "kv_error_code_e"
+    - "uvm_pkg"
+
+artifacts:
+  block_dir: src/sha256
+  source_dirs:
+    - src/sha256/rtl
+    - src/sha256/coverage
+  collateral_dirs:  # imported whole, looser rename contract
+    - src/sha256/tb
+    - src/sha256/coverage/config
+    - src/sha256/stimulus
+  filelist: src/sha256/config/arca_sha256_ctrl.vf
+  rename_map: src/sha256/revinfo.map
+
+source_manifest:  # sha256 of the upstream files as imported
+  - { sha256: "556650ef04155dce2e2c3d81f58aed4f48c3ed6fac77234a6614ee9e21011011", path: "src/sha256/rtl/sha256.sv" }
+  - { sha256: "5baa7f845ddc080383d13f588500a6fa69461443e1f498b1737b728b58781b73", path: "src/sha256/rtl/sha256_core.v" }
+  - { sha256: "d646de1f97b260f336377700cc4efff8c44779691d9fb61fa58aaa365b91d0a0", path: "src/sha256/rtl/sha256_ctrl.sv" }
+  - { sha256: "6a7f72df8b2771419431274e0edbecf7c1fb946a613c71407c63f4ddfdc7e254", path: "src/sha256/rtl/sha256_k_constants.v" }
+  - { sha256: "2f32be755f3b1d321cf2e660f1cf88bb8a940cf5ffcaf13d60e0aa75bd52a37e", path: "src/sha256/rtl/sha256_params_pkg.sv" }
+  - { sha256: "213a945acefc3061fa35e2decfec7a7e96168b8233be45138c1998985fd3d1f8", path: "src/sha256/rtl/sha256_reg.sv" }
+  - { sha256: "85b5baf6e6ea30949a2739c1fc1732a442f7c9b6d05a9f4c7f39243b11b4e90b", path: "src/sha256/rtl/sha256_reg_pkg.sv" }
+  - { sha256: "19ce65fd0519a39d1ee0c96498806c540ee59d088a4fc62d78d77270ee2f0cdb", path: "src/sha256/rtl/sha256_w_mem.v" }
+  - { sha256: "3e7aadce96ccff412b0963f737d6b39cae2877dc2281ad9680ea9ba3118c97c6", path: "src/sha256/coverage/sha256_ctrl_cov_bind.sv" }
+  - { sha256: "18e769b83f2080c107c40f3c2eb9df352773a033eec4b025162ac6a69828f26e", path: "src/sha256/coverage/sha256_ctrl_cov_if.sv" }
+  - { sha256: "30ab1891579eb16aa73f4d094d445a289d67ade40bb08b4761af1ccd434a4b9b", path: "src/sha256/tb/sha256_ctrl_tb.sv" }
+  - { sha256: "21c115577dc5e75c3885c3d991c33372630a8c68c35a65cdd53e007c56ec0f48", path: "src/sha256/tb/sha256_random_test.sv" }
+  - { sha256: "8256ac26f763a64755e645cb69b423394860bd640621025f4f1ed77ff75908fa", path: "src/sha256/tb/sha256_test_gen.py" }
+  - { sha256: "4791512d21f58a14f0867aead1bf083e2fec718f4176ca94e89240a7bd4d8dab", path: "src/sha256/tb/sha256_test_vector.txt" }
+  - { sha256: "12eacab8c3b3a8733390a8207432bd23ef98a436434c5f834e91115644a82bdd", path: "src/sha256/tb/sha256_wntz_test_gen.py" }
+  - { sha256: "a5a451d48d0be89fd57adf4acddfa6e38eb685116e4f240e2b37e4b094cc61be", path: "src/sha256/coverage/config/sha256_cm_hier.cfg" }
+  - { sha256: "8acf2b86f09c714153b27a96e37128576d537840cc2d1554071e547568c3de59", path: "src/sha256/stimulus/tests/directed/sha256_normal_test.yml" }
+  - { sha256: "65589e8c7c9ee05636b59d052f5124c919ad15ab653f8cf8a6ccb80ba0a9b5f6", path: "src/sha256/stimulus/tests/random/sha256_random_test.yml" }
+  - { sha256: "2ca876b39668aa824d316a03d30251e540f8ac03717ef9374ad00e62fb065719", path: "src/sha256/stimulus/testsuites/sha256_nightly_directed_regression.yml" }
+  - { sha256: "19a75ec9fbe52ef3d492f1e14ca557423ef18b0aad812a12957492def1832746", path: "src/sha256/stimulus/testsuites/sha256_nightly_random_regression.yml" }
+
+renamed_manifest:  # sha256 of the committed, renamed files
+  - { sha256: "8665c8f16be77f878473a8288a104b9d2a23f23bd9452140bd91a221bb947d41", path: "src/sha256/config/arca_sha256_ctrl.vf" }
+  - { sha256: "a5a451d48d0be89fd57adf4acddfa6e38eb685116e4f240e2b37e4b094cc61be", path: "src/sha256/coverage/config/sha256_cm_hier.cfg" }
+  - { sha256: "c680787d6cc1350095b4aab87505d685dd84e3773725a93c0fe39a0a360f6220", path: "src/sha256/coverage/sha256_ctrl_cov_bind.sv" }
+  - { sha256: "3a2cceffeddd2760c8586442b6028c5c61f98f99baa61097e37f08e8dcb8c5ee", path: "src/sha256/coverage/sha256_ctrl_cov_if.sv" }
+  - { sha256: "f9e07aa67f09e1edc5c2a9abd65a3f9a365a5d04d55c10a259b3d4bf7d9504b0", path: "src/sha256/rtl/arca_sha256.sv" }
+  - { sha256: "0d61fee9a59e4e226e7fb8d9264408988ef9c35199c9df6792ba7dcc59e583f5", path: "src/sha256/rtl/arca_sha256_core.v" }
+  - { sha256: "fe8115f10fd714dd1a8e7d7edf50d67dfbd623370580884d4885299b0bf91d0f", path: "src/sha256/rtl/arca_sha256_ctrl.sv" }
+  - { sha256: "cc4e4da4b7162dd79b188df5b643f1c4caa1ee7a166ec69ff7e4090d7167938c", path: "src/sha256/rtl/arca_sha256_k_constants.v" }
+  - { sha256: "b88b07901364ea3e89d3e42f66570bbd9fbca1e11aafb0c6c5e86cde28e2733d", path: "src/sha256/rtl/arca_sha256_params_pkg.sv" }
+  - { sha256: "bd20f10d8555821f632fc543fc9f2eeaa9a3e729863ace26a026333fe228e09f", path: "src/sha256/rtl/arca_sha256_reg.sv" }
+  - { sha256: "ff4275e6d60bbd7fcbcaa35e739420af29fce456fbce7a44270f710a9f6a0735", path: "src/sha256/rtl/arca_sha256_reg_pkg.sv" }
+  - { sha256: "64fa51e78b7f58c9d8e867d11e5b713a0e6fc0c6c592f91d31af785607023c73", path: "src/sha256/rtl/arca_sha256_w_mem.v" }
+  - { sha256: "8acf2b86f09c714153b27a96e37128576d537840cc2d1554071e547568c3de59", path: "src/sha256/stimulus/tests/directed/sha256_normal_test.yml" }
+  - { sha256: "65589e8c7c9ee05636b59d052f5124c919ad15ab653f8cf8a6ccb80ba0a9b5f6", path: "src/sha256/stimulus/tests/random/sha256_random_test.yml" }
+  - { sha256: "2ca876b39668aa824d316a03d30251e540f8ac03717ef9374ad00e62fb065719", path: "src/sha256/stimulus/testsuites/sha256_nightly_directed_regression.yml" }
+  - { sha256: "19a75ec9fbe52ef3d492f1e14ca557423ef18b0aad812a12957492def1832746", path: "src/sha256/stimulus/testsuites/sha256_nightly_random_regression.yml" }
+  - { sha256: "5f4463e9d2f84dc7c7b68c219c7c63a0769208ae0ed051976dc67a14b16392fc", path: "src/sha256/tb/sha256_ctrl_tb.sv" }
+  - { sha256: "c90959a72d04dcba25d1504b719c31ddee099e5b907acb8a94b9a23f4007fad3", path: "src/sha256/tb/sha256_random_test.sv" }
+  - { sha256: "fb6ed23b60837ecfbb47e299426d1ebf9e23acd5afa3df985385f9f5717b5727", path: "src/sha256/tb/sha256_test_gen.py" }
+  - { sha256: "4791512d21f58a14f0867aead1bf083e2fec718f4176ca94e89240a7bd4d8dab", path: "src/sha256/tb/sha256_test_vector.txt" }
+  - { sha256: "892ab180ddaf472d30b6ec71f3385db379c9fa16b1e52d95ecbd47e0a7308d91", path: "src/sha256/tb/sha256_wntz_test_gen.py" }

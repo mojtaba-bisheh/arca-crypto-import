@@ -6,6 +6,7 @@ module	hmac_core	arca_hmac_core
 module	hmac_ctrl	arca_hmac_ctrl
 module	hmac_drbg	arca_hmac_drbg
 module	hmac_reg	arca_hmac_reg
+module	sha512_masked_core	arca_sha512_masked_core
 package	hmac_param_pkg	arca_hmac_param_pkg
 package	hmac_reg_pkg	arca_hmac_reg_pkg
 file	src/hmac/rtl/hmac.sv	arca_src/hmac/rtl/hmac.sv

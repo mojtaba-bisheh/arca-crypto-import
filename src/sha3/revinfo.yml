@@ -1,0 +1,109 @@
+# ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
+#
+# To review what changed upstream since this import:
+#   git -C <caliptra-rtl> log --oneline 9d6585080a35f7819ffc05be12b71a128c85ead1..origin/main -- src/sha3/rtl 
+#
+block: sha3
+prefix: "arca_"
+macro_prefix: "ARCA_"
+imported_at: "2026-10-06T15:02:36Z"
+
+upstream:
+  repo: "https://github.com/chipsalliance/caliptra-rtl.git"
+  branch: "main"
+  commit: "9d6585080a35f7819ffc05be12b71a128c85ead1"
+  commit_date: "2026-09-29T12:11:24-07:00"
+  commit_subject: "[VAL] Fix es_csrng_tb read sampling race (#1418)"
+  working_tree_dirty: false
+  subtrees:  # upstream path -> ARCA path
+    - { upstream: "src/sha3/rtl", arca: "src/sha3/rtl" }
+  compile_order_from: src/sha3/config/sha3_ctrl.vf
+
+importer:
+  script: tools/scripts/rename/rename_sha3.sh
+  library_version: "2.0.2"
+  toolchain_fingerprint: "4a5b69269ee9849358f1daa04d887f8f9df7944c2edb4ed7fb3c2cef5d9ecae6"
+  bash: "4.4.20(1)-release"
+  perl: "v5.26.3"
+
+policy:
+  rename_scope: "synthesized design material only"
+  synth_subtrees:  # identifiers declared here are renamed; everything else only references them
+    - "src/sha3/rtl"
+  excluded_globs:
+    - "*_reg_uvm.sv"
+    - "*.rdl"
+  artifact_globs:  # build/sim outputs, regenerated not vendored
+    - "*.ucdb"
+    - "*.exe"
+    - "*.o"
+    - "*.a"
+    - "*.so"
+    - "*.pyc"
+    - "*.wlf"
+    - "*.vstf"
+    - "*.vcd"
+    - "*.fsdb"
+  cross_block_identifiers:
+    []
+  environment_config_macros:
+    []
+  generator_inputs:  # fed to a code generator, must stay byte-identical to upstream
+    []
+  keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed
+    - "kv_defines_pkg"
+    - "kv_read_t"
+    - "kv_write_t"
+    - "kv_error_code_e"
+    - "uvm_pkg"
+
+artifacts:
+  block_dir: src/sha3
+  source_dirs:
+    - src/sha3/rtl
+  collateral_dirs: []
+  filelist: src/sha3/config/arca_sha3_ctrl.vf
+  rename_map: src/sha3/revinfo.map
+
+source_manifest:  # sha256 of the upstream files as imported
+  - { sha256: "c525a75181efc0ff562286d5f75b1d47ce6dc81a7489e6ac530e2a4588309a53", path: "src/sha3/rtl/kmac.sv" }
+  - { sha256: "fc44148e435848ca97257a9c666e340778611ee168ac7737b1af08c6c636fee2", path: "src/sha3/rtl/kmac_app.sv" }
+  - { sha256: "b4eae3233ad94478a8586bbf0360e8f4be772bdd30936e8b22eeb55ea5438816", path: "src/sha3/rtl/kmac_core.sv" }
+  - { sha256: "cb64dd855d3963e23ca0922e95f3113b4f38bd809d647b00fd1f921920bb2da8", path: "src/sha3/rtl/kmac_entropy.sv" }
+  - { sha256: "a0f800d75ad089f67592975d7d18068dfbe05e9c4d9fa74988db69e8b1926a8e", path: "src/sha3/rtl/kmac_errchk.sv" }
+  - { sha256: "c42ee32595f816d41d41f08e68dbc111ae8c78f204cd685659c39ca5ef409621", path: "src/sha3/rtl/kmac_msgfifo.sv" }
+  - { sha256: "30bf95570255a2c5c47cef19e2e6c6c48bda729e0db70fdfaa0d93fb6bc15434", path: "src/sha3/rtl/kmac_pkg.sv" }
+  - { sha256: "d94264ae0acb2eeff2a160b67aeab204e03b6a7b40802870bcfb306775e13eae", path: "src/sha3/rtl/kmac_reg_pkg.sv" }
+  - { sha256: "fa46ee2e38ea9424452721370b878e3076682c3a98ef87d7c4e2c4013c2a05fd", path: "src/sha3/rtl/kmac_reg_top.sv" }
+  - { sha256: "f8a239ded7fbadbaa9cf226f6e199365765f25c3436c91137b7ade5bda14fbad", path: "src/sha3/rtl/kmac_staterd.sv" }
+  - { sha256: "3a8fbe46e9f34073041543627837c3b1a6ec69ba25bcc46cdbd8a623dff574a0", path: "src/sha3/rtl/ot_keccak_2share.sv" }
+  - { sha256: "88984c363be87be6dd329d098f4512ca06e3fd8616b71e58d687cec67bb81b2c", path: "src/sha3/rtl/ot_keccak_round.sv" }
+  - { sha256: "32b26d55c464877d2da749ade58267c5d237b4c66154c3af91451de993599013", path: "src/sha3/rtl/ot_sha3.sv" }
+  - { sha256: "03ca0a607f5d4a3667f57f30071163f948d0ab9c9b04cbca5c0f98e23c83a280", path: "src/sha3/rtl/ot_sha3_pkg.sv" }
+  - { sha256: "028e6f778c04c0a8aa39ff107ceb1bd90aadab787d5b0e6be866fb4e380968cf", path: "src/sha3/rtl/ot_sha3pad.sv" }
+  - { sha256: "850f19d792e37389b7da056af9ef0cb0748eae4374cbb28e9945395008760eed", path: "src/sha3/rtl/sha3_ctrl.sv" }
+  - { sha256: "0601d674df9a91e07896447df36d08cef47e72c2eaa17ba39aa598b6366d1fed", path: "src/sha3/rtl/sha3_param_pkg.sv" }
+  - { sha256: "f58fe94a1ee700fafcf2211d87bc11c968869501222a3bf5c054aa14c7a68380", path: "src/sha3/rtl/sha3_reg.sv" }
+  - { sha256: "1c81f99fa8e96439b604ed359cc7ecf769e8747cd4eda299d32cdbd25de2a710", path: "src/sha3/rtl/sha3_reg_pkg.sv" }
+
+renamed_manifest:  # sha256 of the committed, renamed files
+  - { sha256: "84503b42cce4e84eb97661903dcf147e8b32536086cc31afad88c9631a0fc56e", path: "src/sha3/config/arca_sha3_ctrl.vf" }
+  - { sha256: "6a66dd5d955d969d6efb2f165f2e51588074bf16c5eb401d6b7dfaa67d2980a3", path: "src/sha3/rtl/arca_kmac.sv" }
+  - { sha256: "ee7a9d4445eac98e128a4137171d81cd019ea74d7f3e1bba46a5646cb5cb6450", path: "src/sha3/rtl/arca_kmac_app.sv" }
+  - { sha256: "c61934ae87d8584d0097624ecfd1025e37ea8f228d9341efbd1b3604ff2cd764", path: "src/sha3/rtl/arca_kmac_core.sv" }
+  - { sha256: "3a1a26e2568f86d3ac8c842c965d107e4e8536e5c5c5e3c2ba7bb5aaab72a88f", path: "src/sha3/rtl/arca_kmac_entropy.sv" }
+  - { sha256: "1a0f1982736bdc87ae02fc489569f122b613bff721119ecbabac53bc15ce6f24", path: "src/sha3/rtl/arca_kmac_errchk.sv" }
+  - { sha256: "2e4ee9cb9f403ccf1d1b05828b28b4360654a163d901b7818c351a81054069c1", path: "src/sha3/rtl/arca_kmac_msgfifo.sv" }
+  - { sha256: "8cff4aecbd3b467110703e42bcc67867a6e9e9478e08a60a6ca4252ea6329997", path: "src/sha3/rtl/arca_kmac_pkg.sv" }
+  - { sha256: "cf71956f73d59d93990f216d484035dd44a53f1b383ee2208897215d2b08fdd0", path: "src/sha3/rtl/arca_kmac_reg_pkg.sv" }
+  - { sha256: "ec82091ec58066973975900fc44b7de34fffe262908fac6e22a418fef95ebd3a", path: "src/sha3/rtl/arca_kmac_reg_top.sv" }
+  - { sha256: "f962369283c88a703b26823309c3e9e98e8f9f3c334f24b377413e3b10ccb872", path: "src/sha3/rtl/arca_kmac_staterd.sv" }
+  - { sha256: "d745a18d190752c0c06f0da0fb67c9711994be35cec1f6e740a633354dff3f4f", path: "src/sha3/rtl/arca_ot_keccak_2share.sv" }
+  - { sha256: "3d1a636aa8825e958d9ea47f4b776567a74eb2089cf112bbbf43cc527426a7f3", path: "src/sha3/rtl/arca_ot_keccak_round.sv" }
+  - { sha256: "f7d2ddadb523758955503966615a34e7f94a89d6dfc58bd9203cca1664e75882", path: "src/sha3/rtl/arca_ot_sha3.sv" }
+  - { sha256: "2271cd13dea7751dd3cdbee03d5d93c8ba9b5c2e37696c61d9abc73554f82ab4", path: "src/sha3/rtl/arca_ot_sha3_pkg.sv" }
+  - { sha256: "6ac4ceb40d70ad2c9b8b542f57105448a24fb36a2d2ab47042d1de1a4ea276c9", path: "src/sha3/rtl/arca_ot_sha3pad.sv" }
+  - { sha256: "33aeb61628035e6b3dadd1a1c7e17026ab256613a5ade9490dae36bccc5779ff", path: "src/sha3/rtl/arca_sha3_ctrl.sv" }
+  - { sha256: "73f20c0bb8498a4dca51658f69fc96464532b09eabb86e2a791676707971588f", path: "src/sha3/rtl/arca_sha3_param_pkg.sv" }
+  - { sha256: "214feeda45b1a83c88d2262ffbfc4897ed6aba755f43e056f6a8917073068b53", path: "src/sha3/rtl/arca_sha3_reg.sv" }
+  - { sha256: "2bda21e9265bc2a9b2a28336f34be128fa2bc31d2873e751dc650c8f57389779", path: "src/sha3/rtl/arca_sha3_reg_pkg.sv" }

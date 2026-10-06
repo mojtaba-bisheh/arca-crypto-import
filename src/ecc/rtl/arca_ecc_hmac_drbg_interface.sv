@@ -43,7 +43,7 @@
 //                  There is NO RESEED process.
 //
 //======================================================================
-import hmac_param_pkg::*;
+import arca_hmac_param_pkg::*;
 
 module arca_ecc_hmac_drbg_interface#(
     parameter                  REG_SIZE       = 384,
