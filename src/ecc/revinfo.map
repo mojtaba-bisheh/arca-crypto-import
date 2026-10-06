@@ -3,8 +3,8 @@ macro	CALIPTRA_ECC_DEFINES	ARCA_CALIPTRA_ECC_DEFINES
 macro	CALIPTRA_ECC_PARAMS_PKG	ARCA_CALIPTRA_ECC_PARAMS_PKG
 macro	CALIPTRA_ECC_PM_UOP_PKG	ARCA_CALIPTRA_ECC_PM_UOP_PKG
 macro	ECC_DSA_UOP_PKG	ARCA_ECC_DSA_UOP_PKG
-module	ecc_adder	arca_ecc_adder
 module	ecc_add_sub_mod_alter	arca_ecc_add_sub_mod_alter
+module	ecc_adder	arca_ecc_adder
 module	ecc_arith_unit	arca_ecc_arith_unit
 module	ecc_dsa_ctrl	arca_ecc_dsa_ctrl
 module	ecc_dsa_sequencer	arca_ecc_dsa_sequencer
@@ -27,8 +27,8 @@ package	ecc_dsa_uop_pkg	arca_ecc_dsa_uop_pkg
 package	ecc_params_pkg	arca_ecc_params_pkg
 package	ecc_pm_uop_pkg	arca_ecc_pm_uop_pkg
 package	ecc_reg_pkg	arca_ecc_reg_pkg
-file	src/ecc/rtl/ecc_adder.sv	arca_src/ecc/rtl/ecc_adder.sv
 file	src/ecc/rtl/ecc_add_sub_mod_alter.sv	arca_src/ecc/rtl/ecc_add_sub_mod_alter.sv
+file	src/ecc/rtl/ecc_adder.sv	arca_src/ecc/rtl/ecc_adder.sv
 file	src/ecc/rtl/ecc_arith_unit.sv	arca_src/ecc/rtl/ecc_arith_unit.sv
 file	src/ecc/rtl/ecc_defines_pkg.sv	arca_src/ecc/rtl/ecc_defines_pkg.sv
 file	src/ecc/rtl/ecc_dsa_ctrl.sv	arca_src/ecc/rtl/ecc_dsa_ctrl.sv
@@ -39,14 +39,14 @@ file	src/ecc/rtl/ecc_hmac_drbg_interface.sv	arca_src/ecc/rtl/ecc_hmac_drbg_inter
 file	src/ecc/rtl/ecc_montgomerymultiplier.sv	arca_src/ecc/rtl/ecc_montgomerymultiplier.sv
 file	src/ecc/rtl/ecc_mult_dsp.sv	arca_src/ecc/rtl/ecc_mult_dsp.sv
 file	src/ecc/rtl/ecc_params_pkg.sv	arca_src/ecc/rtl/ecc_params_pkg.sv
+file	src/ecc/rtl/ecc_pe.sv	arca_src/ecc/rtl/ecc_pe.sv
 file	src/ecc/rtl/ecc_pe_final.sv	arca_src/ecc/rtl/ecc_pe_final.sv
 file	src/ecc/rtl/ecc_pe_first.sv	arca_src/ecc/rtl/ecc_pe_first.sv
-file	src/ecc/rtl/ecc_pe.sv	arca_src/ecc/rtl/ecc_pe.sv
 file	src/ecc/rtl/ecc_pm_ctrl.sv	arca_src/ecc/rtl/ecc_pm_ctrl.sv
 file	src/ecc/rtl/ecc_pm_sequencer.sv	arca_src/ecc/rtl/ecc_pm_sequencer.sv
 file	src/ecc/rtl/ecc_pm_uop_pkg.sv	arca_src/ecc/rtl/ecc_pm_uop_pkg.sv
 file	src/ecc/rtl/ecc_ram_tdp_file.sv	arca_src/ecc/rtl/ecc_ram_tdp_file.sv
-file	src/ecc/rtl/ecc_reg_pkg.sv	arca_src/ecc/rtl/ecc_reg_pkg.sv
 file	src/ecc/rtl/ecc_reg.sv	arca_src/ecc/rtl/ecc_reg.sv
+file	src/ecc/rtl/ecc_reg_pkg.sv	arca_src/ecc/rtl/ecc_reg_pkg.sv
 file	src/ecc/rtl/ecc_scalar_blinding.sv	arca_src/ecc/rtl/ecc_scalar_blinding.sv
 file	src/ecc/rtl/ecc_top.sv	arca_src/ecc/rtl/ecc_top.sv

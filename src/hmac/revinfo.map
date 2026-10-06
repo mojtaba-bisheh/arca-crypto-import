@@ -8,11 +8,11 @@ module	hmac_drbg	arca_hmac_drbg
 module	hmac_reg	arca_hmac_reg
 package	hmac_param_pkg	arca_hmac_param_pkg
 package	hmac_reg_pkg	arca_hmac_reg_pkg
+file	src/hmac/rtl/hmac.sv	arca_src/hmac/rtl/hmac.sv
 file	src/hmac/rtl/hmac_core.sv	arca_src/hmac/rtl/hmac_core.sv
 file	src/hmac/rtl/hmac_ctrl.sv	arca_src/hmac/rtl/hmac_ctrl.sv
 file	src/hmac/rtl/hmac_param_pkg.sv	arca_src/hmac/rtl/hmac_param_pkg.sv
-file	src/hmac/rtl/hmac_reg_pkg.sv	arca_src/hmac/rtl/hmac_reg_pkg.sv
 file	src/hmac/rtl/hmac_reg.sv	arca_src/hmac/rtl/hmac_reg.sv
-file	src/hmac/rtl/hmac.sv	arca_src/hmac/rtl/hmac.sv
+file	src/hmac/rtl/hmac_reg_pkg.sv	arca_src/hmac/rtl/hmac_reg_pkg.sv
 file	src/hmac_drbg/rtl/hmac_drbg.sv	arca_src/hmac_drbg/rtl/hmac_drbg.sv
 file	(generated)	arca_hmac_config.svh

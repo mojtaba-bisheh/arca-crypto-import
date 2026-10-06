@@ -79,7 +79,16 @@
 
 set -euo pipefail
 
-RC_SCRIPT_VERSION="2.0.0"
+# Every sort in this file feeds a committed artifact (the rename map, the
+# source manifest, the generated filelist), so collation order is part of the
+# output. glibc's default en_US.UTF-8 collation ignores punctuation at the
+# first comparison level, which puts "hmac.sv" after "hmac_param_pkg.sv",
+# while C collation compares bytes and puts it first. Pin the locale so an
+# import is reproducible across machines rather than only on the machine that
+# happened to run it.
+export LC_ALL=C
+
+RC_SCRIPT_VERSION="2.0.1"
 
 rc_log()  { printf '[%s] %s\n' "${BLOCK:-rename}" "$*"; }
 rc_warn() { printf '[%s] WARNING: %s\n' "${BLOCK:-rename}" "$*" >&2; }
