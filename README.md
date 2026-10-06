@@ -189,6 +189,15 @@ CI (`.github/workflows/checks.yml`) runs all of the above, re-runs the import at
 the recorded commit and requires a bit-identical tree, and elaborates the
 delivery tier with `slang`.
 
+The re-import runs on a different machine than the one that produced the commit,
+which makes it a real reproducibility test rather than a self-consistency one.
+Two things had to be fixed to pass it: the sorts that order the rename map and
+the sha256 manifest are run under `LC_ALL=C`, because glibc's default collation
+ignores punctuation and orders `hmac.sv` after `hmac_param_pkg.sv`; and the
+upstream branch is declared (`--branch`, default `main`) rather than read from
+the clone, which CI has in detached HEAD. `imported_at`, `bash` and `perl`
+describe the importing machine and are allowed to differ; nothing else is.
+
 | | ECC | HMAC (+ HMAC_DRBG) |
 |---|---|---|
 | delivery tier | 25 files | 12 files |
