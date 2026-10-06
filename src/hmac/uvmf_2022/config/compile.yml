@@ -10,37 +10,37 @@ targets:
     directories:
       - ${COMPILE_ROOT}/../rtl
       - ${COMPILE_ROOT}/../../libs/rtl
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_in_pkg
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_in_pkg/src
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_out_pkg
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_out_pkg/src
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/environment_packages/arca_HMAC_env_pkg
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_in_pkg
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_in_pkg/src
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_out_pkg
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_out_pkg/src
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/environment_packages/HMAC_env_pkg
       - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/parameters
       - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/sequences
       - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/tests
       - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/testbench
     files:
 #      - ${COMPILE_ROOT}/../rtl/hmac_intr_regs_uvm.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_in_pkg/arca_HMAC_in_pkg_hdl.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_in_pkg/arca_HMAC_in_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_in_pkg/src/arca_HMAC_in_driver_bfm.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_in_pkg/src/arca_HMAC_in_if.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_in_pkg/src/arca_HMAC_in_monitor_bfm.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_out_pkg/arca_HMAC_out_pkg_hdl.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_out_pkg/arca_HMAC_out_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_out_pkg/src/arca_HMAC_out_driver_bfm.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_out_pkg/src/arca_HMAC_out_if.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_HMAC_out_pkg/src/arca_HMAC_out_monitor_bfm.sv
-#      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/environment_packages/arca_HMAC_env_pkg/registers/HMAC_reg_model_top_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/environment_packages/arca_HMAC_env_pkg/arca_HMAC_env_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/parameters/arca_HMAC_parameters_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/sequences/arca_HMAC_sequences_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/tests/arca_HMAC_tests_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/testbench/arca_hdl_top.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/testbench/arca_hvl_top.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_in_pkg/HMAC_in_pkg_hdl.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_in_pkg/HMAC_in_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_in_pkg/src/HMAC_in_driver_bfm.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_in_pkg/src/HMAC_in_if.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_in_pkg/src/HMAC_in_monitor_bfm.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_out_pkg/HMAC_out_pkg_hdl.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_out_pkg/HMAC_out_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_out_pkg/src/HMAC_out_driver_bfm.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_out_pkg/src/HMAC_out_if.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/HMAC_out_pkg/src/HMAC_out_monitor_bfm.sv
+#      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/environment_packages/HMAC_env_pkg/registers/HMAC_reg_model_top_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/environment_packages/HMAC_env_pkg/HMAC_env_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/parameters/HMAC_parameters_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/sequences/HMAC_sequences_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/tests/HMAC_tests_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/testbench/hdl_top.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/HMAC/tb/testbench/hvl_top.sv
     tops:
-      - arca_hdl_top
-      - arca_hvl_top
+      - hdl_top
+      - hvl_top
   sim:
     pre_exec: 'echo "[PRE-EXEC] Copying HMAC test vector gen script to $(pwd)" && cp $COMPILE_ROOT/../tb/test_gen.py .'
 global:

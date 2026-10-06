@@ -1,1 +1,0 @@
-$UVMF_VIP_LIBRARY_HOME/interface_packages/arca_HMAC_out_pkg/arca_HMAC_out_pkg.sv

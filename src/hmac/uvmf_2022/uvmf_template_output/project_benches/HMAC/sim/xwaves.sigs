@@ -8,9 +8,9 @@
 Group All
 
 #Top level signals
-arca_hdl_top.*
+hdl_top.*
 #Add additional levels or individual signals as needed
-arca_hdl_top.*.*
+hdl_top.*.*
 
 # pragma uvmf custom additional end
 

@@ -12,8 +12,8 @@ ${ARCA_ROOT}/src/hmac/rtl/arca_hmac_ctrl.sv
 ${ARCA_ROOT}/src/hmac/rtl/arca_hmac.sv
 ${ARCA_ROOT}/src/hmac/rtl/arca_hmac_core.sv
 ${ARCA_ROOT}/src/hmac/rtl/arca_hmac_reg.sv
-${ARCA_ROOT}/src/hmac/coverage/arca_hmac_ctrl_cov_bind.sv
-${ARCA_ROOT}/src/hmac/coverage/arca_hmac_ctrl_cov_if.sv
+${ARCA_ROOT}/src/hmac/coverage/hmac_ctrl_cov_bind.sv
+${ARCA_ROOT}/src/hmac/coverage/hmac_ctrl_cov_if.sv
 ${ARCA_ROOT}/src/hmac_drbg/rtl/arca_hmac_drbg.sv
-${ARCA_ROOT}/src/hmac_drbg/coverage/arca_hmac_drbg_cov_bind.sv
-${ARCA_ROOT}/src/hmac_drbg/coverage/arca_hmac_drbg_cov_if.sv
+${ARCA_ROOT}/src/hmac_drbg/coverage/hmac_drbg_cov_bind.sv
+${ARCA_ROOT}/src/hmac_drbg/coverage/hmac_drbg_cov_if.sv

@@ -1,2 +1,0 @@
-@use $UVMF_PROJECT_DIR/tb/tests/arca_HMAC_tests_pkg.vinfo
-arca_hvl_top.sv

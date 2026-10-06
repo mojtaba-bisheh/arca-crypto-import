@@ -32,7 +32,7 @@ file delete -force sv_connect.*
 vlib work 
 # pragma uvmf custom dut_compile_dofile_target begin
 # UVMF_CHANGE_ME : Add commands to compile your dut here, replacing the default examples
-vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/rtl/verilog/arca_verilog_dut.v
+vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/rtl/verilog/verilog_dut.v
 vcom $env(UVMF_PROJECT_DIR)/rtl/vhdl/vhdl_dut.vhd
 # pragma uvmf custom dut_compile_dofile_target end
 
@@ -46,20 +46,20 @@ vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_HOME
 ###################################################################
 ## UVMF INTERFACE COMPILATION
 ###################################################################
-do $env(UVMF_VIP_LIBRARY_HOME)/interface_packages/arca_HMAC_in_pkg/compile.do
-do $env(UVMF_VIP_LIBRARY_HOME)/interface_packages/arca_HMAC_out_pkg/compile.do
+do $env(UVMF_VIP_LIBRARY_HOME)/interface_packages/HMAC_in_pkg/compile.do
+do $env(UVMF_VIP_LIBRARY_HOME)/interface_packages/HMAC_out_pkg/compile.do
 
 ###################################################################
 ## UVMF ENVIRONMENT COMPILATION
 ###################################################################
-do $env(UVMF_VIP_LIBRARY_HOME)/environment_packages/arca_HMAC_env_pkg/compile.do
+do $env(UVMF_VIP_LIBRARY_HOME)/environment_packages/HMAC_env_pkg/compile.do
 
 ###################################################################
 ## UVMF BENCHES COMPILATION
 ###################################################################
-vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/parameters $env(UVMF_PROJECT_DIR)/tb/parameters/arca_HMAC_parameters_pkg.sv
-vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/sequences $env(UVMF_PROJECT_DIR)/tb/sequences/arca_HMAC_sequences_pkg.sv
-vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/tests $env(UVMF_PROJECT_DIR)/tb/tests/arca_HMAC_tests_pkg.sv
+vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/parameters $env(UVMF_PROJECT_DIR)/tb/parameters/HMAC_parameters_pkg.sv
+vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/sequences $env(UVMF_PROJECT_DIR)/tb/sequences/HMAC_sequences_pkg.sv
+vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/tests $env(UVMF_PROJECT_DIR)/tb/tests/HMAC_tests_pkg.sv
 
 vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/../../../../rtl/arca_hmac_ctrl.sv
 vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/../../../../rtl/arca_hmac_core.v
@@ -81,5 +81,5 @@ vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286  +incdir+$env(UVMF_PRO
 ###################################################################
 ## OPTIMIZATION
 ###################################################################
-vopt          arca_hvl_top arca_hdl_top   -o optimized_batch_top_tb
-vopt  +acc    arca_hvl_top arca_hdl_top   -o optimized_debug_top_tb
+vopt          hvl_top hdl_top   -o optimized_batch_top_tb
+vopt  +acc    hvl_top hdl_top   -o optimized_debug_top_tb

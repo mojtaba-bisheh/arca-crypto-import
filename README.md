@@ -169,42 +169,73 @@ synthesisable fileset.
 
 ---
 
-## What gets renamed, and why not just `rtl/`
+## What gets renamed: only synthesized design material
 
 A fair question when you first see the import touch `tb/`, `formal/` and the
-UVMF tree: *shouldn't the rename stop at `rtl/`?* Especially since some files —
-the UVMF `.yaml` generator inputs — visibly cannot be renamed at all.
+UVMF tree: *shouldn't the rename stop at `rtl/`?*
 
-The scope is not a list of directories. It is one rule:
+Yes — for *declarations*. The prefix exists to keep ARCA's design namespace from
+colliding with an SoC that also integrates upstream Caliptra. Collisions happen
+in the **netlist**. Verification collateral is never synthesized, so it cannot
+collide there, and renaming it buys nothing while gratuitously diverging the
+vendored copy from upstream.
 
-> **Rename anything that names a renamed thing.**
+So the scope is one rule:
 
-Everything else falls out of that, including the apparent exception:
+> **Rename what is *declared* in synthesizable RTL.
+> Rewrite *references* to it everywhere. Rename nothing else.**
 
-| Directory | Names renamed things? | Renamed? |
-|---|---|---|
-| `rtl/` | declares them | yes |
-| `coverage/` | binds to `ecc_top` | yes |
-| `tb/` | instantiates `ecc_top`, imports `ecc_params_pkg` | yes |
-| `formal/` | binds to submodules, imports packages | yes |
-| `uvmf_*/uvmf_template_output/` | instantiates `ecc_top`, imports `ecc_defines_pkg` | yes |
-| `uvmf_*/<BLOCK>_*.yaml` | **no** — names UVM *classes*, which are not in the rename map | **no** |
+The two halves are easy to conflate, and the second is why the rename map is
+still applied to every vendored file:
 
-So the YAML is not an exception carved out by hand. It is an *instance* of the
-same rule, and that is exactly why it survives byte-identical: a `module`,
-`package` or `interface` is a compilation-unit-global name and must be
-prefixed; a UVM class is scoped by the package that holds it and must not be.
-The YAML names only the latter.
+| Directory | Declares design names? | Names renamed? | References rewritten? |
+|---|---|---|---|
+| `rtl/` | yes — this is the synth tier | **yes** | yes |
+| `coverage/` | no — bind code, never synthesized | no | yes (`bind arca_ecc_top`) |
+| `tb/` | no | no | yes |
+| `formal/` | no | no | yes |
+| `uvmf_*/uvmf_template_output/` | no | no | yes (`arca_ecc_top` in `hdl_top.sv`) |
+| `uvmf_*/<BLOCK>_*.yaml` | no — names UVM *classes* | no | nothing to rewrite |
 
-**Restricting the rename to `rtl/` is a coherent alternative, with a cost.** You
-would vendor `tb/`, `formal/` and the UVMF tree verbatim as unrenamed
-reference material. That is simpler and the round-trip gets trivially stronger.
-But none of it would then bind to the renamed RTL — `ecc_top` no longer exists
-in ARCA — so verification would have to stay upstream, and ARCA could not run
-its own regressions against its own vendored copy. This repo takes the wider
-scope because an engine you cannot test in-tree is not really vendored. If the
-narrower scope is preferred, `COLLATERAL_SUBTREES=()` in the block driver
-already expresses it.
+`hdl_top.sv` keeps its upstream file and module name and instantiates
+`arca_ecc_top`. `ecc_top_cov_bind` keeps its name and binds into
+`arca_ecc_top`. That is the policy in two lines of evidence.
+
+The payoff is measurable: **324 of 423 imported files are now byte-identical to
+upstream.** Only files that genuinely name RTL differ, which makes the next
+upstream merge a much smaller review.
+
+### The YAML needs no exclusion rule
+
+It is tempting to special-case `uvmf_*/<BLOCK>_*.yaml` in the script. We checked
+instead: the 5 generator YAMLs per block were scanned against the full rename
+map (231 ECC / 177 HMAC identifiers) with the engine's own identifier-boundary
+regex — **zero matches**. The YAML names only UVM classes, which are scoped by
+their package and never enter the map. It survives byte-identical because the
+rule already excludes it, not because of an exception.
+
+What *is* needed is an assertion that it stays that way, since the round-trip
+strips the prefix before diffing and therefore cannot see a wrongly-prefixed
+generator input. `GENERATOR_INPUTS` + a no-stripping `cmp` closes that gap.
+
+### Path components are not identifiers
+
+Several blocks name their top module after their folder, so a text pass cannot
+tell the module `hmac_drbg` from the directory `src/hmac_drbg/`. Left alone the
+engine emits dangling paths:
+
+```
+${CALIPTRA_ROOT}/src/arca_hmac_drbg/rtl/arca_hmac_drbg.sv
+                     ^^^^ no such directory   ^^^^ correct
+```
+
+`rc_fix_path_components` reverts a prefixed path component when the unprefixed
+directory exists and the prefixed one does not — driven by the tree produced,
+not by the rename map, so a directory that really was renamed is left alone.
+This repaired **48 references** across the two blocks. Nothing else caught them:
+`check_filelists.sh` skips `${CALIPTRA_ROOT}`-rooted entries as external, and
+the round-trip strips the prefix before diffing, so the dangling form compared
+*equal* to upstream. Check 11 in `verify_import.sh` now pins it.
 
 ## Generated verification IP (UVMF) — does renaming break it?
 
@@ -367,6 +398,18 @@ Consequences that matter:
   descending length, so no token can be partially rewritten by an earlier pass
   and then rewritten again by a later one.
 
+Two narrower passes run afterwards, because a single identifier pass cannot
+express either of them:
+
+* `rc_fix_file_references` rewrites references to *file* names
+  (`fv_add_sub_alter_coverpoints.sv`). A file stem is not an identifier and is
+  not in the map; the name is matched together with its extension, under a
+  deliberately looser look-behind so a `/` may precede it.
+* `rc_fix_path_components` reverts the opposite error — a prefixed *directory*
+  component in a path string, where the identifier pass could not tell the
+  module `hmac_drbg` from the folder `src/hmac_drbg/`. It reverts only when the
+  unprefixed directory exists and the prefixed one does not.
+
 ### The strongest check: round-trip
 
 `roundtrip_check.sh` strips the prefix back off every committed file and diffs
@@ -455,7 +498,8 @@ Current state of the two imported blocks, all enforced in CI
 |---|---|---|
 | delivery tier | 25 files | 12 files |
 | collateral tier | 191 files in 5 dirs (4 build artifacts skipped) | 193 files in 9 dirs |
-| structural verification (11 checks) | pass | pass |
+| structural verification (13 checks) | pass | pass |
+| files byte-identical to upstream | 158 of 217 | 166 of 206 |
 | round-trip vs upstream blobs | pass, 215 files | pass, 204 files |
 | generator inputs byte-identical | pass, 5 files | pass, 5 files |
 | re-import reproducibility | pass | pass |

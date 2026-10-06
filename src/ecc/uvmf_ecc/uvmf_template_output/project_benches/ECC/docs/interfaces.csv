@@ -9,6 +9,6 @@
 
 ,
 Interface Description, Interface Type, Interface Transaction, Interface Name,
-ECC_in_agent, arca_ECC_in_driver_bfm arca_ECC_in_monitor_bfm, ECC_in_transaction, ECC_in_pkg_ECC_in_agent_BFM,
-ECC_out_agent, arca_ECC_out_driver_bfm arca_ECC_out_monitor_bfm, ECC_out_transaction, ECC_out_pkg_ECC_out_agent_BFM,
+ECC_in_agent, ECC_in_driver_bfm ECC_in_monitor_bfm, ECC_in_transaction, ECC_in_pkg_ECC_in_agent_BFM,
+ECC_out_agent, ECC_out_driver_bfm ECC_out_monitor_bfm, ECC_out_transaction, ECC_out_pkg_ECC_out_agent_BFM,
 

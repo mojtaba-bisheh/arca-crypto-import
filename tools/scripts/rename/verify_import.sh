@@ -80,6 +80,14 @@ verify_block() {
     local cdirs=() cfiles=()
     mapfile -t cdirs < <(sed -nE '/^[[:space:]]*collateral_dirs:/,/^[[:space:]]*filelist:/ s/^[[:space:]]*-[[:space:]]*(src\/.*)$/\1/p' "$revinfo")
 
+    # Synthesizable subtrees: the only place new names are minted.
+    local sdirs
+    mapfile -t sdirs < <(sed -nE '/^[[:space:]]*synth_subtrees:/,/^[[:space:]]*excluded_globs:/ s/^[[:space:]]*-[[:space:]]*"(src\/[^"]+)".*/\1/p' "$revinfo")
+    [ "${#sdirs[@]}" -gt 0 ] || { fail "revinfo lists no synth_subtrees"; return; }
+    for d in "${sdirs[@]}"; do
+        [ -d "$DEST/$d" ] || { fail "synth dir missing: $d"; return; }
+    done
+
     # Every imported source, as a repo-relative path.
     local files
     mapfile -t files < <(cd "$DEST" && find "${dirs[@]}" -maxdepth 1 -type f \
@@ -89,17 +97,25 @@ verify_block() {
         mapfile -t cfiles < <(cd "$DEST" && find "${cdirs[@]}" -type f \
                               \( -name '*.sv' -o -name '*.svh' -o -name '*.v' \) 2>/dev/null | sort)
     fi
-    # Checks 2-6 cover both tiers: a testbench that still says `ecc_top` would
+    # Checks 4-6 cover both tiers: a testbench that still says `ecc_top` would
     # silently bind to whatever other ecc_top is in the simulation.
     local allfiles=("${files[@]}" "${cfiles[@]}")
 
-    # 1. every file name carries the prefix
+    # Synthesizable sources only -- the subset that is renamed.
+    local synthfiles=()
+    mapfile -t synthfiles < <(cd "$DEST" && find "${sdirs[@]}" -maxdepth 1 -type f \
+                              \( -name '*.sv' -o -name '*.svh' -o -name '*.v' \) | sort)
+    [ "${#synthfiles[@]}" -gt 0 ] || { fail "no sources under ${sdirs[*]}"; return; }
+
+    # 1. every *synthesizable* file name carries the prefix. Non-synth delivery
+    #    files (coverage binds) keep their upstream names along with the rest of
+    #    the verification collateral -- see check 10.
     local f b bad=0
-    for f in "${files[@]}"; do
+    for f in "${synthfiles[@]}"; do
         b="$(basename "$f")"
-        case "$b" in "$prefix"*) ;; *) fail "unprefixed file name: $f"; bad=1 ;; esac
+        case "$b" in "$prefix"*) ;; *) fail "unprefixed synthesizable file name: $f"; bad=1 ;; esac
     done
-    [ "$bad" -eq 0 ] && ok "all ${#files[@]} file names carry '$prefix'"
+    [ "$bad" -eq 0 ] && ok "all ${#synthfiles[@]} synthesizable file names carry '$prefix'"
 
     # 1b. the ARCA layout mirrors the upstream layout
     bad=0
@@ -113,31 +129,54 @@ verify_block() {
     done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*\{[[:space:]]*upstream:[[:space:]]*"([^"]+)",[[:space:]]*arca:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
     [ "$bad" -eq 0 ] && ok "ARCA layout mirrors the caliptra-rtl hierarchy"
 
-    # 2. every global-namespace declaration carries the prefix.
+    # 2. every global-namespace declaration in synthesizable RTL carries the
+    #    prefix.
     #
     # module/package/interface/program are the compilation-unit-scope names --
     # the ones that collide if ARCA and an unprefixed caliptra-rtl end up in one
-    # compile. SystemVerilog *classes* are deliberately not checked: a class is
-    # scoped by the package that declares it, so arca_ECC_in_pkg::ECC_in_agent
-    # cannot clash with ECC_in_pkg::ECC_in_agent. Leaving UVM class names alone
-    # is also what keeps +UVM_TESTNAME=test_top and the generated testlists
-    # working, and what lets the UVMF generator inputs stay byte-identical to
-    # upstream.
+    # netlist. That risk belongs to the synthesized design, so the rename is
+    # scoped to it. SystemVerilog *classes* are never renamed anywhere: a class
+    # is scoped by the package that declares it, so ECC_in_pkg::ECC_in_agent
+    # cannot clash across compiles.
     bad=0
+    local name
     while IFS= read -r decl; do
         [ -n "$decl" ] || continue
-        local name="${decl##* }"
-        case "$name" in "$prefix"*) ;; *) fail "unprefixed declaration: $decl"; bad=1 ;; esac
-    done < <(cd "$DEST" && grep -hoE '^[[:space:]]*(module|package|interface|program)[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${allfiles[@]}" \
+        name="${decl##* }"
+        case "$name" in "$prefix"*) ;; *) fail "unprefixed declaration in synthesizable RTL: $decl"; bad=1 ;; esac
+    done < <(cd "$DEST" && grep -hoE '^[[:space:]]*(module|package|interface|program)[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${synthfiles[@]}" \
              | sed -E 's/^[[:space:]]*//; s/[[:space:]]+/ /')
-    [ "$bad" -eq 0 ] && ok "all module/package/interface/program declarations carry '$prefix'"
+    [ "$bad" -eq 0 ] && ok "all synthesizable module/package/interface/program declarations carry '$prefix'"
+
+    # 2b. the converse, and the thing that actually pins the policy down:
+    #     nothing *outside* synthesizable RTL may have been given a new name.
+    #     Without this the scope could silently widen again and the only symptom
+    #     would be a UVMF tree that no longer matches its generator inputs.
+    bad=0
+    local nonsynth=()
+    for f in "${allfiles[@]}"; do
+        local issynth=0 d2
+        for d2 in "${sdirs[@]}"; do case "$f" in "$d2"/*) issynth=1 ;; esac; done
+        [ "$issynth" -eq 0 ] && nonsynth+=("$f")
+    done
+    if [ "${#nonsynth[@]}" -gt 0 ]; then
+        while IFS= read -r decl; do
+            [ -n "$decl" ] || continue
+            name="${decl##* }"
+            case "$name" in
+                "$prefix"*) fail "non-synthesizable declaration was renamed: $decl"; bad=1 ;;
+            esac
+        done < <(cd "$DEST" && grep -hoE '^[[:space:]]*(module|package|interface|program)[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${nonsynth[@]}" \
+                 | sed -E 's/^[[:space:]]*//; s/[[:space:]]+/ /')
+        [ "$bad" -eq 0 ] && ok "no verification-tier declaration was renamed (${#nonsynth[@]} file(s) checked)"
+    fi
 
     # 3. every `define carries the macro prefix
     bad=0
     while IFS= read -r name; do
         [ -n "$name" ] || continue
         case "$name" in "$macro_prefix"*) ;; *) fail "unprefixed \`define: $name"; bad=1 ;; esac
-    done < <(cd "$DEST" && grep -hoE '^[[:space:]]*`define[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${files[@]}" \
+    done < <(cd "$DEST" && grep -hoE '^[[:space:]]*`define[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "${synthfiles[@]}" \
              | sed -E 's/.*`define[[:space:]]+//')
     [ "$bad" -eq 0 ] && ok "all \`define macros carry '$macro_prefix'"
 
@@ -233,12 +272,13 @@ verify_block() {
     done < <(sed -nE '/^renamed_manifest:/,$ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
     [ "$bad" -eq 0 ] && ok "renamed manifest matches working tree"
 
-    # 10. collateral tier -- imported whole, looser contract.
+    # 10. collateral tier -- imported whole, keeps its upstream names.
     #
-    # Checks 2-6 already covered its SystemVerilog, so the identifiers are
-    # consistent with the delivery. What is *not* asserted here:
-    #   * file names need not carry the prefix (Makefile, compile.do, test
-    #     vector .txt files are not identifiers);
+    # Checks 4-6 already proved its *references* follow the renamed RTL, and
+    # check 2b proved its own declarations were left alone. What is deliberately
+    # not asserted here:
+    #   * file names do not carry the prefix -- nothing here is synthesized, so
+    #     nothing here needs a new name;
     #   * `include targets need not resolve inside the block -- testbenches
     #     reach into caliptra-rtl verification headers and UVM, neither of which
     #     this import vendors. Those are reported, not failed.
@@ -248,16 +288,15 @@ verify_block() {
         local nall ninc=0 bad
         nall="$(cd "$DEST" && find "${cdirs[@]}" -type f 2>/dev/null | wc -l)"
 
-        # every HDL source carries the prefix, same rule as the delivery tier;
-        # non-HDL collateral (Makefile, compile.do, *.yaml) deliberately does not
-        bad="$(cd "$DEST" && find "${cdirs[@]}" \
-                 \( -name '*.sv' -o -name '*.svh' -o -name '*.v' -o -name '*.vh' \) \
-                 ! -name "${prefix}*" 2>/dev/null)"
+        # No collateral file name may have been prefixed. Renaming them would
+        # desynchronise the UVMF tree from the generator inputs it was produced
+        # from, for no netlist benefit.
+        bad="$(cd "$DEST" && find "${cdirs[@]}" -name "${prefix}*" -type f 2>/dev/null)"
         if [ -n "$bad" ]; then
-            fail "collateral HDL file name(s) missing '$prefix':"
+            fail "collateral file name(s) were prefixed but should keep upstream names:"
             printf '%s\n' "$bad" | sed 's/^/          /'
         else
-            ok "all collateral HDL file names carry '$prefix'"
+            ok "all collateral file names kept their upstream names"
         fi
         while IFS='|' read -r src inc; do
             [ -n "${inc:-}" ] || continue
@@ -273,6 +312,32 @@ verify_block() {
         ok "collateral tier: $nall file(s) in ${#cdirs[@]} dir(s), ${#cfiles[@]} SystemVerilog, identifiers consistent with the delivery"
         [ "$ninc" -gt 0 ] && printf '  note  %d collateral `include target(s) resolve outside the block (UVM / caliptra-rtl verification headers, not vendored)\n' "$ninc"
     fi
+    # ------------------------------------------------------------------
+    # 11. no path string may name a directory that does not exist.
+    #
+    # The identifier pass is a text pass and cannot distinguish the module
+    # "hmac_drbg" from the directory "src/hmac_drbg". Without a repair pass it
+    # silently emits dangling paths like
+    #   ${CALIPTRA_ROOT}/src/arca_hmac_drbg/rtl/arca_hmac_drbg.sv
+    # in .vf lists, compile.do and stimulus YAML. Neither check_filelists.sh
+    # (skips externally-rooted entries) nor the round-trip (strips the prefix
+    # before diffing) can see them, so they need their own check.
+    # ------------------------------------------------------------------
+    local pathbad=() comp
+    while IFS= read -r comp; do
+        [ -n "$comp" ] || continue
+        find "$DEST" -type d -name "$comp" -print -quit | grep -q . && continue
+        pathbad+=("$comp")
+    done < <(cd "$DEST" && find "${dirs[@]}" ${cdirs[0]:+"${cdirs[@]}"} -type f 2>/dev/null \
+             | xargs grep -hoE "/${prefix}[A-Za-z0-9_]+/" 2>/dev/null \
+             | sed -E "s|^/||; s|/$||" | sort -u)
+    if [ "${#pathbad[@]}" -gt 0 ]; then
+        fail "path string(s) name a prefixed directory that does not exist:"
+        printf '          %s\n' "${pathbad[@]}"
+    else
+        ok "every prefixed path component names a directory that exists"
+    fi
+
     return 0
 }
 

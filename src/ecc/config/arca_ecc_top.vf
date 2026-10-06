@@ -26,5 +26,5 @@ ${ARCA_ROOT}/src/ecc/rtl/arca_ecc_pe_final.sv
 ${ARCA_ROOT}/src/ecc/rtl/arca_ecc_mult_dsp.sv
 ${ARCA_ROOT}/src/ecc/rtl/arca_ecc_add_sub_mod_alter.sv
 ${ARCA_ROOT}/src/ecc/rtl/arca_ecc_adder.sv
-${ARCA_ROOT}/src/ecc/coverage/arca_ecc_top_cov_bind.sv
-${ARCA_ROOT}/src/ecc/coverage/arca_ecc_top_cov_if.sv
+${ARCA_ROOT}/src/ecc/coverage/ecc_top_cov_bind.sv
+${ARCA_ROOT}/src/ecc/coverage/ecc_top_cov_if.sv

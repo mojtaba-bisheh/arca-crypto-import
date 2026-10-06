@@ -5,30 +5,30 @@ quietly WaveActivateNextPane {} 0
 
 add wave -noupdate -divider ECC_in_agent 
 add wave -noupdate /uvm_root/uvm_test_top/environment/ECC_in_agent/ECC_in_agent_monitor/txn_stream
-add wave -noupdate -group ECC_in_agent_bus /arca_hdl_top/ECC_in_agent_bus/*
+add wave -noupdate -group ECC_in_agent_bus /hdl_top/ECC_in_agent_bus/*
 add wave -noupdate -divider ECC_out_agent 
 add wave -noupdate /uvm_root/uvm_test_top/environment/ECC_out_agent/ECC_out_agent_monitor/txn_stream
-add wave -noupdate -group ECC_out_agent_bus /arca_hdl_top/ECC_out_agent_bus/*
+add wave -noupdate -group ECC_out_agent_bus /hdl_top/ECC_out_agent_bus/*
 add wave -noupdate -divider Internal_Signals
-add wave -noupdate /arca_hdl_top/dut/ecc_dsa_ctrl_i/dsa_busy
-add wave -noupdate /arca_hdl_top/dut/ecc_dsa_ctrl_i/pm_busy_o
-add wave -noupdate /arca_hdl_top/dut/ecc_dsa_ctrl_i/privkey_reg
-add wave -noupdate /arca_hdl_top/dut/ecc_dsa_ctrl_i/cmd_reg
-add wave -noupdate /arca_hdl_top/dut/ecc_reg1/field_combo
-add wave -noupdate /arca_hdl_top/dut/ecc_reg_hwif_in
-add wave -noupdate /arca_hdl_top/dut/ecc_reg_hwif_out
-add wave -noupdate /arca_hdl_top/dut/hrdata_o
-add wave -noupdate /arca_hdl_top/hrdata_top
-add wave -noupdate -divider arca_ECC_out_monitor_bfm
-add wave -noupdate /arca_hdl_top/ECC_out_agent_mon_bfm/transaction_flag_out_monitor_i
-add wave -noupdate /arca_hdl_top/ECC_out_agent_mon_bfm/transaction_flag
-add wave -noupdate /arca_hdl_top/ECC_out_agent_mon_bfm/privkey
-add wave -noupdate /arca_hdl_top/ECC_out_agent_mon_bfm/pubkey_x
-add wave -noupdate /arca_hdl_top/ECC_out_agent_mon_bfm/pubkey_y
-add wave -noupdate /arca_hdl_top/ECC_out_agent_mon_bfm/R
-add wave -noupdate /arca_hdl_top/ECC_out_agent_mon_bfm/S
-add wave -noupdate /arca_hdl_top/ECC_out_agent_mon_bfm/verify_R
-add wave -noupdate /arca_hdl_top/ECC_out_agent_mon_bfm/op
+add wave -noupdate /hdl_top/dut/ecc_dsa_ctrl_i/dsa_busy
+add wave -noupdate /hdl_top/dut/ecc_dsa_ctrl_i/pm_busy_o
+add wave -noupdate /hdl_top/dut/ecc_dsa_ctrl_i/privkey_reg
+add wave -noupdate /hdl_top/dut/ecc_dsa_ctrl_i/cmd_reg
+add wave -noupdate /hdl_top/dut/ecc_reg1/field_combo
+add wave -noupdate /hdl_top/dut/ecc_reg_hwif_in
+add wave -noupdate /hdl_top/dut/ecc_reg_hwif_out
+add wave -noupdate /hdl_top/dut/hrdata_o
+add wave -noupdate /hdl_top/hrdata_top
+add wave -noupdate -divider ECC_out_monitor_bfm
+add wave -noupdate /hdl_top/ECC_out_agent_mon_bfm/transaction_flag_out_monitor_i
+add wave -noupdate /hdl_top/ECC_out_agent_mon_bfm/transaction_flag
+add wave -noupdate /hdl_top/ECC_out_agent_mon_bfm/privkey
+add wave -noupdate /hdl_top/ECC_out_agent_mon_bfm/pubkey_x
+add wave -noupdate /hdl_top/ECC_out_agent_mon_bfm/pubkey_y
+add wave -noupdate /hdl_top/ECC_out_agent_mon_bfm/R
+add wave -noupdate /hdl_top/ECC_out_agent_mon_bfm/S
+add wave -noupdate /hdl_top/ECC_out_agent_mon_bfm/verify_R
+add wave -noupdate /hdl_top/ECC_out_agent_mon_bfm/op
 
 TreeUpdate [SetDefaultTree]
 quietly wave cursor active 0

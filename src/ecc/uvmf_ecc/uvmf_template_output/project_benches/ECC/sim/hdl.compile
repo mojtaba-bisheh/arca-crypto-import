@@ -2,4 +2,4 @@ needs:
 # pragma uvmf custom dut_compile_info begin
   - ../rtl/dut.compile
 # pragma uvmf custom dut_compile_info end
-  - ../tb/testbench/arca_hdl_top.compile
+  - ../tb/testbench/hdl_top.compile

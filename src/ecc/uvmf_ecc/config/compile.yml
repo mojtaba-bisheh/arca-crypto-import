@@ -10,37 +10,37 @@ targets:
     directories:
       - ${COMPILE_ROOT}/../rtl
       - ${COMPILE_ROOT}/../../libs/rtl
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_in_pkg
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_in_pkg/src
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_out_pkg
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_out_pkg/src
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/environment_packages/arca_ECC_env_pkg
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_in_pkg
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_in_pkg/src
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_out_pkg
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_out_pkg/src
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/environment_packages/ECC_env_pkg
       - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/parameters
       - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/sequences
       - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/tests
       - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/testbench
     files:
 #      - ${COMPILE_ROOT}/../rtl/ecc_reg_uvm.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_in_pkg/arca_ECC_in_pkg_hdl.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_in_pkg/arca_ECC_in_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_in_pkg/src/arca_ECC_in_driver_bfm.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_in_pkg/src/arca_ECC_in_if.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_in_pkg/src/arca_ECC_in_monitor_bfm.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_out_pkg/arca_ECC_out_pkg_hdl.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_out_pkg/arca_ECC_out_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_out_pkg/src/arca_ECC_out_driver_bfm.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_out_pkg/src/arca_ECC_out_if.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/arca_ECC_out_pkg/src/arca_ECC_out_monitor_bfm.sv
-#      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/environment_packages/arca_ECC_env_pkg/registers/ECC_reg_model_top_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/environment_packages/arca_ECC_env_pkg/arca_ECC_env_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/parameters/arca_ECC_parameters_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/sequences/arca_ECC_sequences_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/tests/arca_ECC_tests_pkg.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/testbench/arca_hdl_top.sv
-      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/testbench/arca_hvl_top.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_in_pkg/ECC_in_pkg_hdl.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_in_pkg/ECC_in_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_in_pkg/src/ECC_in_driver_bfm.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_in_pkg/src/ECC_in_if.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_in_pkg/src/ECC_in_monitor_bfm.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_out_pkg/ECC_out_pkg_hdl.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_out_pkg/ECC_out_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_out_pkg/src/ECC_out_driver_bfm.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_out_pkg/src/ECC_out_if.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/interface_packages/ECC_out_pkg/src/ECC_out_monitor_bfm.sv
+#      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/environment_packages/ECC_env_pkg/registers/ECC_reg_model_top_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/verification_ip/environment_packages/ECC_env_pkg/ECC_env_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/parameters/ECC_parameters_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/sequences/ECC_sequences_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/tests/ECC_tests_pkg.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/testbench/hdl_top.sv
+      - ${COMPILE_ROOT}/uvmf_template_output/project_benches/ECC/tb/testbench/hvl_top.sv
     tops:
-      - arca_hdl_top
-      - arca_hvl_top
+      - hdl_top
+      - hvl_top
   sim:
     pre_exec: 'echo "[PRE-EXEC] Copying ECC vector generator to $(pwd)" && cp $COMPILE_ROOT/../tb/ecc_secp384r1.exe .'
 global:

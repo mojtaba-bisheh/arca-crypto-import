@@ -32,12 +32,12 @@ file delete -force sv_connect.*
 vlib work 
 # pragma uvmf custom dut_compile_dofile_target begin
 # UVMF_CHANGE_ME : Add commands to compile your dut here, replacing the default examples
-#vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/rtl/verilog/arca_verilog_dut.v
+#vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/rtl/verilog/verilog_dut.v
 #vcom $env(UVMF_PROJECT_DIR)/rtl/vhdl/vhdl_dut.vhd
 
 vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/../../../../../libs/rtl/caliptra_sva_pkg.sv
 vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/../../../../../keyvault/rtl/kv_defines_pkg.sv
-vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/../../../../../arca_hmac_drbg/rtl/arca_hmac_drbg.v
+vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/../../../../../hmac_drbg/rtl/arca_hmac_drbg.v
 vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_core.v
 vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_ctrl.sv
 vlog -sv -timescale 1ps/1ps -suppress 2223,2286 $env(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_param_pkg.sv
@@ -91,20 +91,20 @@ vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_HOME
 ###################################################################
 ## UVMF INTERFACE COMPILATION
 ###################################################################
-do $env(UVMF_VIP_LIBRARY_HOME)/interface_packages/arca_ECC_in_pkg/compile.do
-do $env(UVMF_VIP_LIBRARY_HOME)/interface_packages/arca_ECC_out_pkg/compile.do
+do $env(UVMF_VIP_LIBRARY_HOME)/interface_packages/ECC_in_pkg/compile.do
+do $env(UVMF_VIP_LIBRARY_HOME)/interface_packages/ECC_out_pkg/compile.do
 
 ###################################################################
 ## UVMF ENVIRONMENT COMPILATION
 ###################################################################
-do $env(UVMF_VIP_LIBRARY_HOME)/environment_packages/arca_ECC_env_pkg/compile.do
+do $env(UVMF_VIP_LIBRARY_HOME)/environment_packages/ECC_env_pkg/compile.do
 
 ###################################################################
 ## UVMF BENCHES COMPILATION
 ###################################################################
-vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/parameters $env(UVMF_PROJECT_DIR)/tb/parameters/arca_ECC_parameters_pkg.sv
-vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/sequences $env(UVMF_PROJECT_DIR)/tb/sequences/arca_ECC_sequences_pkg.sv
-vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/tests $env(UVMF_PROJECT_DIR)/tb/tests/arca_ECC_tests_pkg.sv
+vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/parameters $env(UVMF_PROJECT_DIR)/tb/parameters/ECC_parameters_pkg.sv
+vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/sequences $env(UVMF_PROJECT_DIR)/tb/sequences/ECC_sequences_pkg.sv
+vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/tests $env(UVMF_PROJECT_DIR)/tb/tests/ECC_tests_pkg.sv
 
 vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286 +incdir+$env(UVMF_PROJECT_DIR)/tb/testbench -F $env(UVMF_PROJECT_DIR)/tb/testbench/top_filelist_hdl.f
 vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286  +incdir+$env(UVMF_PROJECT_DIR)/tb/testbench -F $env(UVMF_PROJECT_DIR)/tb/testbench/top_filelist_hvl.f
@@ -112,5 +112,5 @@ vlog -sv -timescale 1ps/1ps -suppress 2223 -suppress 2286  +incdir+$env(UVMF_PRO
 ###################################################################
 ## OPTIMIZATION
 ###################################################################
-vopt          arca_hvl_top arca_hdl_top   -o optimized_batch_top_tb
-vopt  +acc    arca_hvl_top arca_hdl_top   -o optimized_debug_top_tb
+vopt          hvl_top hdl_top   -o optimized_batch_top_tb
+vopt  +acc    hvl_top hdl_top   -o optimized_debug_top_tb

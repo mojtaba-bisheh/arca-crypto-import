@@ -1,8 +1,0 @@
-needs:
-  - $UVMF_HOME/uvmf_base_pkg/uvmf_base_pkg.compile
-  - ../../../verification_ip/interface_packages/arca_HMAC_in_pkg/HMAC_in_hvl.compile
-  - ../../../verification_ip/interface_packages/arca_HMAC_out_pkg/HMAC_out_hvl.compile
-
-src:
-  - arca_HMAC_env_pkg.sv
-

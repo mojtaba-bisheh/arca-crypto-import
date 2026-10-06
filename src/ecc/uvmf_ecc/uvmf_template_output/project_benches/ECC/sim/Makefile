@@ -75,11 +75,11 @@ include $(UVMF_HOME)/scripts/Makefile
 
 
 # Include all requisite interface package targets for this bench
-include $(UVMF_VIP_LIBRARY_HOME)/interface_packages/arca_ECC_in_pkg/Makefile
-include $(UVMF_VIP_LIBRARY_HOME)/interface_packages/arca_ECC_out_pkg/Makefile
+include $(UVMF_VIP_LIBRARY_HOME)/interface_packages/ECC_in_pkg/Makefile
+include $(UVMF_VIP_LIBRARY_HOME)/interface_packages/ECC_out_pkg/Makefile
 
 # Include all requisite environment package targets for this bench
-include $(UVMF_VIP_LIBRARY_HOME)/environment_packages/arca_ECC_env_pkg/Makefile
+include $(UVMF_VIP_LIBRARY_HOME)/environment_packages/ECC_env_pkg/Makefile
 
 
 
@@ -110,20 +110,20 @@ EXTRA_VSIM_TOPS       +=
 
 # Project bench package source
 ECC_PARAMETERS_PKG ?=\
-$(UVMF_PROJECT_DIR)/tb/parameters/arca_ECC_parameters_pkg.sv
+$(UVMF_PROJECT_DIR)/tb/parameters/ECC_parameters_pkg.sv
 
 
 ECC_SEQUENCES_PKG ?=\
-$(UVMF_PROJECT_DIR)/tb/sequences/arca_ECC_sequences_pkg.sv
+$(UVMF_PROJECT_DIR)/tb/sequences/ECC_sequences_pkg.sv
 
 
 ECC_TEST_PKG ?=\
-$(UVMF_PROJECT_DIR)/tb/tests/arca_ECC_tests_pkg.sv
+$(UVMF_PROJECT_DIR)/tb/tests/ECC_tests_pkg.sv
 
 # pragma uvmf custom dut_files begin
 # UVMF_CHANGE_ME : Reference Verilog DUT source.
 ECC_VERILOG_DUT ?=\
-$(UVMF_PROJECT_DIR)/../../../../../arca_hmac_drbg/rtl/arca_hmac_drbg.v\
+$(UVMF_PROJECT_DIR)/../../../../../hmac_drbg/rtl/arca_hmac_drbg.v\
 $(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_core.v\
 $(UVMF_PROJECT_DIR)/../../../../../keyvault/rtl/kv_defines_pkg.sv\
 $(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_ctrl.sv\

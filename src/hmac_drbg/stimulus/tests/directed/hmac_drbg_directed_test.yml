@@ -14,7 +14,7 @@
 #
 ---
 plusargs:
-  - +HMAC_DRBG_TEST_VECTOR_FILE='${CALIPTRA_ROOT}/src/arca_hmac_drbg/tb/test_vectors/arca_hmac_drbg_tb.hex'
+  - +HMAC_DRBG_TEST_VECTOR_FILE='${CALIPTRA_ROOT}/src/hmac_drbg/tb/test_vectors/hmac_drbg_tb.hex'
   - +HMAC_DRBG_TEST='HMAC_DRBG_directed_test'
 
 testname: hmac_drbg_directed_test

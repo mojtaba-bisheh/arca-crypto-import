@@ -3,13 +3,13 @@ The description of the proofs, is provided in the caliptra 1.0 version which are
 **MACROS :** 
 TOP 
 
-- Used for the submodules arca_fv_ecc_fau.sv and arca_fv_scalar_blinding.sv and in fv_ecc_dsa_ctrl_constraints.sv.
+- Used for the submodules fv_ecc_fau.sv and fv_scalar_blinding.sv and in fv_ecc_dsa_ctrl_constraints.sv.
 
 - Use this macro or define this macro only when loading the design the with arca_ecc_dsa_ctrl as top module.
 
 FOR48
 
-- This macro is used for arca_fv_montmultiplier.sv as the montgomery multiplier shorter version end-to-end checkers. Due to the restriction of the formal tool overmultiplication this file is used for only reduced version of the design. This macro is for 48 bit version and radix as 4 which reproduces the same number of processing elements instantiations in the original version(384 bit and radix 48 bit). If this macro isn't enabled then 16 bit version of the multiplier proofs are set (16bit and Radix as 2)
+- This macro is used for fv_montmultiplier.sv as the montgomery multiplier shorter version end-to-end checkers. Due to the restriction of the formal tool overmultiplication this file is used for only reduced version of the design. This macro is for 48 bit version and radix as 4 which reproduces the same number of processing elements instantiations in the original version(384 bit and radix 48 bit). If this macro isn't enabled then 16 bit version of the multiplier proofs are set (16bit and Radix as 2)
 
 ## Notable changes from caliptra 1.0
 
@@ -18,7 +18,7 @@ FOR48
         - Reduced version proofs for REG_SIZE 16 and 48 with RADIX 2 and 4 respectively
         - Created a set of five different primes, p_mu, q_mu, r_inv to run the proofs
         - Adapted the proofs for arca_ecc_pe, arca_ecc_pe_first and arca_ecc_pe_final for RADIX 48 bit
-        - Similary the proofs were adjusted for the arca_fv_montmultiplier_glue.sv for the RADIX 48bit
+        - Similary the proofs were adjusted for the fv_montmultiplier_glue.sv for the RADIX 48bit
     # HMAC_DRBG interface 
         - The interface has the lfsr_seed input previously of 148 bit wide in the latest version adopted the changes to 384 bit in the proofs
         - For arca_hmac_drbg and hmac_core can have the same AIP as the caliptra 1.0 as verifying those modules we would cut out the outputs from sha_masked and lfsr_seed is only fed to sha_masked as entropy.

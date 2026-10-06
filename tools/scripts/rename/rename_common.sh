@@ -79,7 +79,7 @@
 
 set -euo pipefail
 
-RC_SCRIPT_VERSION="1.5.0"
+RC_SCRIPT_VERSION="2.0.0"
 
 rc_log()  { printf '[%s] %s\n' "${BLOCK:-rename}" "$*"; }
 rc_warn() { printf '[%s] WARNING: %s\n' "${BLOCK:-rename}" "$*" >&2; }
@@ -128,6 +128,24 @@ RC_DEFAULT_ARTIFACT_GLOBS=(
     '*.ucdb' '*.exe' '*.o' '*.a' '*.so' '*.pyc' '*.wlf' '*.vstf' '*.vcd' '*.fsdb'
 )
 
+# Rename scope: synthesized design material only.
+#
+# The prefix exists to keep the ARCA *design* namespace from colliding with an
+# upstream Caliptra instance in the same elaboration. That is a property of the
+# synthesized netlist, so only identifiers *declared* in synthesizable RTL are
+# renamed. SYNTH_SUBTREES names those directories; it defaults to every
+# delivery subtree called "rtl".
+#
+# The rename map is still applied to *every* vendored file, which is the part
+# that is easy to misread as a contradiction. Declaring and referencing are
+# different things: the benches under tb/, formal/ and the UVMF tree keep their
+# own upstream names, but they instantiate ecc_top, and ecc_top is now
+# arca_ecc_top -- so their references have to follow or the vendored bench no
+# longer binds to the vendored RTL. One rule covers both tiers:
+#
+#     rename what is declared in synthesizable RTL;
+#     rewrite references to it everywhere; rename nothing else.
+#
 # Code-generator inputs. A block may vendor files that are *fed to* a generator
 # rather than compiled -- the UVMF .yaml descriptions are the case here. They
 # must come through byte-identical to upstream or regeneration silently
@@ -138,7 +156,8 @@ RC_DEFAULT_ARTIFACT_GLOBS=(
 rc_init() {
     rc_default_array EXCLUDE_GLOBS EXTRA_RENAME_IDENTS ENV_MACRO_SPECS \
                      ENV_HEADER_REPLACE KEEP_IDENTS DEST_SUBTREES \
-                     COLLATERAL_SUBTREES ARTIFACT_GLOBS GENERATOR_INPUTS
+                     COLLATERAL_SUBTREES ARTIFACT_GLOBS GENERATOR_INPUTS \
+                     SYNTH_SUBTREES
     [ "${#ARTIFACT_GLOBS[@]}" -gt 0 ] || ARTIFACT_GLOBS=("${RC_DEFAULT_ARTIFACT_GLOBS[@]}")
     WITH_COLLATERAL=1
 
@@ -194,6 +213,23 @@ rc_init() {
     BLOCK_DIR="${BLOCK_DIR:-$(dirname "${DEST_SUBTREES[0]}")}"
     rc_check_relpath "$BLOCK_DIR"
     CONFIG_DIR="$BLOCK_DIR/config"
+
+    # Synthesized design material. Default: every delivery subtree called
+    # "rtl". A block whose synthesizable sources live elsewhere overrides this.
+    if [ "${#SYNTH_SUBTREES[@]}" -eq 0 ]; then
+        for dst in "${DEST_SUBTREES[@]}"; do
+            [ "$(basename "$dst")" = "rtl" ] && SYNTH_SUBTREES+=("$dst")
+        done
+    fi
+    [ "${#SYNTH_SUBTREES[@]}" -gt 0 ] || \
+        rc_die "no synthesizable subtree identified; set SYNTH_SUBTREES in the driver"
+    for dst in "${SYNTH_SUBTREES[@]}"; do
+        rc_check_relpath "$dst"
+        case " ${DEST_SUBTREES[*]} " in
+            *" $dst "*) ;;
+            *) rc_die "SYNTH_SUBTREES entry '$dst' is not a delivery subtree" ;;
+        esac
+    done
 
     OUT_REVINFO="$DEST/revinfo"
     WORK="$(mktemp -d "${TMPDIR:-/tmp}/arca-import-$BLOCK-XXXXXX")"
@@ -339,6 +375,15 @@ rc_assert_unique_basename() {
 # rc_build_map -- collect every identifier this block owns and build the
 #                 original -> renamed mapping table.
 # ---------------------------------------------------------------------------
+# rc_is_synth -- is this staged path inside a synthesizable subtree?
+rc_is_synth() {
+    local p="$1" d
+    for d in "${SYNTH_SUBTREES[@]}"; do
+        case "$p" in "$d"/*) return 0 ;; esac
+    done
+    return 1
+}
+
 rc_build_map() {
     local f kind name tok keep hit
     : > "$MAP.raw"
@@ -346,6 +391,11 @@ rc_build_map() {
     pushd "$STAGE" >/dev/null
     for f in "${STAGED_FILES[@]}" "${COLLATERAL_FILES[@]}"; do
         case "$f" in *.sv|*.svh|*.v|*.vh) ;; *) continue ;; esac
+        # Only synthesizable RTL contributes *new* names. Benches, coverage
+        # binds and UVMF components keep their upstream identifiers; they are
+        # not in the netlist, so they cannot collide there, and leaving them
+        # alone is what keeps the UVMF generator inputs usable.
+        rc_is_synth "$f" || continue
         # Declarations owned by the block.
         grep -hoE '^[[:space:]]*(module|package|interface)[[:space:]]+[A-Za-z_][A-Za-z0-9_$]*' "$f" 2>/dev/null \
             | sed -E 's/^[[:space:]]*//; s/[[:space:]]+/\t/' >> "$MAP.raw" || true
@@ -400,6 +450,7 @@ rc_build_map() {
 
     # File renames are recorded for traceability; apply_map.pl ignores them.
     for f in "${STAGED_FILES[@]}"; do
+        rc_is_synth "$f" || continue
         printf 'file\t%s\t%s%s\n' "$f" "$PREFIX" "$f" >> "$MAP"
     done
 
@@ -488,10 +539,12 @@ rc_env_macros() {
 #                    is already prefixed).
 # ---------------------------------------------------------------------------
 rc_rename_files() {
-    local f dir base new out=()
+    local f dir base new out=() n=0
     for f in "${STAGED_FILES[@]}"; do
         dir="$(dirname "$f")"
         base="$(basename "$f")"
+        # Coverage binds and other non-synth delivery files keep upstream names.
+        if ! rc_is_synth "$f"; then out+=("$f"); continue; fi
         case "$base" in
             "$PREFIX"*) out+=("$f"); continue ;;
         esac
@@ -500,39 +553,33 @@ rc_rename_files() {
         mv "$STAGE/$f" "$STAGE/$new"
         printf '%s\t%s\n' "$base" "${PREFIX}${base}" >> "$FILE_RENAMES"
         out+=("$new")
+        n=$((n + 1))
     done
     STAGED_FILES=("${out[@]}")
-    rc_log "renamed ${#STAGED_FILES[@]} file(s)"
+    rc_log "renamed $n synthesizable file(s) of ${#STAGED_FILES[@]} delivered"
     rc_rename_collateral_files
 }
 
 # ---------------------------------------------------------------------------
-# rc_rename_collateral_files -- prefix collateral file names.
+# rc_rename_collateral_files -- collateral keeps its upstream names.
 #
-# Every HDL source file (*.sv *.svh *.v *.vh) is prefixed unconditionally, the
-# same rule the delivery tier uses: the file name is part of how a fileset is
-# identified, and a vendored src/ecc/formal/.../fv_add_sub_alter_coverpoints.sv
-# sitting next to someone else's copy of the same upstream file is exactly the
-# collision the prefix exists to prevent. Note the stem is not always an
-# identifier -- that file declares module fv_add_sub_alter_coverpoints_m -- so
-# the name cannot be derived from the map.
+# Nothing here is synthesized, so nothing here can collide in the netlist and
+# nothing here is renamed. File names, module names and the UVMF component
+# names all stay exactly as upstream wrote them. The identifier pass has
+# already rewritten their *references* to the renamed RTL, which is what makes
+# the vendored bench bind to the vendored design.
 #
-# Non-HDL files are prefixed only when the stem *is* a renamed identifier.
-# Makefile, compile.do, hmac_vectors_singleblk.txt and ECC_bench.yaml stay as
-# they are: renaming them breaks the tools that look them up by name, for no
-# namespace benefit (they are not in SystemVerilog's global namespace).
-#
-# *Directories* are prefixed when their name is a renamed identifier. UVMF
-# names a package directory after the package it contains
-# (verification_ip/interface_packages/ECC_out_pkg/), and the generated .f lists
-# reference it by that path -- so the directory has to follow the package into
-# arca_ECC_out_pkg/ or the filelists dangle.
-#
-# References to the renamed files -- `include, .f lists, do/tcl scripts -- are
-# fixed up afterwards by rc_fix_file_references.
+# One exception survives, and it is forced rather than chosen. If a *synth*
+# package happens to share its name with a directory, the identifier pass
+# rewrites that name inside .f path strings just as readily as inside a
+# declaration, so the directory has to follow or the filelist dangles. With the
+# scope narrowed to RTL this is expected to fire zero times -- the UVMF package
+# directories (ECC_in_pkg/ and friends) are named after UVMF packages, which
+# are no longer renamed -- but the handling stays, because the alternative is a
+# silent dangling path if a future block does declare such a package in rtl/.
 # ---------------------------------------------------------------------------
 rc_rename_collateral_files() {
-    local f dir base stem ext new out=() n=0 nd=0 hdl comp newdir comps=() root st
+    local f dir base new out=() nd=0 comp newdir comps=() root st
     local -A ident=() dirseen=()
     [ "${#COLLATERAL_FILES[@]}" -gt 0 ] || return 0
 
@@ -543,7 +590,6 @@ rc_rename_collateral_files() {
 
     for f in "${COLLATERAL_FILES[@]}" "${COLLATERAL_BINARIES[@]}"; do
         dir="$(dirname "$f")"; base="$(basename "$f")"
-        stem="${base%%.*}"; ext="${base#"$stem"}"
 
         # Directory components named after a renamed identifier follow it --
         # but only *below* the declared subtree root. src/hmac/ and
@@ -568,22 +614,7 @@ rc_rename_collateral_files() {
             dirseen["$newdir"]=1; nd=$((nd + 1))
         fi
 
-        hdl=0
-        case "$base" in *.sv|*.svh|*.v|*.vh) hdl=1 ;; esac
-
-        case "$base" in
-            "$PREFIX"*) new="$newdir/$base" ;;
-            *)
-                if [ "$hdl" -eq 1 ] || { [ -n "$stem" ] && [ -n "${ident[$stem]:-}" ]; }; then
-                    new="$newdir/${PREFIX}${base}"
-                    printf 'file\t%s\t%s\n' "$f" "$new" >> "$MAP"
-                    printf '%s\t%s\n' "$base" "${PREFIX}${base}" >> "$FILE_RENAMES"
-                    n=$((n + 1))
-                else
-                    new="$newdir/$base"
-                fi
-                ;;
-        esac
+        new="$newdir/$base"
 
         if [ "$new" != "$f" ]; then
             [ -e "$STAGE/$new" ] && rc_die "collateral rename collision: $new"
@@ -596,8 +627,13 @@ rc_rename_collateral_files() {
     COLLATERAL_INSTALLED=("${out[@]}")
     # moving the last file out of a renamed directory leaves the old one behind
     find "$STAGE" -type d -empty -delete
-    rc_log "renamed $n collateral file name(s) and $nd directory name(s) of ${#out[@]}"
+    if [ "$nd" -gt 0 ]; then
+        rc_log "collateral: $nd directory name(s) followed a renamed RTL package, ${#out[@]} file name(s) kept upstream"
+    else
+        rc_log "collateral: all ${#out[@]} file name(s) kept upstream"
+    fi
     rc_fix_file_references
+    rc_fix_path_components
 }
 
 # ---------------------------------------------------------------------------
@@ -642,6 +678,73 @@ rc_fix_file_references() {
 }
 
 # ---------------------------------------------------------------------------
+# rc_fix_path_components -- undo the identifier pass where it hit a *directory*
+# name inside a path string.
+#
+# The identifier pass is a text pass: it cannot tell
+#
+#     hmac_drbg          <- the module, must become arca_hmac_drbg
+#     src/hmac_drbg/rtl  <- the directory, must stay put
+#
+# apart, because several blocks name their top module after their folder. Left
+# alone it emits dangling paths like
+#
+#     ${CALIPTRA_ROOT}/src/arca_hmac_drbg/rtl/arca_hmac_drbg.sv
+#                          ^^^^^ no such directory      ^^^^^ correct
+#
+# in .vf lists, compile.do scripts and stimulus YAML. Nothing else catches
+# these: check_filelists.sh skips ${CALIPTRA_ROOT}-rooted entries as external
+# references, and the round-trip strips the prefix before diffing, so the
+# dangling form compares equal to upstream.
+#
+# The repair is driven by the tree we actually produced rather than by the
+# rename map, which is what makes it safe: a prefixed path component is
+# reverted only when the unprefixed directory exists and the prefixed one does
+# not. If a directory really was renamed (a synth package naming its own
+# folder), the prefixed directory exists and we leave the reference alone.
+# ---------------------------------------------------------------------------
+rc_fix_path_components() {
+    local d base keep=() n=0
+    # Directory names come from the upstream checkout as well as our own stage:
+    # a block may reference a sibling block's folder (ECC compiles hmac_drbg's
+    # RTL) that this driver never staged, and those references are exactly the
+    # ones most likely to dangle.
+    while IFS= read -r d; do
+        base="$(basename "$d")"
+        case "$base" in "${PREFIX}"*) continue ;; esac
+        [ -d "$(dirname "$d")/${PREFIX}${base}" ] && continue
+        find "$STAGE" -type d -name "${PREFIX}${base}" -print -quit | grep -q . && continue
+        keep+=("$base")
+    done < <({ find "$STAGE" -type d; find "$UPSTREAM/src" -maxdepth 2 -type d; } | sort -u)
+    [ "${#keep[@]}" -gt 0 ] || return 0
+    n="$(perl -e '
+        my ($prefix, $nkeep, @rest) = @ARGV;
+        my @keep  = splice(@rest, 0, $nkeep);
+        my @files = @rest;
+        my %seen; my @u = grep { !$seen{$_}++ } @keep;
+        my $alt = join "|", map { quotemeta } sort { length($b) <=> length($a) } @u;
+        my $p   = quotemeta $prefix;
+        # only between path separators: a bare identifier is never touched
+        my $re  = qr{(?<=/)$p($alt)(?=/)};
+        my $hits = 0;
+        for my $f (@files) {
+            open(my $in, "<", $f) or next;
+            local $/; my $txt = <$in>; close $in;
+            my $orig = $txt;
+            $hits += ($txt =~ s/$re/$1/g);
+            next if $txt eq $orig;
+            open(my $out, ">", $f) or die $!;
+            print $out $txt; close $out;
+        }
+        print $hits;
+    ' "$PREFIX" "${#keep[@]}" "${keep[@]}" \
+      $(printf "$STAGE/%s " "${STAGED_FILES[@]}") \
+      $(printf "$STAGE/%s " "${COLLATERAL_INSTALLED[@]}"))"
+    [ "$n" -gt 0 ] && rc_log "reverted $n prefixed path component(s) naming an unrenamed directory"
+    return 0
+}
+
+# ---------------------------------------------------------------------------
 # rc_emit_filelist -- compile-ordered filelist.
 #
 # It lands in the block's config/ directory, mirroring where caliptra-rtl keeps
@@ -659,8 +762,10 @@ rc_emit_filelist() {
 
     if [ -n "${VF_FILELIST:-}" ] && [ -f "$UPSTREAM/$VF_FILELIST" ]; then
         while IFS= read -r line; do
-            base="${PREFIX}$(basename "${line%%[[:space:]]*}")"
-            f="$(rc_staged_path "$base")"
+            base="$(basename "${line%%[[:space:]]*}")"
+            # synthesizable sources were prefixed; anything else kept its name
+            f="$(rc_staged_path "${PREFIX}${base}")"
+            [ -n "$f" ] || f="$(rc_staged_path "$base")"
             [ -n "$f" ] || continue
             case " ${ordered[*]} " in *" $f "*) continue ;; esac
             ordered+=("$f")
@@ -780,6 +885,9 @@ rc_emit_revinfo() {
         printf '  perl: "%s"\n' "$(perl -e 'print $^V')"
         printf '\n'
         printf 'policy:\n'
+        printf '  rename_scope: "synthesized design material only"\n'
+        printf '  synth_subtrees:  # identifiers declared here are renamed; everything else only references them\n'
+        for tok in "${SYNTH_SUBTREES[@]}"; do [ -n "$tok" ] && printf '    - "%s"\n' "$tok"; done
         printf '  excluded_globs:\n'
         for tok in "${EXCLUDE_GLOBS[@]}"; do [ -n "$tok" ] && printf '    - "%s"\n' "$tok"; done
         printf '  artifact_globs:  # build/sim outputs, regenerated not vendored\n'

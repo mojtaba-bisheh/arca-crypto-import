@@ -171,28 +171,84 @@ renamed HDL namespace object*. `ECC_in_pkg.vinfo` tracks the identity of
 language, so it keeps its upstream name. Roughly 186 files sit in that second
 category by design.
 
-### 4.2a Rename scope: why not stop at `rtl/`
+### 4.2a Rename scope: synthesized design material only
 
-The set of directories the rename touches is derived, not enumerated. The rule
-is:
+The prefix exists to keep ARCA's design namespace from colliding with an SoC
+that also integrates upstream Caliptra. Collisions occur in the **netlist**.
+Verification collateral is never synthesized and therefore cannot collide there,
+so renaming it buys no safety and costs review surface on every upstream merge.
 
-> rename anything that **names** a renamed thing.
+The rule:
 
-`rtl/` declares the renamed identifiers; `coverage/`, `tb/`, `formal/` and the
-UVMF template output all reference them (`ecc_top`, `ecc_top_cov_bind`,
-`ecc_defines_pkg`), so all of them are renamed. The UVMF `.yaml` generator
-inputs name UVM *classes* only, which are deliberately not in the rename map
-(§4.3), so they are untouched. The YAML is therefore not an exception to the
-rule — it is an instance of it, and that is precisely why regeneration still
-works.
+> Rename what is **declared** in synthesizable RTL.
+> Rewrite **references** to it everywhere. Rename nothing else.
 
-The narrower scope — rename `rtl/` + `coverage/` and vendor the rest verbatim —
-is self-consistent and is expressible today as `COLLATERAL_SUBTREES=()` in the
-block driver. It was rejected because the unrenamed benches then bind to
-`ecc_top`, which does not exist in ARCA, so no verification collateral could be
-run against the vendored RTL. The cost of the wider scope is a larger renamed
-surface; the cost of the narrower one is that verification cannot follow the
-block.
+Declaring and referencing are different operations, and conflating them is the
+easy mistake. The rename map is still applied to *every* vendored file — `tb/`,
+`formal/` and the UVMF tree keep their own upstream names but must still have
+their references rewritten, or the vendored bench no longer binds to the
+vendored RTL. Concretely: `hdl_top.sv` keeps its name and instantiates
+`arca_ecc_top`; `ecc_top_cov_bind` keeps its name and binds into `arca_ecc_top`.
+
+`SYNTH_SUBTREES` names the synthesizable tier. It defaults to every
+`DEST_SUBTREES` entry whose basename is `rtl`, which is correct for both blocks
+and matches the `VF_FILTER` each driver already declares. A block that
+synthesizes from elsewhere sets it explicitly.
+
+`coverage/` is in the *delivery* tier but is functional-coverage bind code, so
+under a strict reading of "synthesized" it is **not** renamed. Its modules
+(`ecc_top_cov_bind`, `ecc_top_cov_if`) keep upstream names. The delivery
+filelist therefore mixes prefixed and unprefixed entries, which `rc_emit_filelist`
+handles by looking up the prefixed name first and falling back to the bare one.
+
+Effect: **324 of 423 imported files are byte-identical to upstream**, versus
+essentially none under the previous policy.
+
+Two checks pin the policy from both sides, and both were negative-tested:
+
+* **check 2** — every `module`/`package`/`interface`/`program` declared under
+  `synth_subtrees` carries the prefix.
+* **check 2b** — no declaration *outside* those subtrees carries it. Without
+  this the scope could silently re-widen. Prefixing `module hdl_top` makes it
+  fail, as verified.
+
+Check 5 ("no original identifier survives anywhere") remains the load-bearing
+proof that *references* followed the rename.
+
+#### Path components are not identifiers
+
+Several blocks name their top module after their folder (`hmac_drbg`), so the
+identifier pass — a text pass — cannot distinguish the module from the
+directory `src/hmac_drbg/`. Unrepaired it emits:
+
+```
+${CALIPTRA_ROOT}/src/arca_hmac_drbg/rtl/arca_hmac_drbg.sv
+                     ^^^^ no such directory   ^^^^ correct
+```
+
+`rc_fix_path_components` runs after the identifier and file-reference passes and
+reverts a prefixed path component when the unprefixed directory exists and the
+prefixed one does not. It is driven by the directory tree — the stage plus the
+upstream checkout, since a block may reference a sibling block's folder that
+this driver never staged — rather than by the rename map, so a directory that
+genuinely was renamed is left alone.
+
+This repaired 48 references (4 ECC, 44 HMAC) in `.vf` lists, `compile.do` and
+stimulus YAML. Nothing else could have caught them: `check_filelists.sh` skips
+`${CALIPTRA_ROOT}`-rooted entries as external references, and the round-trip
+strips the prefix before diffing, so the dangling form compared *equal* to
+upstream. Check 11 asserts every prefixed path component names a directory that
+exists, and was negative-tested.
+
+#### No exclusion rule is needed for the UVMF YAML
+
+A natural proposal is to exclude `uvmf_*/<BLOCK>_*.yaml` from the rename. We
+measured instead: the 5 generator YAMLs per block were scanned against the full
+rename map (231 ECC / 177 HMAC identifiers) using the engine's own
+identifier-boundary regex — **zero matches in every file**. The YAML names only
+UVM classes, which are package-scoped and never enter the map, so an exclusion
+would be redundant. What is needed is the assertion that this remains true,
+which `GENERATOR_INPUTS` + a no-stripping `cmp` provides (§4.3).
 
 ---
 
@@ -259,12 +315,15 @@ are structural. They are still fairly strong:
 
 `verify_import.sh` (runs automatically at the end of every import, and in CI):
 
-1. every file name carries the prefix
+1. every **synthesizable** file name carries the prefix
 1b. the ARCA layout mirrors the caliptra-rtl hierarchy — every directory
     recorded in `revinfo` is present, and any deliberate deviation from the
     upstream path is reported as an explicit note rather than passing silently
-2. every `module` / `package` / `interface` declaration carries the prefix
-3. every `` `define `` carries the macro prefix
+2. every `module` / `package` / `interface` / `program` declared under
+   `synth_subtrees` carries the prefix
+2b. no declaration **outside** `synth_subtrees` carries it — the converse, so
+   the scope cannot silently re-widen
+3. every `` `define `` in the synthesizable tier carries the macro prefix
 4. no double prefixing (`arca_arca_`) — idempotency
 5. no original, unprefixed block identifier survives anywhere
 6. the rename map is injective (no two originals collapse onto one name)
@@ -274,11 +333,12 @@ are structural. They are still fairly strong:
    caliptra-rtl keeps it), covers every source, and every entry exists
 9. every committed file still matches the sha256 recorded in revinfo
    (detects hand-edits after import)
-10. every collateral HDL file name carries the prefix — the same assertion
-    check 1 makes for the delivery tier, so no `.sv`/`.svh`/`.v`/`.vh`
-    anywhere in the import escapes the namespace
-11. collateral-tier summary: file/directory/SV counts, and the identifier
-    checks (2, 4, 5) are applied to the collateral sources too, so a
+10. no collateral file name carries the prefix — collateral keeps its upstream
+    names so the UVMF tree stays aligned with the generator inputs
+11. every prefixed path component names a directory that exists — catches the
+    `src/arca_hmac_drbg/` dangling-path class that no other check can see
+12. collateral-tier summary: file/directory/SV counts, and the identifier
+    checks (2b, 4, 5) are applied to the collateral sources too, so a
     testbench referring to an *unrenamed* `ecc_top` fails the build. What
     these deliberately do **not** assert is unique basenames, include
     resolution, or filelist coverage — see §4.2

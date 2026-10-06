@@ -1,2 +1,2 @@
 needs:
-  - ../tb/testbench/arca_hvl_top.compile
+  - ../tb/testbench/hvl_top.compile

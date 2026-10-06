@@ -7,22 +7,22 @@ ${UVM_HOME}/src/uvm_pkg.sv
 -f ${UVMF_HOME}/common/common_sve.f
 
 // BFM Files
--F ${UVMF_VIP_LIBRARY_HOME}/interface_packages/arca_HMAC_in_pkg/HMAC_in_pkg_sve.F
--F ${UVMF_VIP_LIBRARY_HOME}/interface_packages/arca_HMAC_out_pkg/HMAC_out_pkg_sve.F
+-F ${UVMF_VIP_LIBRARY_HOME}/interface_packages/HMAC_in_pkg/HMAC_in_pkg_sve.F
+-F ${UVMF_VIP_LIBRARY_HOME}/interface_packages/HMAC_out_pkg/HMAC_out_pkg_sve.F
 
 // Environment Files
--F ${UVMF_VIP_LIBRARY_HOME}/environment_packages/arca_HMAC_env_pkg/HMAC_env_pkg_sve.F
+-F ${UVMF_VIP_LIBRARY_HOME}/environment_packages/HMAC_env_pkg/HMAC_env_pkg_sve.F
 
 // Bench Files
 +incdir+./tb/tests
-./tb/tests/arca_HMAC_tests_pkg.sv
+./tb/tests/HMAC_tests_pkg.sv
 
 +incdir+./tb/sequences
-./tb/sequences/arca_HMAC_sequences_pkg.sv
+./tb/sequences/HMAC_sequences_pkg.sv
 
 +incdir+./tb/parameters
-./tb/parameters/arca_HMAC_parameters_pkg.sv
+./tb/parameters/HMAC_parameters_pkg.sv
 
-./tb/testbench/arca_hdl_top.sv
-./tb/testbench/arca_hvl_top.sv
+./tb/testbench/hdl_top.sv
+./tb/testbench/hvl_top.sv
 

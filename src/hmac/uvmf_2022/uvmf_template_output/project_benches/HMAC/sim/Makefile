@@ -75,11 +75,11 @@ include $(UVMF_HOME)/scripts/Makefile
 
 
 # Include all requisite interface package targets for this bench
-include $(UVMF_VIP_LIBRARY_HOME)/interface_packages/arca_HMAC_in_pkg/Makefile
-include $(UVMF_VIP_LIBRARY_HOME)/interface_packages/arca_HMAC_out_pkg/Makefile
+include $(UVMF_VIP_LIBRARY_HOME)/interface_packages/HMAC_in_pkg/Makefile
+include $(UVMF_VIP_LIBRARY_HOME)/interface_packages/HMAC_out_pkg/Makefile
 
 # Include all requisite environment package targets for this bench
-include $(UVMF_VIP_LIBRARY_HOME)/environment_packages/arca_HMAC_env_pkg/Makefile
+include $(UVMF_VIP_LIBRARY_HOME)/environment_packages/HMAC_env_pkg/Makefile
 
 
 
@@ -110,15 +110,15 @@ EXTRA_VSIM_TOPS       +=
 
 # Project bench package source
 HMAC_PARAMETERS_PKG ?=\
-$(UVMF_PROJECT_DIR)/tb/parameters/arca_HMAC_parameters_pkg.sv
+$(UVMF_PROJECT_DIR)/tb/parameters/HMAC_parameters_pkg.sv
 
 
 HMAC_SEQUENCES_PKG ?=\
-$(UVMF_PROJECT_DIR)/tb/sequences/arca_HMAC_sequences_pkg.sv
+$(UVMF_PROJECT_DIR)/tb/sequences/HMAC_sequences_pkg.sv
 
 
 HMAC_TEST_PKG ?=\
-$(UVMF_PROJECT_DIR)/tb/tests/arca_HMAC_tests_pkg.sv
+$(UVMF_PROJECT_DIR)/tb/tests/HMAC_tests_pkg.sv
 
 # pragma uvmf custom dut_files begin
 # UVMF_CHANGE_ME : Reference Verilog DUT source.
