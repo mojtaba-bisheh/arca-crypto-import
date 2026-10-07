@@ -54,12 +54,21 @@ package the same way. Each `revinfo.yml` records the policy that was in force
 under `policy.stem_renames` / `policy.stem_keep`.
 
 `revinfo.yml` is deliberately engine-level: it answers "where did this block
-come from", which is one upstream commit. The per-file list lives beside it in
-`revinfo.manifest`, because it is machine input rather than something you read
--- `roundtrip_check.sh` enumerates it to know what to prove, and it is what
-records the effect of `excluded_globs` / `artifact_globs`. `revinfo.yml` pins it
-under `content.manifest_sha256`, and `verify_import.sh` rejects the pair if they
-disagree, so moving the detail out does not make it easier to tamper with.
+come from", which is one upstream commit — not one row per file. There is no
+per-file manifest, because there is nothing for one to say. The list of files
+*is* the committed tree, and git already content-addresses every one of them;
+`roundtrip_check.sh` therefore enumerates `git ls-files` over the block's
+declared subtrees and maps each path back to upstream by undoing the prefix and
+the stem. That is strictly stronger than reading a recorded list, because a
+file added locally can no longer escape the proof just by not being on it.
+
+The one thing that cannot be recovered from the tree is which files the import
+*generated* rather than vendored — the compile-order filelist, and the captured
+environment-macro header where a block needs one. Those are declared under
+`artifacts.generated`, and they are the only files exempt from the round-trip
+proof. `verify_import.sh` checks the declaration is truthful (each one present
+and committed), since an untruthful entry there would quietly excuse a file
+from being checked.
 
 `mldsa_mlkem_all_levels` is renamed the other way round: its *directory* is
 renamed but its *identifiers* are not. Upstream calls the engine `abr`

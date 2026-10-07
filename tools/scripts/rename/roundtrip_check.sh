@@ -5,9 +5,21 @@
 #   ./tools/scripts/rename/roundtrip_check.sh [--block ecc] --upstream <dir>
 #
 # For every imported file this strips the Tessera prefix back off and diffs the
-# result against the exact upstream blob recorded in revinfo/<block>.revinfo.yml.
+# result against the exact upstream blob recorded in the block's revinfo.yml.
 # A clean run means the vendored RTL differs from caliptra-rtl by nothing but
 # names -- no accidental logic edits, no dropped lines, no mangled strings.
+#
+# The set of files proved is the *committed tree*, enumerated over the subtrees
+# the block declared, rather than a recorded file list. That way every committed
+# file has to justify itself by mapping back to a real upstream blob; a file
+# added locally cannot escape the proof just by not being on a list. Only the
+# files the import declares it generated (artifacts.generated -- the compile
+# -order filelist and the captured environment-macro header) are exempt, and
+# those are held to bit-identical regeneration by CI instead.
+#
+# The complementary direction -- an upstream file that was never imported --
+# is covered by the re-import job, which regenerates every block and fails on
+# any file that comes back changed or uncommitted.
 #
 # The only differences tolerated are `include redirections, which the import
 # performs on purpose when it captures environment configuration macros into a
@@ -58,11 +70,6 @@ rc=0
 for b in "${blocks[@]}"; do
     revinfo="$(ri_path "$DEST" "$b" || true)"
     [ -f "$revinfo" ] || { echo "missing $revinfo" >&2; rc=1; continue; }
-    # The file lists live beside revinfo.yml. They are what says which files the
-    # import actually took, i.e. the effect of excluded_globs/artifact_globs, so
-    # they are read rather than re-derived from the upstream tree.
-    manifest="$(dirname "$revinfo")/revinfo.manifest"
-    [ -f "$manifest" ] || { echo "missing $manifest" >&2; rc=1; continue; }
 
     sha="$(sed -nE 's/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/\1/p' "$revinfo" | head -1)"
     prefix="$(sed -nE 's/^prefix:[[:space:]]*"(.*)"$/\1/p' "$revinfo" | head -1)"
@@ -228,38 +235,97 @@ for b in "${blocks[@]}"; do
         printf '%s' "$out"
     }
 
-    declare -A pathmap=()
-    while read -r _ rpath; do
-        [ -n "${rpath:-}" ] || continue
-        pathmap["$(tessera_key "$rpath")"]="$rpath"
-    done < <(sed -nE '/^renamed_manifest:/,$ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"(src\/[^"]+)".*/\1 \2/p' "$manifest")
+    # local Tessera path -> upstream path. tessera_key undoes the prefix and the
+    # stem but leaves the path in Tessera directories; this then undoes the
+    # subtree relocation, which is exactly remap_path run backwards (longest
+    # matching Tessera root wins, same as the forward direction).
+    unmap_path() {
+        local k i best=-1 blen=0
+        k="$(tessera_key "$1")"
+        for i in "${!roots_tessera[@]}"; do
+            case "$k" in "${roots_tessera[$i]}"/*)
+                [ "${#roots_tessera[$i]}" -gt "$blen" ] && { blen="${#roots_tessera[$i]}"; best="$i"; } ;;
+            esac
+        done
+        if [ "$best" -ge 0 ]; then
+            printf '%s%s\n' "${roots_up[$best]}" "${k#"${roots_tessera[$best]}"}"
+        else
+            printf '%s\n' "$k"
+        fi
+    }
+
+    # Files the import declared it produced itself (the compile-order filelist
+    # and, where a block needed one, the captured environment-macro header).
+    # They have no upstream blob to diff against; the re-import job is what
+    # holds them to their contract.
+    # Reset explicitly: these are rebuilt per block, and a stale entry carried
+    # over from the previous block would exempt the wrong file.
+    unset generated seen_up
+    declare -A generated=()
+    declare -A seen_up=()
+
+    while IFS= read -r g; do
+        [ -n "$g" ] || continue
+        generated["$g"]=1
+    done < <(sed -nE '/^  generated:/,/^$/ s/^[[:space:]]*-[[:space:]]*(.+)$/\1/p' "$revinfo")
+
+    # The set of files to prove is the committed tree itself, enumerated over
+    # the subtrees the block declared. Driving from the tree rather than from a
+    # recorded file list means every committed file has to justify itself
+    # against upstream: a file added locally can no longer go unexamined
+    # because it simply was not on the list.
+    blockdirs=()
+    while IFS= read -r d; do [ -n "$d" ] && blockdirs+=("$d"); done < <(
+        sed -nE '/^  source_dirs:/,/^  (collateral_dirs|filelist):/ s/^[[:space:]]*-[[:space:]]*(.+)$/\1/p' "$revinfo"
+        sed -nE '/^  collateral_dirs:/,/^  filelist:/ s/^[[:space:]]*-[[:space:]]*(.+)$/\1/p' "$revinfo")
+    if [ "${#blockdirs[@]}" -eq 0 ]; then
+        echo "  FAIL  revinfo.yml declares no source_dirs"; rc=1; continue
+    fi
+    # Enumerating from git is what makes this check meaningful, so refuse to
+    # degrade into "proved nothing, exited 0" if git cannot answer: a wrong cwd,
+    # an unpacked tarball, or a renamed block directory must all be loud.
+    top="$(git -C "$DEST" rev-parse --show-toplevel 2>/dev/null || true)"
+    if [ -z "$top" ] || [ "$top" != "$DEST" ]; then
+        echo "  FAIL  $DEST is not the root of a git work tree; cannot enumerate the block" >&2
+        rc=1; continue
+    fi
+    emptydir=0
+    for d in "${blockdirs[@]}"; do
+        [ -n "$(git -C "$DEST" ls-files -- "$d")" ] && continue
+        printf '  FAIL  declared subtree %s holds no tracked files\n' "$d"; rc=1; emptydir=1
+    done
+    [ "$emptydir" -eq 0 ] || continue
 
     checked=0
     binchecked=0
-    while read -r _ upath; do
-        [ -n "${upath:-}" ] || continue
-        base="$(basename "$upath")"
-        updir="$(dirname "$upath")"
+    skipped=0
 
-        # Where upstream put it is not where Tessera puts it, for any block that
-        # relocates a subtree. Translate first, then look the result up.
-        mapped="$(remap_path "$upath")"
-        renamed=""
-        if [ -n "${pathmap[$mapped]:-}" ]; then
-            renamed="$DEST/${pathmap[$mapped]}"
-        elif [ -f "$DEST/$(dirname "$mapped")/${prefix}$(restem "$base")" ]; then
-            renamed="$DEST/$(dirname "$mapped")/${prefix}$(restem "$base")"
-        elif [ -f "$DEST/$mapped" ]; then
-            renamed="$DEST/$mapped"
-        else
-            tesseradir="${dirmap[$updir]:-}"
-            [ -n "$tesseradir" ] && renamed="$DEST/$tesseradir/${prefix}$(restem "$base")"
+    while IFS= read -r rel; do
+        [ -n "${rel:-}" ] || continue
+        if [ -n "${generated[$rel]:-}" ]; then skipped=$((skipped + 1)); continue; fi
+
+        renamed="$DEST/$rel"
+        [ -f "$renamed" ] || { printf '  FAIL  tracked but absent from the work tree: %s\n' "$rel"; rc=1; continue; }
+
+        upath="$(unmap_path "$rel")"
+        # Two local files collapsing onto one upstream path would mean the
+        # inverse mapping is wrong, and one of the two would be proved against
+        # the other's source. Refuse rather than report a false pass.
+        if [ -n "${seen_up[$upath]:-}" ]; then
+            printf '  FAIL  %s and %s both map to upstream %s\n' "${seen_up[$upath]}" "$rel" "$upath"
+            rc=1; continue
         fi
-        [ -n "$renamed" ] && [ -f "$renamed" ] || { echo "  FAIL  missing renamed file for $upath"; rc=1; continue; }
+        seen_up["$upath"]="$rel"
+
+        IFS=$'\t' read -r urepo usha urel < <(upstream_repo_for "$upath")
+        if ! git -C "$urepo" cat-file -e "$usha:$urel" 2>/dev/null; then
+            printf '  FAIL  %s has no upstream counterpart (derived %s)\n' "$rel" "$upath"
+            printf '        not vendored and not declared under artifacts.generated\n'
+            rc=1; continue
+        fi
 
         if ! grep -Iq . "$renamed" 2>/dev/null; then
             # binary collateral: must be carried through byte-for-byte
-            IFS=$'\t' read -r urepo usha urel < <(upstream_repo_for "$upath")
             if git -C "$urepo" show "$usha:$urel" | cmp -s - "$renamed"; then
                 binchecked=$((binchecked + 1))
             else
@@ -269,7 +335,6 @@ for b in "${blocks[@]}"; do
             continue
         fi
 
-        IFS=$'\t' read -r urepo usha urel < <(upstream_repo_for "$upath")
         if diffout="$(diff <(uninvert "$renamed") \
                           <(git -C "$urepo" show "$usha:$urel"))"; then
             checked=$((checked + 1))
@@ -285,7 +350,7 @@ for b in "${blocks[@]}"; do
             printf '%s\n' "$diffout" | sed 's/^/        /'
             rc=1
         fi
-    done < <(sed -nE '/^source_manifest:/,/^renamed_manifest:/ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"([^"]+)".*/\1 \2/p' "$manifest")
+    done < <(git -C "$DEST" ls-files -- "${blockdirs[@]}")
 
     # Code-generator inputs are held to a *stronger* contract than everything
     # else: byte-identical, not merely naming-equivalent. The loop above strips
@@ -313,6 +378,7 @@ for b in "${blocks[@]}"; do
     [ "$local_gi" -eq 0 ] || printf '  ok    %d generator input(s) byte-identical to upstream\n' "$local_gi"
 
     [ "$binchecked" -eq 0 ] || printf '  ok    %d binary file(s) carried byte-for-byte\n' "$binchecked"
+    [ "$skipped" -eq 0 ] || printf '  --    %d generated file(s) skipped (no upstream counterpart)\n' "$skipped"
     printf '  -- %d file(s) round-tripped\n' "$checked"
     [ "$checked" -gt 0 ] || { echo "  FAIL  nothing checked"; rc=1; }
 done

@@ -1091,8 +1091,7 @@ rc_install() {
 # ---------------------------------------------------------------------------
 rc_emit_revinfo() {
     local out="$OUT_REVINFO/revinfo.yml"
-    local man="$OUT_REVINFO/revinfo.manifest"
-    local f tok script_sha src_n ren_n man_sha
+    local f tok script_sha src_n ren_n
     # Hash the *contents* only. sha256sum prints the path next to each digest,
     # so feeding its output back in would make the fingerprint depend on how the
     # script was invoked ("./tools/.../rename_ecc.sh" vs an absolute path from
@@ -1101,34 +1100,31 @@ rc_emit_revinfo() {
     script_sha="$(cat "$0" "$RC_LIB_DIR/rename_common.sh" "$RC_LIB_DIR/lib/apply_map.pl" \
                   | sha256sum | cut -d' ' -f1)"
 
-    # Per-file detail goes in a sibling manifest rather than in revinfo.yml.
-    # revinfo.yml answers "where did this engine come from", which is one
-    # upstream commit per engine; a few thousand lines of per-file sha256 next
-    # to that answer buries it. The file list is still needed -- roundtrip_check
-    # enumerates it to know what to prove, and it is what records the effect of
-    # excluded_globs/artifact_globs -- so it is kept verbatim, just moved out
-    # and pinned from revinfo.yml by digest so it cannot drift unnoticed.
-    {
-        printf '# Tessera vendored-block file manifest for %s -- GENERATED, do not edit by hand.\n' "$BLOCK"
-        printf '#\n'
-        printf '# Pinned by content.manifest_sha256 in revinfo.yml; verify_import.sh\n'
-        printf '# rejects this file if the two disagree.\n'
-        printf '\n'
-        printf 'source_manifest:  # sha256 of the upstream files as imported\n'
-        while IFS= read -r tok; do
-            printf '  - { sha256: "%s", path: "%s" }\n' "${tok%% *}" "${tok##* }"
-        done < "$SRC_MANIFEST"
-        printf '\n'
-        printf 'renamed_manifest:  # sha256 of the committed, renamed files\n'
-        for f in "${INSTALLED_FILES[@]}"; do
-            printf '  - { sha256: "%s", path: "%s" }\n' \
-                   "$(sha256sum "$DEST/$f" | cut -d' ' -f1)" "$f"
+    # What the import produced that upstream has no counterpart for. This is the
+    # only part of the file list that cannot be recovered by looking at the
+    # committed tree: every other file under source_dirs/collateral_dirs maps
+    # back to an upstream path by undoing the prefix and the stem, which is
+    # exactly what roundtrip_check does. Declaring the generated files lets that
+    # check demand an upstream counterpart for everything else.
+    local generated=()
+    [ -n "${FILELIST:-}" ]   && generated+=("$FILELIST")
+    [ -n "${ENV_HEADER:-}" ] && generated+=("$ENV_HEADER")
+    # A generated path that is not actually installed would silently excuse a
+    # file from the roundtrip proof, so assert the declaration is truthful.
+    # Done in-shell rather than with `printf ... | grep -q`: grep exits on the
+    # first match, printf then takes SIGPIPE, and under `set -o pipefail` a
+    # *successful* match would come back as a failed pipeline.
+    local inst found
+    for tok in ${generated[@]+"${generated[@]}"}; do
+        found=0
+        for inst in ${INSTALLED_FILES[@]+"${INSTALLED_FILES[@]}"}; do
+            [ "$inst" = "$tok" ] && { found=1; break; }
         done
-    } > "$man"
+        [ "$found" -eq 1 ] || rc_die "declared generated artifact '$tok' was not installed"
+    done
+
     src_n="$(grep -c . "$SRC_MANIFEST" || true)"
     ren_n="${#INSTALLED_FILES[@]}"
-    man_sha="$(sha256sum "$man" | cut -d' ' -f1)"
-    rc_log "wrote $BLOCK_DIR/revinfo.manifest ($src_n source, $ren_n renamed)"
 
     {
         printf '# Tessera vendored-block provenance record -- GENERATED, do not edit by hand.\n'
@@ -1248,12 +1244,16 @@ rc_emit_revinfo() {
         fi
         printf '  filelist: %s\n' "$FILELIST"
         printf '  rename_map: %s/revinfo.map\n' "$BLOCK_DIR"
-        printf '  manifest: %s/revinfo.manifest\n' "$BLOCK_DIR"
+        printf '  generated:  # produced by the import; no upstream counterpart\n'
+        if [ "${#generated[@]}" -gt 0 ]; then
+            for tok in "${generated[@]}"; do printf '    - %s\n' "$tok"; done
+        else
+            printf '    []\n'
+        fi
         printf '\n'
-        printf 'content:  # engine-level summary; per-file detail is in the manifest above\n'
+        printf 'content:  # engine-level summary; the file list is the committed tree itself\n'
         printf '  source_files: %s\n' "$src_n"
         printf '  renamed_files: %s\n' "$ren_n"
-        printf '  manifest_sha256: "%s"\n' "$man_sha"
     } > "$out"
     rc_log "wrote $BLOCK_DIR/revinfo.yml"
 }

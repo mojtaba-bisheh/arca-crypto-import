@@ -6,7 +6,7 @@
 block: sha512_masked
 prefix: "tessera_"
 macro_prefix: "TESSERA_"
-imported_at: "2026-10-07T17:04:33Z"
+imported_at: "2026-10-07T19:38:25Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -24,7 +24,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_sha512_masked.sh
   library_version: "2.1.1"
-  toolchain_fingerprint: "c851ee304071aa5a0c725f78777a9e479c776fd66bf84830d8fca8bd27d5d24d"
+  toolchain_fingerprint: "e7325a271b38d14186a32bc3e5426f59ff9ce6b03354627e8404ba244b247c03"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -74,9 +74,9 @@ artifacts:
     - src/sha512_masked/tb
   filelist: src/sha512_masked/config/tessera_sha512_masked_core.vf
   rename_map: src/sha512_masked/revinfo.map
-  manifest: src/sha512_masked/revinfo.manifest
+  generated:  # produced by the import; no upstream counterpart
+    - src/sha512_masked/config/tessera_sha512_masked_core.vf
 
-content:  # engine-level summary; per-file detail is in the manifest above
+content:  # engine-level summary; the file list is the committed tree itself
   source_files: 4
   renamed_files: 5
-  manifest_sha256: "8a138e281dbf782a309800dc569c94c2f1863fdaac76ce4b38e85df5c70d8121"

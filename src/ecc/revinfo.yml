@@ -6,7 +6,7 @@
 block: ecc
 prefix: "tessera_"
 macro_prefix: "TESSERA_"
-imported_at: "2026-10-07T17:02:45Z"
+imported_at: "2026-10-07T19:35:58Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -28,7 +28,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_ecc.sh
   library_version: "2.1.1"
-  toolchain_fingerprint: "9f22ec4660f71ea8adc057084791b6903f7ece6e70f2924899742fa768797e77"
+  toolchain_fingerprint: "54436ab65aa57a17392e9e19bf78589989e75535cf728176e2b6c594bd9f11c7"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -84,9 +84,9 @@ artifacts:
     - src/ecc/uvmf_ecc
   filelist: src/ecc/config/tessera_ecc_top.vf
   rename_map: src/ecc/revinfo.map
-  manifest: src/ecc/revinfo.manifest
+  generated:  # produced by the import; no upstream counterpart
+    - src/ecc/config/tessera_ecc_top.vf
 
-content:  # engine-level summary; per-file detail is in the manifest above
+content:  # engine-level summary; the file list is the committed tree itself
   source_files: 190
   renamed_files: 191
-  manifest_sha256: "5e74080eafca54731d17e6039786894b34780f1fb0796b9f73f464a0f95653db"

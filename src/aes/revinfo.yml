@@ -6,7 +6,7 @@
 block: aes
 prefix: "tessera_"
 macro_prefix: "TESSERA_"
-imported_at: "2026-10-07T17:02:36Z"
+imported_at: "2026-10-07T19:35:47Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -23,7 +23,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_aes.sh
   library_version: "2.1.1"
-  toolchain_fingerprint: "109d0e32977f4d6eaa9dfffcafece900819fbd924c32532f596db04d8d722d3e"
+  toolchain_fingerprint: "03a51a6b3f3718ea54408a52e11ba0513f30bc71b8a2bfe0fb61a360efa9b9d5"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -70,9 +70,9 @@ artifacts:
   collateral_dirs: []
   filelist: src/aes/config/tessera_aes.vf
   rename_map: src/aes/revinfo.map
-  manifest: src/aes/revinfo.manifest
+  generated:  # produced by the import; no upstream counterpart
+    - src/aes/config/tessera_aes.vf
 
-content:  # engine-level summary; per-file detail is in the manifest above
+content:  # engine-level summary; the file list is the committed tree itself
   source_files: 45
   renamed_files: 46
-  manifest_sha256: "c36b1bc55d9f010a45a731bfda8833f5ffa2813e0734e7fea611c5dd896fa257"

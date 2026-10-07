@@ -58,11 +58,17 @@ jobs:
           # Everything but the provenance records must be bit-identical.
           git diff --stat -- src/ ':(exclude)src/*/revinfo.yml' | tee /tmp/rtl.diff
           test ! -s /tmp/rtl.diff || { echo "re-import produced different RTL"; git diff -- src/ ':(exclude)src/*/revinfo.yml'; exit 1; }
+          # `git diff` reports tracked files only, so it cannot see the case
+          # that matters most here: a file that was dropped from the commit
+          # comes back from the re-import as *untracked*, leaving the diff above
+          # perfectly clean. Ask about untracked files separately, or
+          # "reproducible" would not actually imply "complete".
+          git ls-files --others --exclude-standard -- src/ | tee /tmp/rtl.new
+          test ! -s /tmp/rtl.new || { echo "re-import produced files that are missing from the commit"; exit 1; }
           # revinfo.yml records when the import ran and which interpreters ran
           # it. Those three keys describe the importing machine, not the import,
           # so they are expected to move; everything else -- upstream commit,
-          # policy, toolchain fingerprint, manifest digest -- must not. The
-          # manifest itself is covered by the bit-identical check above.
+          # policy, toolchain fingerprint -- must not.
           git diff -U0 -- src/*/revinfo.yml \
             | grep -E '^[+-][^+-]' \
             | grep -vE '^[+-][[:space:]]*(imported_at|bash|perl):' > /tmp/rev.diff || true

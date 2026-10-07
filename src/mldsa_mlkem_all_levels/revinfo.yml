@@ -6,7 +6,7 @@
 block: mldsa_mlkem_all_levels
 prefix: "tessera_"
 macro_prefix: "TESSERA_"
-imported_at: "2026-10-07T17:04:16Z"
+imported_at: "2026-10-07T19:37:39Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -101,7 +101,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_mldsa_mlkem_all_levels.sh
   library_version: "2.1.1"
-  toolchain_fingerprint: "28971ee87b0859e78528301287bbaf7e9724d1df08626ce212b9495acf623be2"
+  toolchain_fingerprint: "074ce78425a97beb46eaf0456c9f7a03df1fac0da009d35652b1050e6a1a2317"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -242,9 +242,9 @@ artifacts:
     - src/mldsa_mlkem_all_levels/coverage/config
   filelist: src/mldsa_mlkem_all_levels/config/tessera_abr_top.vf
   rename_map: src/mldsa_mlkem_all_levels/revinfo.map
-  manifest: src/mldsa_mlkem_all_levels/revinfo.manifest
+  generated:  # produced by the import; no upstream counterpart
+    - src/mldsa_mlkem_all_levels/config/tessera_abr_top.vf
 
-content:  # engine-level summary; per-file detail is in the manifest above
+content:  # engine-level summary; the file list is the committed tree itself
   source_files: 590
   renamed_files: 591
-  manifest_sha256: "6d90c8303f18338153b2ce7383379e261a1e938f3d0b754dac50ec4c001c5560"

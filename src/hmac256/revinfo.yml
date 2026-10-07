@@ -6,7 +6,7 @@
 block: hmac256
 prefix: "tessera_"
 macro_prefix: "TESSERA_"
-imported_at: "2026-10-07T17:02:52Z"
+imported_at: "2026-10-07T19:36:11Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -28,7 +28,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_hmac256.sh
   library_version: "2.1.1"
-  toolchain_fingerprint: "d934791d09f13bcce93fbf392aff3bcec505ff51b9261acb5c8d44cd769112df"
+  toolchain_fingerprint: "a8a5221d8e703eaff6fce5f1715f32d086a0528dca628a32f59eb3470c715b17"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -84,9 +84,9 @@ artifacts:
     - src/hmac256/uvmf_hmac256
   filelist: src/hmac256/config/tessera_hmac256_ctrl.vf
   rename_map: src/hmac256/revinfo.map
-  manifest: src/hmac256/revinfo.manifest
+  generated:  # produced by the import; no upstream counterpart
+    - src/hmac256/config/tessera_hmac256_ctrl.vf
 
-content:  # engine-level summary; per-file detail is in the manifest above
+content:  # engine-level summary; the file list is the committed tree itself
   source_files: 136
   renamed_files: 137
-  manifest_sha256: "531be8300ba9bbd8310522166e96c9bd3f1634ea8137a8cda4c91dba303f2b22"
