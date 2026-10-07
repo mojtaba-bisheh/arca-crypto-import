@@ -34,14 +34,15 @@ git add -A && git commit -m "Update ecc from caliptra-rtl"
 `import_block.sh` runs the checks itself; if it prints `all checks passed`
 the import is good.
 
-Blocks: `abr` `aes` `ecc` `hmac512` `hmac256` `sha256` `sha256_masked` `sha3`
-`sha512` `sha512_masked`. `abr` comes from the `adams-bridge` submodule, and
-`hmac256` and `sha256_masked` from caliptra-rtl's `future` branch — both are
-handled automatically.
+Blocks: `aes` `ecc` `hmac512` `hmac256` `mldsa_mlkem_all_levels` `sha256`
+`sha256_masked` `sha3` `sha512` `sha512_masked`. `mldsa_mlkem_all_levels`
+comes from the `adams-bridge` submodule, and `hmac256` and `sha256_masked`
+from caliptra-rtl's `future` branch — both are handled automatically.
 
-`hmac512` is the one block whose ARCA name differs from its upstream one:
-caliptra-rtl calls the SHA-512 HMAC engine simply `hmac`, which reads as a
-generic name next to `hmac256`. The repo-wide *stem policy* in
+Two blocks carry an ARCA name that differs from the upstream one.
+
+`hmac512`: caliptra-rtl calls the SHA-512 HMAC engine simply `hmac`, which
+reads as a generic name next to `hmac256`. The repo-wide *stem policy* in
 `rename_common.sh` (`RC_DEFAULT_STEM_RENAMES`) renames `hmac*` to `hmac512*`
 on top of the `arca_` prefix, so upstream `src/hmac/rtl/hmac_core.sv` lands as
 `src/hmac512/rtl/arca_hmac512_core.sv`. `hmac_drbg` is exempt
@@ -51,6 +52,16 @@ imports it too. The policy lives in the shared engine rather than in
 references `hmac_param_pkg`, and both imports have to spell the renamed
 package the same way. Each `revinfo.yml` records the policy that was in force
 under `policy.stem_renames` / `policy.stem_keep`.
+
+`mldsa_mlkem_all_levels` is renamed the other way round: its *directory* is
+renamed but its *identifiers* are not. Upstream calls the engine `abr`
+("Adams Bridge"), a codename that says nothing about ML-DSA, ML-KEM, or the
+security levels covered, so the ARCA directory is named for what the block
+implements. The identifiers keep the short upstream `abr_` stem — a
+22-character stem on all 222 identifiers in the block would cost far more
+readability than it buys. Directory and stem are independent knobs:
+`BLOCK_DIR`/`DEST_SUBTREES` set the first, `RC_DEFAULT_STEM_RENAMES` the
+second. Tying them together, as `hmac512` does, is a per-block choice.
 
 ## Seeing what changed upstream first
 

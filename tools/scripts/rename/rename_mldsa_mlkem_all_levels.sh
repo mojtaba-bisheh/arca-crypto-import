@@ -1,8 +1,19 @@
 #!/usr/bin/env bash
 #
-# rename_abr.sh -- import + prefix the Adams Bridge PQC engine (ML-DSA / ML-KEM).
+# rename_mldsa_mlkem_all_levels.sh -- import + prefix the Adams Bridge PQC
+# engine, which implements ML-DSA and ML-KEM at every parameter set.
 #
-#   ./tools/scripts/rename/rename_abr.sh --upstream /path/to/caliptra-rtl
+#   ./tools/scripts/rename/rename_mldsa_mlkem_all_levels.sh --upstream /path/to/caliptra-rtl
+#
+# The ARCA directory is named for what the engine implements rather than for
+# its upstream codename: upstream calls it "abr" (Adams Bridge), which says
+# nothing about ML-DSA, ML-KEM, or the security levels it covers.
+#
+# The directory name and the identifier stem are deliberately different knobs.
+# The directory is mldsa_mlkem_all_levels; the identifiers keep the short
+# upstream abr_ stem, so modules stay arca_abr_top rather than growing a
+# 22-character prefix across all 222 of them. See the stem policy in
+# rename_common.sh for the case where the two are tied together instead.
 #
 # The one block that is not a caliptra-rtl directory
 # --------------------------------------------------
@@ -15,9 +26,9 @@
 # normal src/<block>/ tree like every other engine. So this driver flattens two
 # repositories into one ARCA block:
 #
-#   caliptra-rtl        src/abr/coverage/                 -> src/abr/coverage/
-#   adams-bridge        src/<unit>/rtl/                   -> src/abr/<unit>/rtl/
-#   adams-bridge        src/abr_top/coverage/             -> src/abr/abr_top/coverage/
+#   caliptra-rtl    src/abr/coverage/        -> src/mldsa_mlkem_all_levels/coverage/
+#   adams-bridge    src/<unit>/rtl/          -> src/mldsa_mlkem_all_levels/<unit>/rtl/
+#   adams-bridge    src/abr_top/coverage/    -> src/mldsa_mlkem_all_levels/abr_top/coverage/
 #
 # That flattening costs us something real, and the cost is paid in revinfo.
 # Every other block's provenance is one commit. ABR's is two, and the second one
@@ -33,7 +44,7 @@
 # Why the unit directories survive the flattening
 # -----------------------------------------------
 # adams-bridge is 25 units, each with its own rtl/. They could have been poured
-# into one src/abr/rtl/, and that would have been simpler. They are not, because
+# into one src/mldsa_mlkem_all_levels/rtl/, and that would have been simpler. They are not, because
 # the per-unit `include directories are load-bearing: abr_top.vf carries 26
 # +incdir+ lines, one per unit, and the sources `include across unit boundaries
 # by bare filename. Collapsing the tree would silently change which file an
@@ -57,13 +68,13 @@
 
 set -euo pipefail
 
-BLOCK="abr"
+BLOCK="mldsa_mlkem_all_levels"
 
 # Normally the block directory is inferred as the parent of the first delivery
-# subtree. Here that parent is src/abr/abr_libs, the first adams-bridge unit, not
-# the block root -- ABR is the only block whose delivery subtrees are two levels
+# subtree. Here that parent is <block>/abr_libs, the first adams-bridge unit, not
+# the block root -- this is the only block whose delivery subtrees are two levels
 # down rather than one. Say it explicitly.
-BLOCK_DIR="src/abr"
+BLOCK_DIR="src/mldsa_mlkem_all_levels"
 
 # The adams-bridge units, in the repository's own order. Each contributes rtl/
 # to the delivery tier and whatever of tb/ stimulus/ uvmf/ utb/ it has to the
@@ -84,7 +95,7 @@ COLLATERAL_SUBTREES=()
 
 for u in "${ABR_UNITS[@]}"; do
     UPSTREAM_SUBTREES+=("$SUB/src/$u/rtl")
-    DEST_SUBTREES+=("src/abr/$u/rtl")
+    DEST_SUBTREES+=("$BLOCK_DIR/$u/rtl")
 done
 
 # Which units ship which collateral is listed rather than discovered, because
@@ -112,7 +123,7 @@ abr_collateral() {
     local u
     for u in "$@"; do
         COLLATERAL_SUBTREES+=("$SUB/src/$u/$COLL")
-        COLLATERAL_DEST_SUBTREES+=("src/abr/$u/$COLL")
+        COLLATERAL_DEST_SUBTREES+=("$BLOCK_DIR/$u/$COLL")
     done
 }
 COLL=tb       abr_collateral "${ABR_TB_UNITS[@]}"
@@ -125,9 +136,9 @@ COLL=utb      abr_collateral "${ABR_UTB_UNITS[@]}"
 # tier but not synthesizable, so like every other coverage/ here they keep their
 # file names and only have references rewritten.
 UPSTREAM_SUBTREES+=("src/abr/coverage" "$SUB/src/abr_top/coverage")
-DEST_SUBTREES+=("src/abr/coverage" "src/abr/abr_top/coverage")
+DEST_SUBTREES+=("$BLOCK_DIR/coverage" "$BLOCK_DIR/abr_top/coverage")
 COLLATERAL_SUBTREES+=("src/abr/coverage/config")
-COLLATERAL_DEST_SUBTREES+=("src/abr/coverage/config")
+COLLATERAL_DEST_SUBTREES+=("$BLOCK_DIR/coverage/config")
 
 VF_FILELIST="$SUB/src/abr_top/config/abr_top.vf"
 VF_FILTER="/rtl/"

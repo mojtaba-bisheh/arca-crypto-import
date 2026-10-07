@@ -26,9 +26,9 @@ jobs:
       - name: Fetch the adams-bridge submodule ABR was taken from
         run: |
           # ABR's sources live in a submodule, so the round-trip needs that
-          # repository too -- at the commit src/abr/revinfo.yml records, which
+          # repository too -- at the commit src/mldsa_mlkem_all_levels/revinfo.yml records, which
           # is the gitlink of the caliptra-rtl commit it was imported from.
-          sha=$(sed -nE 's/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/\1/p' src/abr/revinfo.yml | head -1)
+          sha=$(sed -nE 's/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/\1/p' src/mldsa_mlkem_all_levels/revinfo.yml | head -1)
           git -C .upstream-cache/caliptra-rtl checkout --quiet --detach "$sha"
           git -C .upstream-cache/caliptra-rtl submodule update --init --recursive
       - name: Strip prefixes and diff against the recorded upstream commit
