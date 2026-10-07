@@ -1,0 +1,250 @@
+# Tessera vendored-block provenance record -- GENERATED, do not edit by hand.
+#
+# To review what changed upstream since this import:
+#   git -C <caliptra-rtl> log --oneline b9ac0e466758d6ba8eac562d8acc3bc5483a2f6a..origin/main -- submodules/adams-bridge/src/abr_libs/rtl submodules/adams-bridge/src/abr_prim/rtl submodules/adams-bridge/src/abr_prim_generic/rtl submodules/adams-bridge/src/abr_sampler_top/rtl submodules/adams-bridge/src/abr_sha3/rtl submodules/adams-bridge/src/abr_top/rtl submodules/adams-bridge/src/barrett_reduction/rtl submodules/adams-bridge/src/cbd_sampler/rtl submodules/adams-bridge/src/compress/rtl submodules/adams-bridge/src/decompose/rtl submodules/adams-bridge/src/decompress/rtl submodules/adams-bridge/src/exp_mask/rtl submodules/adams-bridge/src/makehint/rtl submodules/adams-bridge/src/norm_check/rtl submodules/adams-bridge/src/ntt_top/rtl submodules/adams-bridge/src/pk_decode/rtl submodules/adams-bridge/src/power2round/rtl submodules/adams-bridge/src/rej_bounded/rtl submodules/adams-bridge/src/rej_sampler/rtl submodules/adams-bridge/src/sample_in_ball/rtl submodules/adams-bridge/src/sigdecode_h/rtl submodules/adams-bridge/src/sig_decode_z/rtl submodules/adams-bridge/src/sig_encode_z/rtl submodules/adams-bridge/src/sk_decode/rtl submodules/adams-bridge/src/sk_encode/rtl src/abr/coverage submodules/adams-bridge/src/abr_top/coverage 
+#
+block: mldsa_mlkem_all_levels
+prefix: "tessera_"
+macro_prefix: "TESSERA_"
+imported_at: "2026-10-07T21:28:05Z"
+
+upstream:
+  repo: "https://github.com/chipsalliance/caliptra-rtl.git"
+  branch: "main"
+  commit: "b9ac0e466758d6ba8eac562d8acc3bc5483a2f6a"
+  commit_date: "2026-10-06T08:53:38-07:00"
+  commit_subject: "Feat/stash bank rfc 673 (#1395)"
+  working_tree_dirty: false
+  submodules:  # vendored from a different repository than the one above
+    - path: "submodules/adams-bridge"
+      repo: "https://github.com/chipsalliance/adams-bridge"
+      commit: "2f15ffb1a2e9bd99652fa04d434a48ffcdc23f42"
+      commit_date: "2026-08-31T09:04:56-07:00"
+      commit_subject: "[RTL] Add explicit MLDSA signature verification result to MLDSA_STATUS (#297)"
+      working_tree_dirty: false
+  subtrees:  # upstream path -> Tessera path
+    - { upstream: "submodules/adams-bridge/src/abr_libs/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_libs/rtl" }
+    - { upstream: "submodules/adams-bridge/src/abr_prim/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_prim/rtl" }
+    - { upstream: "submodules/adams-bridge/src/abr_prim_generic/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_prim_generic/rtl" }
+    - { upstream: "submodules/adams-bridge/src/abr_sampler_top/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_sampler_top/rtl" }
+    - { upstream: "submodules/adams-bridge/src/abr_sha3/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_sha3/rtl" }
+    - { upstream: "submodules/adams-bridge/src/abr_top/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_top/rtl" }
+    - { upstream: "submodules/adams-bridge/src/barrett_reduction/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/barrett_reduction/rtl" }
+    - { upstream: "submodules/adams-bridge/src/cbd_sampler/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/cbd_sampler/rtl" }
+    - { upstream: "submodules/adams-bridge/src/compress/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/compress/rtl" }
+    - { upstream: "submodules/adams-bridge/src/decompose/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/decompose/rtl" }
+    - { upstream: "submodules/adams-bridge/src/decompress/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/decompress/rtl" }
+    - { upstream: "submodules/adams-bridge/src/exp_mask/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/exp_mask/rtl" }
+    - { upstream: "submodules/adams-bridge/src/makehint/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/makehint/rtl" }
+    - { upstream: "submodules/adams-bridge/src/norm_check/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/norm_check/rtl" }
+    - { upstream: "submodules/adams-bridge/src/ntt_top/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/ntt_top/rtl" }
+    - { upstream: "submodules/adams-bridge/src/pk_decode/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/pk_decode/rtl" }
+    - { upstream: "submodules/adams-bridge/src/power2round/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/power2round/rtl" }
+    - { upstream: "submodules/adams-bridge/src/rej_bounded/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/rej_bounded/rtl" }
+    - { upstream: "submodules/adams-bridge/src/rej_sampler/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/rej_sampler/rtl" }
+    - { upstream: "submodules/adams-bridge/src/sample_in_ball/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sample_in_ball/rtl" }
+    - { upstream: "submodules/adams-bridge/src/sigdecode_h/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sigdecode_h/rtl" }
+    - { upstream: "submodules/adams-bridge/src/sig_decode_z/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sig_decode_z/rtl" }
+    - { upstream: "submodules/adams-bridge/src/sig_encode_z/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sig_encode_z/rtl" }
+    - { upstream: "submodules/adams-bridge/src/sk_decode/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sk_decode/rtl" }
+    - { upstream: "submodules/adams-bridge/src/sk_encode/rtl", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sk_encode/rtl" }
+    - { upstream: "src/abr/coverage", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/coverage" }
+    - { upstream: "submodules/adams-bridge/src/abr_top/coverage", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_top/coverage" }
+  collateral_subtrees:  # upstream path -> Tessera path
+    - { upstream: "submodules/adams-bridge/src/abr_libs/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_libs/tb" }
+    - { upstream: "submodules/adams-bridge/src/abr_sha3/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_sha3/tb" }
+    - { upstream: "submodules/adams-bridge/src/abr_top/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_top/tb" }
+    - { upstream: "submodules/adams-bridge/src/barrett_reduction/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/barrett_reduction/tb" }
+    - { upstream: "submodules/adams-bridge/src/cbd_sampler/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/cbd_sampler/tb" }
+    - { upstream: "submodules/adams-bridge/src/compress/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/compress/tb" }
+    - { upstream: "submodules/adams-bridge/src/decompose/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/decompose/tb" }
+    - { upstream: "submodules/adams-bridge/src/exp_mask/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/exp_mask/tb" }
+    - { upstream: "submodules/adams-bridge/src/makehint/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/makehint/tb" }
+    - { upstream: "submodules/adams-bridge/src/norm_check/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/norm_check/tb" }
+    - { upstream: "submodules/adams-bridge/src/ntt_top/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/ntt_top/tb" }
+    - { upstream: "submodules/adams-bridge/src/pk_decode/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/pk_decode/tb" }
+    - { upstream: "submodules/adams-bridge/src/power2round/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/power2round/tb" }
+    - { upstream: "submodules/adams-bridge/src/rej_bounded/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/rej_bounded/tb" }
+    - { upstream: "submodules/adams-bridge/src/rej_sampler/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/rej_sampler/tb" }
+    - { upstream: "submodules/adams-bridge/src/sample_in_ball/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sample_in_ball/tb" }
+    - { upstream: "submodules/adams-bridge/src/sigdecode_h/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sigdecode_h/tb" }
+    - { upstream: "submodules/adams-bridge/src/sig_decode_z/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sig_decode_z/tb" }
+    - { upstream: "submodules/adams-bridge/src/sig_encode_z/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sig_encode_z/tb" }
+    - { upstream: "submodules/adams-bridge/src/sk_decode/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sk_decode/tb" }
+    - { upstream: "submodules/adams-bridge/src/sk_encode/tb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sk_encode/tb" }
+    - { upstream: "submodules/adams-bridge/src/abr_libs/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_libs/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/abr_sha3/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_sha3/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/abr_top/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_top/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/cbd_sampler/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/cbd_sampler/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/compress/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/compress/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/decompose/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/decompose/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/exp_mask/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/exp_mask/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/makehint/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/makehint/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/norm_check/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/norm_check/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/ntt_top/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/ntt_top/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/pk_decode/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/pk_decode/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/power2round/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/power2round/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/rej_bounded/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/rej_bounded/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/rej_sampler/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/rej_sampler/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/sample_in_ball/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sample_in_ball/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/sigdecode_h/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sigdecode_h/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/sig_decode_z/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sig_decode_z/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/sig_encode_z/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sig_encode_z/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/sk_decode/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sk_decode/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/sk_encode/stimulus", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/sk_encode/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/abr_libs/uvmf", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_libs/uvmf" }
+    - { upstream: "submodules/adams-bridge/src/abr_top/uvmf", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/abr_top/uvmf" }
+    - { upstream: "submodules/adams-bridge/src/ntt_top/utb", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/ntt_top/utb" }
+    - { upstream: "src/abr/coverage/config", tessera: "src/MLDSA_MLKEM_ALL_LEVELS/coverage/config" }
+  compile_order_from: submodules/adams-bridge/src/abr_top/config/abr_top.vf
+
+importer:
+  script: tools/scripts/rename/rename_mldsa_mlkem_all_levels.sh
+  library_version: "2.1.1"
+  toolchain_fingerprint: "9e6c3c25a02b5597f567b759c0abeaf1b738f4cc87d800130886a8099fef8449"
+  bash: "4.4.20(1)-release"
+  perl: "v5.26.3"
+
+policy:
+  rename_scope: "synthesized design material only"
+  stem_renames:  # block-name stems rewritten under the prefix (repo-wide)
+    - "hmac=hmac512"
+  stem_keep:  # names that merely share the leading token and keep it
+    - "hmac_drbg"
+  synth_subtrees:  # identifiers declared here are renamed; everything else only references them
+    - "src/MLDSA_MLKEM_ALL_LEVELS/abr_libs/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/abr_prim/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/abr_prim_generic/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/abr_sampler_top/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/abr_sha3/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/abr_top/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/barrett_reduction/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/cbd_sampler/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/compress/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/decompose/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/decompress/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/exp_mask/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/makehint/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/norm_check/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/ntt_top/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/pk_decode/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/power2round/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/rej_bounded/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/rej_sampler/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/sample_in_ball/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/sigdecode_h/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/sig_decode_z/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/sig_encode_z/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/sk_decode/rtl"
+    - "src/MLDSA_MLKEM_ALL_LEVELS/sk_encode/rtl"
+  excluded_globs:
+    - "*_reg_uvm.sv"
+    - "*.rdl"
+  artifact_globs:  # build/sim outputs, regenerated not vendored
+    - "*.ucdb"
+    - "*.exe"
+    - "*.o"
+    - "*.a"
+    - "*.so"
+    - "*.pyc"
+    - "*.wlf"
+    - "*.vstf"
+    - "*.vcd"
+    - "*.fsdb"
+  cross_block_identifiers:
+    []
+  environment_config_macros:
+    []
+  generator_inputs:  # fed to a code generator, must stay byte-identical to upstream
+    []
+  keep_list:  # shared Tessera platform identifiers, deliberately NOT prefixed
+    - "kv_defines_pkg"
+    - "kv_read_t"
+    - "kv_write_t"
+    - "kv_error_code_e"
+    - "uvm_pkg"
+
+artifacts:
+  block_dir: src/MLDSA_MLKEM_ALL_LEVELS
+  source_dirs:
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_libs/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_prim/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_prim_generic/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_sampler_top/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_sha3/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_top/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/barrett_reduction/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/cbd_sampler/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/compress/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/decompose/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/decompress/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/exp_mask/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/makehint/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/norm_check/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/ntt_top/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/pk_decode/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/power2round/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/rej_bounded/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/rej_sampler/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/sample_in_ball/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/sigdecode_h/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/sig_decode_z/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/sig_encode_z/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/sk_decode/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/sk_encode/rtl
+    - src/MLDSA_MLKEM_ALL_LEVELS/coverage
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_top/coverage
+  collateral_dirs:  # imported whole, looser rename contract
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_libs/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_sha3/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_top/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/barrett_reduction/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/cbd_sampler/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/compress/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/decompose/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/exp_mask/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/makehint/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/norm_check/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/ntt_top/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/pk_decode/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/power2round/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/rej_bounded/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/rej_sampler/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/sample_in_ball/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/sigdecode_h/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/sig_decode_z/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/sig_encode_z/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/sk_decode/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/sk_encode/tb
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_libs/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_sha3/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_top/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/cbd_sampler/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/compress/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/decompose/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/exp_mask/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/makehint/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/norm_check/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/ntt_top/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/pk_decode/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/power2round/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/rej_bounded/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/rej_sampler/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/sample_in_ball/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/sigdecode_h/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/sig_decode_z/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/sig_encode_z/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/sk_decode/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/sk_encode/stimulus
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_libs/uvmf
+    - src/MLDSA_MLKEM_ALL_LEVELS/abr_top/uvmf
+    - src/MLDSA_MLKEM_ALL_LEVELS/ntt_top/utb
+    - src/MLDSA_MLKEM_ALL_LEVELS/coverage/config
+  filelist: src/MLDSA_MLKEM_ALL_LEVELS/config/tessera_abr_top.vf
+  rename_map: src/MLDSA_MLKEM_ALL_LEVELS/revinfo.map
+  generated:  # produced by the import; no upstream counterpart
+    - src/MLDSA_MLKEM_ALL_LEVELS/config/tessera_abr_top.vf
+
+content:  # engine-level summary; the file list is the committed tree itself
+  source_files: 590
+  renamed_files: 591

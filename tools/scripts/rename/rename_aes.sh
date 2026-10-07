@@ -35,6 +35,9 @@ set -euo pipefail
 
 BLOCK="aes"
 
+UPSTREAM_BLOCK_DIR="src/aes"
+BLOCK_DIR="src/AES_ALL_MODES"
+
 UPSTREAM_SUBTREES=(
     "src/aes/rtl"
     "src/aes/coverage"
@@ -42,10 +45,6 @@ UPSTREAM_SUBTREES=(
 
 COLLATERAL_SUBTREES=()
 
-DEST_SUBTREES=(
-    "src/aes/rtl"
-    "src/aes/coverage"
-)
 
 VF_FILELIST="src/aes/config/aes.vf"
 VF_FILTER="/aes/rtl/"

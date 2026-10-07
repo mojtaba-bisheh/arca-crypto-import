@@ -50,6 +50,9 @@ set -euo pipefail
 
 BLOCK="sha256_masked"
 
+UPSTREAM_BLOCK_DIR="src/sha256_masked"
+BLOCK_DIR="src/SHA2_256_ALL_MODES_MASKED"
+
 UPSTREAM_SUBTREES=(
     "src/sha256_masked/rtl"
 )
@@ -58,9 +61,6 @@ COLLATERAL_SUBTREES=(
     "src/sha256_masked/tb"
 )
 
-DEST_SUBTREES=(
-    "src/sha256_masked/rtl"
-)
 
 VF_FILELIST="src/sha256_masked/config/sha256_masked_core.vf"
 VF_FILTER="/sha256_masked/rtl/"

@@ -29,6 +29,9 @@ set -euo pipefail
 
 BLOCK="sha3"
 
+UPSTREAM_BLOCK_DIR="src/sha3"
+BLOCK_DIR="src/SHA3_SHAKE_ALL_MODES"
+
 UPSTREAM_SUBTREES=(
     "src/sha3/rtl"
 )
@@ -36,9 +39,6 @@ UPSTREAM_SUBTREES=(
 # Upstream ships no bench, coverage or stimulus for this block.
 COLLATERAL_SUBTREES=()
 
-DEST_SUBTREES=(
-    "src/sha3/rtl"
-)
 
 VF_FILELIST="src/sha3/config/sha3_ctrl.vf"
 VF_FILTER="/sha3/rtl/"

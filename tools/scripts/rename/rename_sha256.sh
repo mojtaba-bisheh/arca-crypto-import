@@ -29,6 +29,9 @@ set -euo pipefail
 
 BLOCK="sha256"
 
+UPSTREAM_BLOCK_DIR="src/sha256"
+BLOCK_DIR="src/SHA2_256_ALL_MODES"
+
 UPSTREAM_SUBTREES=(
     "src/sha256/rtl"
     "src/sha256/coverage"
@@ -40,10 +43,6 @@ COLLATERAL_SUBTREES=(
     "src/sha256/stimulus"
 )
 
-DEST_SUBTREES=(
-    "src/sha256/rtl"
-    "src/sha256/coverage"
-)
 
 VF_FILELIST="src/sha256/config/sha256_ctrl.vf"
 VF_FILTER="/sha256/rtl/"

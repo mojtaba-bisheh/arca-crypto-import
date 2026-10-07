@@ -30,6 +30,9 @@ set -euo pipefail
 
 BLOCK="sha512_masked"
 
+UPSTREAM_BLOCK_DIR="src/sha512_masked"
+BLOCK_DIR="src/SHA2_512_384_ALL_MODES_MASKED"
+
 UPSTREAM_SUBTREES=(
     "src/sha512_masked/rtl"
 )
@@ -38,9 +41,6 @@ COLLATERAL_SUBTREES=(
     "src/sha512_masked/tb"
 )
 
-DEST_SUBTREES=(
-    "src/sha512_masked/rtl"
-)
 
 VF_FILELIST="src/sha512_masked/config/sha512_masked_core.vf"
 VF_FILTER="/sha512_masked/rtl/"

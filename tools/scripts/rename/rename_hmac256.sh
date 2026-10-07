@@ -49,6 +49,9 @@ set -euo pipefail
 
 BLOCK="hmac256"
 
+UPSTREAM_BLOCK_DIR="src/hmac256"
+BLOCK_DIR="src/HMAC_256"
+
 UPSTREAM_SUBTREES=(
     "src/hmac256/rtl"
     "src/hmac256/coverage"
@@ -61,10 +64,6 @@ COLLATERAL_SUBTREES=(
     "src/hmac256/uvmf_hmac256"
 )
 
-DEST_SUBTREES=(
-    "src/hmac256/rtl"
-    "src/hmac256/coverage"
-)
 
 VF_FILELIST="src/hmac256/config/hmac256_ctrl.vf"
 VF_FILTER="/hmac256/rtl/"

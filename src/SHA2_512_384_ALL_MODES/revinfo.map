@@ -1,0 +1,19 @@
+# Tessera identifier rename map for block 'sha512' (prefix: tessera_)
+module	sha512	tessera_sha512
+module	sha512_core	tessera_sha512_core
+module	sha512_ctrl	tessera_sha512_ctrl
+module	sha512_h_constants	tessera_sha512_h_constants
+module	sha512_k_constants	tessera_sha512_k_constants
+module	sha512_reg	tessera_sha512_reg
+module	sha512_w_mem	tessera_sha512_w_mem
+package	sha512_params_pkg	tessera_sha512_params_pkg
+package	sha512_reg_pkg	tessera_sha512_reg_pkg
+file	src/SHA2_512_384_ALL_MODES/rtl/sha512.sv	src/SHA2_512_384_ALL_MODES/rtl/tessera_sha512.sv
+file	src/SHA2_512_384_ALL_MODES/rtl/sha512_core.v	src/SHA2_512_384_ALL_MODES/rtl/tessera_sha512_core.v
+file	src/SHA2_512_384_ALL_MODES/rtl/sha512_ctrl.sv	src/SHA2_512_384_ALL_MODES/rtl/tessera_sha512_ctrl.sv
+file	src/SHA2_512_384_ALL_MODES/rtl/sha512_h_constants.v	src/SHA2_512_384_ALL_MODES/rtl/tessera_sha512_h_constants.v
+file	src/SHA2_512_384_ALL_MODES/rtl/sha512_k_constants.v	src/SHA2_512_384_ALL_MODES/rtl/tessera_sha512_k_constants.v
+file	src/SHA2_512_384_ALL_MODES/rtl/sha512_params_pkg.sv	src/SHA2_512_384_ALL_MODES/rtl/tessera_sha512_params_pkg.sv
+file	src/SHA2_512_384_ALL_MODES/rtl/sha512_reg.sv	src/SHA2_512_384_ALL_MODES/rtl/tessera_sha512_reg.sv
+file	src/SHA2_512_384_ALL_MODES/rtl/sha512_reg_pkg.sv	src/SHA2_512_384_ALL_MODES/rtl/tessera_sha512_reg_pkg.sv
+file	src/SHA2_512_384_ALL_MODES/rtl/sha512_w_mem.v	src/SHA2_512_384_ALL_MODES/rtl/tessera_sha512_w_mem.v

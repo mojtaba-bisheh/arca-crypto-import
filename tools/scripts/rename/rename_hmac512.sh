@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # rename_hmac512.sh -- import + prefix the caliptra-rtl HMAC-SHA512 engine
-#                      together with the HMAC_DRBG it owns.
+#                      together with the hmac_drbg it owns.
 #
 #   ./tools/scripts/rename/rename_hmac512.sh --upstream /path/to/caliptra-rtl
 #
@@ -79,25 +79,25 @@ COLLATERAL_SUBTREES=(
 # The SHA-512 engine moves to src/hmac512/; hmac_drbg stays where upstream put
 # it, because ECC compiles it from there and it is not part of the rename.
 DEST_SUBTREES=(
-    "src/hmac512/rtl"
-    "src/hmac512/coverage"
-    "src/hmac_drbg/rtl"
-    "src/hmac_drbg/coverage"
+    "src/HMAC_512_384/rtl"
+    "src/HMAC_512_384/coverage"
+    "src/HMAC_DRBG/rtl"
+    "src/HMAC_DRBG/coverage"
 )
 
 COLLATERAL_DEST_SUBTREES=(
-    "src/hmac512/tb"
-    "src/hmac512/coverage/config"
-    "src/hmac512/stimulus"
-    "src/hmac512/uvmf_2022"
-    "src/hmac_drbg/tb"
-    "src/hmac_drbg/coverage/config"
-    "src/hmac_drbg/stimulus"
+    "src/HMAC_512_384/tb"
+    "src/HMAC_512_384/coverage/config"
+    "src/HMAC_512_384/stimulus"
+    "src/HMAC_512_384/uvmf_2022"
+    "src/HMAC_DRBG/tb"
+    "src/HMAC_DRBG/coverage/config"
+    "src/HMAC_DRBG/stimulus"
 )
 
 # DEST_SUBTREES[0] is src/hmac512/rtl, so BLOCK_DIR would be derived correctly
 # anyway; stating it keeps the block folder independent of subtree ordering.
-BLOCK_DIR="src/hmac512"
+BLOCK_DIR="src/HMAC_512_384"
 
 VF_FILELIST="src/hmac/config/hmac_ctrl.vf"
 VF_FILTER="/hmac(_drbg)?/rtl/"

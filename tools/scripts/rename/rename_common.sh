@@ -28,9 +28,19 @@
 #                           Tessera          src/ecc/rtl/tessera_ecc_top.sv
 #                         Override only when Tessera deliberately shelves a block
 #                         under a different name, e.g.
-#                           DEST_SUBTREES=("src/hmac512/rtl")
+#                           DEST_SUBTREES=("src/HMAC_512_384/rtl")
 #   BLOCK_DIR             Tessera directory that owns the block's config/ dir.
 #                         Defaults to the parent of DEST_SUBTREES[0].
+#   UPSTREAM_BLOCK_DIR    upstream directory that BLOCK_DIR replaces. Setting
+#                         both maps every upstream subtree -- delivery and
+#                         collateral -- through the swap, so a block that is
+#                         shelved under a different name states that once
+#                         instead of mirroring each subtree by hand:
+#                           UPSTREAM_BLOCK_DIR="src/ecc"
+#                           BLOCK_DIR="src/ECC_ECDSA_ECDHE"
+#                         An explicit DEST_SUBTREES/COLLATERAL_DEST_SUBTREES
+#                         entry still wins, which is what blocks spanning two
+#                         upstream directories (hmac512) need.
 #   VF_FILELIST           upstream .vf filelist used to derive compile order
 #                         (its basename is reused for the generated filelist)
 #   VF_FILTER             egrep pattern selecting this block's lines in VF_FILELIST
@@ -168,6 +178,19 @@ rc_check_relpath() {
     esac
 }
 
+# Map one upstream subtree into the block's Tessera directory by swapping the
+# UPSTREAM_BLOCK_DIR prefix for BLOCK_DIR. A subtree that does not sit under
+# UPSTREAM_BLOCK_DIR is a driver bug: it would silently land at its upstream
+# path while its siblings moved, which is how half-renamed trees happen.
+rc_blockdir_remap() {
+    local up="$1"
+    case "$up" in
+        "$UPSTREAM_BLOCK_DIR") printf '%s' "$BLOCK_DIR" ;;
+        "$UPSTREAM_BLOCK_DIR"/*) printf '%s/%s' "$BLOCK_DIR" "${up#"$UPSTREAM_BLOCK_DIR"/}" ;;
+        *) rc_die "subtree '$up' is not under UPSTREAM_BLOCK_DIR '$UPSTREAM_BLOCK_DIR'; give it an explicit DEST_SUBTREES entry" ;;
+    esac
+}
+
 # Build / simulation outputs. Checked into caliptra-rtl in a few places, but
 # they are derived files: vendoring them would commit stale results and bloat
 # the Tessera history. Regenerate instead.
@@ -260,6 +283,25 @@ rc_init() {
     # may override individual paths via DEST_SUBTREES.
     # ------------------------------------------------------------------
     local i dst
+    # A block whose Tessera directory differs from its upstream one declares
+    # that once, as UPSTREAM_BLOCK_DIR + BLOCK_DIR, and every subtree is mapped
+    # through it. The alternative is a DEST_SUBTREES entry per upstream entry,
+    # parallel arrays that have to be kept in step by hand -- the same drift
+    # hazard the drivers avoid for identifier policy. An explicit DEST_SUBTREES
+    # entry still wins, for blocks like hmac512 that span two upstream
+    # directories and cannot be expressed as one prefix swap.
+    if [ -n "${UPSTREAM_BLOCK_DIR:-}" ]; then
+        [ -n "${BLOCK_DIR:-}" ] || \
+            rc_die "UPSTREAM_BLOCK_DIR set without BLOCK_DIR"
+        for i in "${!UPSTREAM_SUBTREES[@]}"; do
+            [ -n "${DEST_SUBTREES[$i]:-}" ] && continue
+            DEST_SUBTREES[$i]="$(rc_blockdir_remap "${UPSTREAM_SUBTREES[$i]}")"
+        done
+        for i in "${!COLLATERAL_SUBTREES[@]}"; do
+            [ -n "${COLLATERAL_DEST_SUBTREES[$i]:-}" ] && continue
+            COLLATERAL_DEST_SUBTREES[$i]="$(rc_blockdir_remap "${COLLATERAL_SUBTREES[$i]}")"
+        done
+    fi
     for i in "${!UPSTREAM_SUBTREES[@]}"; do
         dst="${DEST_SUBTREES[$i]:-${UPSTREAM_SUBTREES[$i]}}"
         rc_check_relpath "$dst"
@@ -931,7 +973,7 @@ rc_fix_file_references() {
 # folder), the prefixed directory exists and we leave the reference alone.
 # ---------------------------------------------------------------------------
 rc_fix_path_components() {
-    local d base keep=() n=0
+    local d base keep=() rc_unstem=() n=0
     # Directory names come from the upstream checkout as well as our own stage:
     # a block may reference a sibling block's folder (ECC compiles hmac_drbg's
     # RTL) that this driver never staged, and those references are exactly the
@@ -948,21 +990,44 @@ rc_fix_path_components() {
     # links to .../hw/ip/kmac/doc/... -- and kmac is a module here, not a folder,
     # so nothing in either checkout can tell the reverter to leave it alone.
     keep+=("${EXTRA_PATH_DIRS[@]}")
+    # A stem rename makes the mangle two layers deep, so stripping the prefix is
+    # not enough to land back on a real name. Upstream `src/hmac` becomes the
+    # path component `tessera_hmac512`: prefix *and* stem. Reverting that to
+    # `hmac512` only resolved while the Tessera directory happened to be spelled
+    # `src/hmac512` too -- a coincidence, and one that dies the moment the block
+    # is shelved under a different directory name. Map it back to the upstream
+    # name instead, which is what these ${CALIPTRA_ROOT}-rooted citations mean:
+    # they point into a caliptra-rtl checkout, not into this tree.
+    local spec from to
+    for spec in "${STEM_RENAMES[@]}"; do
+        from="${spec%%=*}"; to="${spec#*=}"
+        [ -n "$from" ] && [ -n "$to" ] && [ "$from" != "$to" ] || continue
+        [ -d "$UPSTREAM/src/$from" ] || continue
+        rc_unstem+=("$to=$from")
+    done
     [ "${#keep[@]}" -gt 0 ] || return 0
     n="$(perl -e '
         my ($prefix, $nkeep, @rest) = @ARGV;
-        my @keep  = splice(@rest, 0, $nkeep);
-        my @files = @rest;
+        my @keep   = splice(@rest, 0, $nkeep);
+        my $nunstem = shift @rest;
+        my @unstem = splice(@rest, 0, $nunstem);
+        my @files  = @rest;
         my %seen; my @u = grep { !$seen{$_}++ } @keep;
         my $alt = join "|", map { quotemeta } sort { length($b) <=> length($a) } @u;
         my $p   = quotemeta $prefix;
         # only between path separators: a bare identifier is never touched
         my $re  = qr{(?<=/)$p($alt)(?=/)};
+        # stem-renamed components, longest first so a longer stem cannot be
+        # shadowed by a prefix of itself
+        my %un = map { my ($k,$v) = split /=/, $_, 2; ($k => $v) } @unstem;
+        my $ualt = join "|", map { quotemeta } sort { length($b) <=> length($a) } keys %un;
+        my $ure  = $ualt ? qr{(?<=/)$p($ualt)(?=/)} : undef;
         my $hits = 0;
         for my $f (@files) {
             open(my $in, "<", $f) or next;
             local $/; my $txt = <$in>; close $in;
             my $orig = $txt;
+            $hits += ($txt =~ s/$ure/$un{$1}/g) if $ure;
             $hits += ($txt =~ s/$re/$1/g);
             next if $txt eq $orig;
             open(my $out, ">", $f) or die $!;
@@ -970,6 +1035,7 @@ rc_fix_path_components() {
         }
         print $hits;
     ' "$PREFIX" "${#keep[@]}" "${keep[@]}" \
+      "${#rc_unstem[@]}" ${rc_unstem[0]:+"${rc_unstem[@]}"} \
       $(printf "$STAGE/%s " "${STAGED_FILES[@]}") \
       $(printf "$STAGE/%s " "${COLLATERAL_INSTALLED[@]}"))"
     [ "$n" -gt 0 ] && rc_log "reverted $n prefixed path component(s) naming an unrenamed directory"

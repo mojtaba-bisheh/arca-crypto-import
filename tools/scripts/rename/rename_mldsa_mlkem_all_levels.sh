@@ -74,7 +74,7 @@ BLOCK="mldsa_mlkem_all_levels"
 # subtree. Here that parent is <block>/abr_libs, the first adams-bridge unit, not
 # the block root -- this is the only block whose delivery subtrees are two levels
 # down rather than one. Say it explicitly.
-BLOCK_DIR="src/mldsa_mlkem_all_levels"
+BLOCK_DIR="src/MLDSA_MLKEM_ALL_LEVELS"
 
 # The adams-bridge units, in the repository's own order. Each contributes rtl/
 # to the delivery tier and whatever of tb/ stimulus/ uvmf/ utb/ it has to the

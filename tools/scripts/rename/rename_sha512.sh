@@ -30,6 +30,9 @@ set -euo pipefail
 
 BLOCK="sha512"
 
+UPSTREAM_BLOCK_DIR="src/sha512"
+BLOCK_DIR="src/SHA2_512_384_ALL_MODES"
+
 UPSTREAM_SUBTREES=(
     "src/sha512/rtl"
     "src/sha512/coverage"
@@ -42,10 +45,6 @@ COLLATERAL_SUBTREES=(
     "src/sha512/uvmf_sha512"
 )
 
-DEST_SUBTREES=(
-    "src/sha512/rtl"
-    "src/sha512/coverage"
-)
 
 VF_FILELIST="src/sha512/config/sha512_ctrl.vf"
 VF_FILTER="/sha512/rtl/"

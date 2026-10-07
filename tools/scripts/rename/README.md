@@ -39,13 +39,55 @@ Blocks: `aes` `ecc` `hmac512` `hmac256` `mldsa_mlkem_all_levels` `sha256`
 comes from the `adams-bridge` submodule, and `hmac256` and `sha256_masked`
 from caliptra-rtl's `future` branch — both are handled automatically.
 
-Two blocks carry an Tessera name that differs from the upstream one.
+## Directory names say what the block implements
+
+Upstream directory names are engine names (`sha512`, `abr`). Tessera shelves
+each block under the *capability* it provides, so the tree can be read without
+knowing caliptra-rtl's vocabulary:
+
+| upstream | Tessera |
+|---|---|
+| `src/aes` | `src/AES_ALL_MODES` |
+| `src/ecc` | `src/ECC_ECDSA_ECDHE` |
+| `src/hmac` + `src/hmac_drbg` | `src/HMAC_512_384` + `src/HMAC_DRBG` |
+| `src/hmac256` | `src/HMAC_256` |
+| `src/abr` (submodule) | `src/MLDSA_MLKEM_ALL_LEVELS` |
+| `src/sha256` | `src/SHA2_256_ALL_MODES` |
+| `src/sha256_masked` | `src/SHA2_256_ALL_MODES_MASKED` |
+| `src/sha3` | `src/SHA3_SHAKE_ALL_MODES` |
+| `src/sha512` | `src/SHA2_512_384_ALL_MODES` |
+| `src/sha512_masked` | `src/SHA2_512_384_ALL_MODES_MASKED` |
+
+A driver states this once, as a prefix swap:
+
+```sh
+UPSTREAM_BLOCK_DIR="src/ecc"
+BLOCK_DIR="src/ECC_ECDSA_ECDHE"
+```
+
+`rc_run` maps every upstream subtree — delivery *and* collateral — through that
+swap. The alternative, a hand-written `DEST_SUBTREES` and
+`COLLATERAL_DEST_SUBTREES` per block, is two lists per driver that have to be
+kept in step with the upstream arrays by hand, and nothing would catch them
+drifting apart. A subtree that does not sit under `UPSTREAM_BLOCK_DIR` is an
+error rather than a silent pass-through, so a block cannot half-move. An
+explicit `DEST_SUBTREES` entry still wins, which is what `hmac512` needs: it
+spans two upstream directories and lands in two Tessera ones, which is not a
+single prefix swap.
+
+Note the **block names themselves are unchanged** — still `ecc`, `sha512`,
+`hmac512`. `BLOCK` drives *identifiers* (`tessera_ecc_adder.sv`) and the
+generated env header (`tessera_hmac512_config.svh`); only the directory is
+capability-named. `VF_FILELIST` likewise stays an upstream path — only its
+basename is reused, under `$BLOCK_DIR/config/`.
+
+Two blocks also carry a *stem* that differs from the upstream one.
 
 `hmac512`: caliptra-rtl calls the SHA-512 HMAC engine simply `hmac`, which
 reads as a generic name next to `hmac256`. The repo-wide *stem policy* in
 `rename_common.sh` (`RC_DEFAULT_STEM_RENAMES`) renames `hmac*` to `hmac512*`
 on top of the `tessera_` prefix, so upstream `src/hmac/rtl/hmac_core.sv` lands as
-`src/hmac512/rtl/tessera_hmac512_core.sv`. `hmac_drbg` is exempt
+`src/HMAC_512_384/rtl/tessera_hmac512_core.sv`. `hmac_drbg` is exempt
 (`RC_DEFAULT_STEM_KEEP`) — it is a shared DRBG, not a SHA-512 HMAC, and ECC
 imports it too. The policy lives in the shared engine rather than in
 `rename_hmac512.sh` because identifiers cross block boundaries: ECC also
@@ -70,13 +112,13 @@ proof. `verify_import.sh` checks the declaration is truthful (each one present
 and committed), since an untruthful entry there would quietly excuse a file
 from being checked.
 
-`mldsa_mlkem_all_levels` is renamed the other way round: its *directory* is
-renamed but its *identifiers* are not. Upstream calls the engine `abr`
-("Adams Bridge"), a codename that says nothing about ML-DSA, ML-KEM, or the
-security levels covered, so the Tessera directory is named for what the block
-implements. The identifiers keep the short upstream `abr_` stem — a
-22-character stem on all 222 identifiers in the block would cost far more
-readability than it buys. Directory and stem are independent knobs:
+`mldsa_mlkem_all_levels` shows the two knobs pulling in opposite directions:
+its *directory* is renamed but its *identifiers* are not. Upstream calls the
+engine `abr` ("Adams Bridge"), a codename that says nothing about ML-DSA,
+ML-KEM, or the security levels covered, so the Tessera directory is named for
+what the block implements. The identifiers keep the short upstream `abr_` stem
+— a 22-character stem on all 222 identifiers in the block would cost far more
+readability than it buys. Directory and stem are independent:
 `BLOCK_DIR`/`DEST_SUBTREES` set the first, `RC_DEFAULT_STEM_RENAMES` the
 second. Tying them together, as `hmac512` does, is a per-block choice.
 

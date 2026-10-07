@@ -70,6 +70,9 @@ set -euo pipefail
 
 BLOCK="ecc"
 
+UPSTREAM_BLOCK_DIR="src/ecc"
+BLOCK_DIR="src/ECC_ECDSA_ECDHE"
+
 UPSTREAM_SUBTREES=(
     "src/ecc/rtl"
     "src/ecc/coverage"
@@ -84,14 +87,11 @@ COLLATERAL_SUBTREES=(
     "src/ecc/uvmf_ecc"
 )
 
-# Where each upstream subtree lands in Tessera. The identity mapping keeps the
-# caliptra-rtl hierarchy; set an explicit path only to shelve the block
-# elsewhere, e.g. DEST_SUBTREES=("src/ecc384/rtl" "src/ecc384/coverage").
+# Every subtree above moves by swapping UPSTREAM_BLOCK_DIR for BLOCK_DIR, so
+# the shelving decision is stated once at the top rather than mirrored here as
+# a second copy of the same path list. Add an explicit DEST_SUBTREES entry only
+# for a subtree that does not follow that swap.
 
-DEST_SUBTREES=(
-    "src/ecc/rtl"
-    "src/ecc/coverage"
-)
 
 VF_FILELIST="src/ecc/config/ecc_top.vf"
 VF_FILTER="/ecc/rtl/"
