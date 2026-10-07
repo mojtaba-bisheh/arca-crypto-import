@@ -3,7 +3,7 @@ provides: [uvmf_hmac256]
 schema_version: 2.4.0
 requires:
   - uvmf_lib
-  - arca_hmac256_ctrl
+  - tessera_hmac256_ctrl
   - hmac256_uvm_pkg
   - hmac256_coverage
   - caliptra_top_defines

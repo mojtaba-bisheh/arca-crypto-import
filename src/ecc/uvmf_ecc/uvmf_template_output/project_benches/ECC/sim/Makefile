@@ -123,11 +123,11 @@ $(UVMF_PROJECT_DIR)/tb/tests/ECC_tests_pkg.sv
 # pragma uvmf custom dut_files begin
 # UVMF_CHANGE_ME : Reference Verilog DUT source.
 ECC_VERILOG_DUT ?=\
-$(UVMF_PROJECT_DIR)/../../../../../hmac_drbg/rtl/arca_hmac_drbg.v\
+$(UVMF_PROJECT_DIR)/../../../../../hmac_drbg/rtl/tessera_hmac_drbg.v\
 $(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_core.v\
 $(UVMF_PROJECT_DIR)/../../../../../keyvault/rtl/kv_defines_pkg.sv\
 $(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_ctrl.sv\
-$(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/arca_hmac512_param_pkg.sv\
+$(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/tessera_hmac512_param_pkg.sv\
 $(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_intr_regs_pkg.sv\
 $(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac.sv\
 $(UVMF_PROJECT_DIR)/../../../../../hmac/rtl/hmac_intr_regs.sv\
@@ -140,30 +140,30 @@ $(UVMF_PROJECT_DIR)/../../../../../sha512/rtl/sha512.sv\
 $(UVMF_PROJECT_DIR)/../../../../../sha512/rtl/sha512_w_mem.v\
 $(UVMF_PROJECT_DIR)/../../../../../sha512/rtl/sha512_intr_regs_pkg.sv\
 $(UVMF_PROJECT_DIR)/../../../../../sha512/rtl/sha512_intr_regs.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_defines_pkg.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_params_pkg.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_reg_pkg.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_dsa_uop_pkg.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_pm_uop_pkg.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_top.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_reg.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_scalar_blinding.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_dsa_ctrl.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_dsa_sequencer.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_defines_pkg.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_params_pkg.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_reg_pkg.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_dsa_uop_pkg.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_pm_uop_pkg.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_top.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_reg.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_scalar_blinding.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_dsa_ctrl.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_dsa_sequencer.sv\
 $(UVMF_PROJECT_DIR)/../../../../rtl/ecc_fixed_msb.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_hmac_drbg_interface.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_arith_unit.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_pm_ctrl.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_pm_sequencer.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_ram_tdp_file.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_fau.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_montgomerymultiplier.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_pe_first.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_pe.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_pe_final.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_mult_dsp.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_add_sub_mod_alter.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_ecc_adder.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_hmac_drbg_interface.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_arith_unit.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_pm_ctrl.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_pm_sequencer.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_ram_tdp_file.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_fau.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_montgomerymultiplier.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_pe_first.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_pe.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_pe_final.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_mult_dsp.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_add_sub_mod_alter.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_ecc_adder.sv\
 $(UVMF_PROJECT_DIR)/../../../../../libs/rtl/caliptra_sva_pkg.sv\
 $(UVMF_PROJECT_DIR)/../../../../../libs/rtl/ahb_slv_sif.sv
 

@@ -21,11 +21,11 @@
 
 import "DPI-C" function string getenv(input string env_name);
 
-`include "arca_abr_config_defines.svh"
+`include "tessera_abr_config_defines.svh"
 
 module exp_mask_tb
-  import arca_abr_sampler_pkg::*;
-  import arca_abr_params_pkg::*;
+  import tessera_abr_sampler_pkg::*;
+  import tessera_abr_params_pkg::*;
 (
 `ifdef VERILATOR
   input bit clk_tb
@@ -108,7 +108,7 @@ module exp_mask_tb
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_abr_piso #(
+  tessera_abr_piso #(
     .PISO_BUFFER_W(EXP_PISO_BUFFER_W),
     .PISO_INPUT_RATE(EXP_PISO_INPUT_RATE),
     .PISO_OUTPUT_RATE(EXP_PISO_OUTPUT_RATE)
@@ -125,7 +125,7 @@ module exp_mask_tb
  );
 
 
-  arca_exp_mask_ctrl #(
+  tessera_exp_mask_ctrl #(
     .EXP_NUM_SAMPLERS(EXP_NUM_SAMPLERS),
     .EXP_SAMPLE_W(EXP_SAMPLE_W),
     .EXP_VLD_SAMPLES(EXP_VLD_SAMPLES),
@@ -323,7 +323,7 @@ module exp_mask_tb
     end
     $fclose(fd_w);
     //generate input vectors and expected results
-    $system($sformatf("python arca_exp_mask.py"));
+    $system($sformatf("python tessera_exp_mask.py"));
 
 
     //open expected results files

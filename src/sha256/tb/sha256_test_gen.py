@@ -29,7 +29,7 @@ def generate_expected_digest():
             block_str = line.strip()[8:]    
 
     #Generate digest using OpenSSL HMAC SHA384
-    command = 'echo '+block_str+' | xxd -r -p | openssl dgst -arca_sha256'
+    command = 'echo '+block_str+' | xxd -r -p | openssl dgst -tessera_sha256'
     digest = subprocess.check_output(command, shell=True)
     digest_str = str(digest)
 

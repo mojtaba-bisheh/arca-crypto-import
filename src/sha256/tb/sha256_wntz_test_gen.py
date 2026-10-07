@@ -86,8 +86,8 @@ def generate_expected_wntz_digest(w, n):
     # print("j_init = ", j_init,"msg_str[45:46] = ", msg_str[45:46])
     #------------------------------------------------------------------------
 
-    #Generate 1st digest using OpenSSL arca_sha256
-    command = 'echo '+msg_str+' | xxd -r -p | openssl dgst -arca_sha256'
+    #Generate 1st digest using OpenSSL tessera_sha256
+    command = 'echo '+msg_str+' | xxd -r -p | openssl dgst -tessera_sha256'
     digest = subprocess.check_output(command, shell=True)
     digest_str = str(digest)
 
@@ -112,7 +112,7 @@ def generate_expected_wntz_digest(w, n):
         # print(str(j) + ":" + digest_str)
         digest_str = msg_str_for_chain+str(format(j+1,'02x'))+digest_str #+padding
         # print(str(j) + ":" +digest_str)
-        command = 'echo '+digest_str+' | xxd -r -p | openssl dgst -arca_sha256'
+        command = 'echo '+digest_str+' | xxd -r -p | openssl dgst -tessera_sha256'
         digest = subprocess.check_output(command, shell=True)
         digest_str = str(digest)
 

@@ -16,14 +16,14 @@
 //
 // sigdecode_z_tb.sv
 // ---------------
-// Testbench for arca_sigdecode_z_top module
+// Testbench for tessera_sigdecode_z_top module
 //======================================================================
 
 `default_nettype none
 
 module sigdecode_z_tb
-    import arca_abr_params_pkg::*;
-    import arca_sigdecode_z_defines_pkg::*;
+    import tessera_abr_params_pkg::*;
+    import tessera_sigdecode_z_defines_pkg::*;
 #(
     parameter REG_SIZE = 24,
     parameter MEM_ADDR_WIDTH = MLDSA_MEM_ADDR_WIDTH,
@@ -59,7 +59,7 @@ reg [23:0] actual_output_mem [0:NUM_OF_COEFF-1];
 
 
 
-arca_sigdecode_z_top #(
+tessera_sigdecode_z_top #(
     .MEM_ADDR_WIDTH(MEM_ADDR_WIDTH),
     .REG_SIZE(REG_SIZE),
     .GAMMA1(GAMMA1)

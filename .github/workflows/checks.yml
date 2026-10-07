@@ -70,7 +70,7 @@ jobs:
   lint:
     name: SystemVerilog elaboration
     runs-on: ubuntu-latest
-    # The vendored blocks depend on the shared ARCA platform library
+    # The vendored blocks depend on the shared Tessera platform library
     # (kv_macros.svh, kv_defines_pkg, caliptra_prim_assert.sv). In this example
     # repo that library is not vendored, so we pull it from upstream just to get
     # a parse. Both blocks elaborate with 0 errors, 0 warnings.
@@ -89,12 +89,12 @@ jobs:
       - name: Parse each block
         run: |
           set -e
-          export ARCA_ROOT="$PWD"
+          export TESSERA_ROOT="$PWD"
           UP="$PWD/.upstream-cache/caliptra-rtl/src"
           # The generated filelist lives where caliptra-rtl keeps it: src/<block>/config/.
           # It carries its own +incdir+ lines, so slang can consume it directly as a
-          # command file once ${ARCA_ROOT} has been substituted.
-          for vf in src/*/config/arca_*.vf; do
+          # command file once ${TESSERA_ROOT} has been substituted.
+          for vf in src/*/config/tessera_*.vf; do
             echo "== $vf =="
             envsubst < "$vf" > /tmp/block.f
             slang --lint-only --single-unit -Wno-nonstandard-hierarchical-cross \

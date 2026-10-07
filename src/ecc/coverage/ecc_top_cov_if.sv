@@ -67,58 +67,58 @@ interface ecc_top_cov_if
     kv_write_filter_metrics_t kv_write_metrics;
     kv_write_ctrl_reg_t kv_write_ctrl_reg;
 
-    assign mod_p_q = arca_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.mod_p_q;
-    assign add_en = arca_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.add_en_i;
-    assign add_sub_i = arca_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.sub_i;
-    assign add_res0 = arca_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.i_ADDER_SUBTRACTOR.r0_reg;
-    assign add_cout0 = arca_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.i_ADDER_SUBTRACTOR.carry0_reg;
-    assign add_cout1 = arca_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.i_ADDER_SUBTRACTOR.carry1;
-    assign add_res_less_than_prime = ((add_cout0 == 1'b0) & (add_res0 < arca_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.prime_i));
+    assign mod_p_q = tessera_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.mod_p_q;
+    assign add_en = tessera_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.add_en_i;
+    assign add_sub_i = tessera_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.sub_i;
+    assign add_res0 = tessera_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.i_ADDER_SUBTRACTOR.r0_reg;
+    assign add_cout0 = tessera_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.i_ADDER_SUBTRACTOR.carry0_reg;
+    assign add_cout1 = tessera_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.i_ADDER_SUBTRACTOR.carry1;
+    assign add_res_less_than_prime = ((add_cout0 == 1'b0) & (add_res0 < tessera_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.prime_i));
     assign add_res_greater_than_384_bit = (add_cout0 == 1'b1);
     
-    assign mult_ready = arca_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.i_MULTIPLIER.ready_o;
-    assign mult_last_reduction = arca_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.i_MULTIPLIER.last_reduction;
+    assign mult_ready = tessera_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.i_MULTIPLIER.ready_o;
+    assign mult_last_reduction = tessera_ecc_top.ecc_dsa_ctrl_i.ecc_arith_unit_i.ecc_fau_i.i_MULTIPLIER.last_reduction;
     assign mult_final_subtraction = mult_ready & mult_last_reduction;
     
-    assign ecc_cmd = arca_ecc_top.ecc_dsa_ctrl_i.cmd_reg;
-    assign pcr_sign_mode = arca_ecc_top.ecc_dsa_ctrl_i.pcr_sign_mode;
-    assign zeroize = arca_ecc_top.ecc_dsa_ctrl_i.zeroize_reg;
-    assign ready = arca_ecc_top.ecc_dsa_ctrl_i.ecc_ready_reg;
-    assign valid = arca_ecc_top.ecc_dsa_ctrl_i.ecc_valid_reg;
+    assign ecc_cmd = tessera_ecc_top.ecc_dsa_ctrl_i.cmd_reg;
+    assign pcr_sign_mode = tessera_ecc_top.ecc_dsa_ctrl_i.pcr_sign_mode;
+    assign zeroize = tessera_ecc_top.ecc_dsa_ctrl_i.zeroize_reg;
+    assign ready = tessera_ecc_top.ecc_dsa_ctrl_i.ecc_ready_reg;
+    assign valid = tessera_ecc_top.ecc_dsa_ctrl_i.ecc_valid_reg;
 
-    assign kv_write_metrics = arca_ecc_top.ecc_dsa_ctrl_i.kv_write_metrics;
-    assign kv_write_ctrl_reg = arca_ecc_top.ecc_dsa_ctrl_i.kv_write_ctrl_reg;
+    assign kv_write_metrics = tessera_ecc_top.ecc_dsa_ctrl_i.kv_write_metrics;
+    assign kv_write_ctrl_reg = tessera_ecc_top.ecc_dsa_ctrl_i.kv_write_ctrl_reg;
 
     always_ff @(posedge clk) begin
         if (!reset_n) begin
             ecc_sw_cmd <= '0;
         end
-        else if (arca_ecc_top.ecc_reg1.decoded_reg_strb.ECC_CTRL && arca_ecc_top.ecc_reg1.decoded_req_is_wr) begin // SW write
-            ecc_sw_cmd[1:0] <= (arca_ecc_top.ecc_reg1.field_storage.ECC_CTRL.CTRL.value & ~arca_ecc_top.ecc_reg1.decoded_wr_biten[1:0]) | (arca_ecc_top.ecc_reg1.decoded_wr_data[1:0] & arca_ecc_top.ecc_reg1.decoded_wr_biten[1:0]);
-            ecc_sw_cmd[2] <= (arca_ecc_top.ecc_reg1.field_storage.ECC_CTRL.DH_SHAREDKEY.value & ~arca_ecc_top.ecc_reg1.decoded_wr_biten[4]) | (arca_ecc_top.ecc_reg1.decoded_wr_data[4] & arca_ecc_top.ecc_reg1.decoded_wr_biten[4]);
+        else if (tessera_ecc_top.ecc_reg1.decoded_reg_strb.ECC_CTRL && tessera_ecc_top.ecc_reg1.decoded_req_is_wr) begin // SW write
+            ecc_sw_cmd[1:0] <= (tessera_ecc_top.ecc_reg1.field_storage.ECC_CTRL.CTRL.value & ~tessera_ecc_top.ecc_reg1.decoded_wr_biten[1:0]) | (tessera_ecc_top.ecc_reg1.decoded_wr_data[1:0] & tessera_ecc_top.ecc_reg1.decoded_wr_biten[1:0]);
+            ecc_sw_cmd[2] <= (tessera_ecc_top.ecc_reg1.field_storage.ECC_CTRL.DH_SHAREDKEY.value & ~tessera_ecc_top.ecc_reg1.decoded_wr_biten[4]) | (tessera_ecc_top.ecc_reg1.decoded_wr_data[4] & tessera_ecc_top.ecc_reg1.decoded_wr_biten[4]);
         end
     end
 
-    assign dest_keyvault = arca_ecc_top.ecc_dsa_ctrl_i.dest_keyvault;
+    assign dest_keyvault = tessera_ecc_top.ecc_dsa_ctrl_i.dest_keyvault;
 
-    assign error_flag = arca_ecc_top.ecc_dsa_ctrl_i.error_flag | arca_ecc_top.ecc_dsa_ctrl_i.error_flag_reg;
-    assign privkey_input_outofrange = arca_ecc_top.ecc_dsa_ctrl_i.privkey_input_outofrange;
-    assign r_output_outofrange = arca_ecc_top.ecc_dsa_ctrl_i.r_output_outofrange;
-    assign s_output_outofrange = arca_ecc_top.ecc_dsa_ctrl_i.s_output_outofrange;
-    assign r_input_outofrange = arca_ecc_top.ecc_dsa_ctrl_i.r_input_outofrange;
-    assign s_input_outofrange = arca_ecc_top.ecc_dsa_ctrl_i.s_input_outofrange;
-    assign pubkeyx_input_outofrange = arca_ecc_top.ecc_dsa_ctrl_i.pubkeyx_input_outofrange;
-    assign pubkeyy_input_outofrange = arca_ecc_top.ecc_dsa_ctrl_i.pubkeyy_input_outofrange;
-    assign pubkey_input_invalid = arca_ecc_top.ecc_dsa_ctrl_i.pubkey_input_invalid;
-    assign pcr_sign_input_invalid = arca_ecc_top.ecc_dsa_ctrl_i.pcr_sign_input_invalid;
-    assign keygen_process = arca_ecc_top.ecc_dsa_ctrl_i.keygen_process;
-    assign signing_process = arca_ecc_top.ecc_dsa_ctrl_i.signing_process;
-    assign verifying_process = arca_ecc_top.ecc_dsa_ctrl_i.verifying_process;
-    assign sharedkey_process = arca_ecc_top.ecc_dsa_ctrl_i.sharedkey_process;
-    assign privkey_output_outofrange = arca_ecc_top.ecc_dsa_ctrl_i.privkey_output_outofrange;
-    assign pubkeyx_output_outofrange = arca_ecc_top.ecc_dsa_ctrl_i.pubkeyx_output_outofrange;
-    assign pubkeyy_output_outofrange = arca_ecc_top.ecc_dsa_ctrl_i.pubkeyy_output_outofrange;
-    assign sharedkey_outofrange = arca_ecc_top.ecc_dsa_ctrl_i.sharedkey_outofrange;
+    assign error_flag = tessera_ecc_top.ecc_dsa_ctrl_i.error_flag | tessera_ecc_top.ecc_dsa_ctrl_i.error_flag_reg;
+    assign privkey_input_outofrange = tessera_ecc_top.ecc_dsa_ctrl_i.privkey_input_outofrange;
+    assign r_output_outofrange = tessera_ecc_top.ecc_dsa_ctrl_i.r_output_outofrange;
+    assign s_output_outofrange = tessera_ecc_top.ecc_dsa_ctrl_i.s_output_outofrange;
+    assign r_input_outofrange = tessera_ecc_top.ecc_dsa_ctrl_i.r_input_outofrange;
+    assign s_input_outofrange = tessera_ecc_top.ecc_dsa_ctrl_i.s_input_outofrange;
+    assign pubkeyx_input_outofrange = tessera_ecc_top.ecc_dsa_ctrl_i.pubkeyx_input_outofrange;
+    assign pubkeyy_input_outofrange = tessera_ecc_top.ecc_dsa_ctrl_i.pubkeyy_input_outofrange;
+    assign pubkey_input_invalid = tessera_ecc_top.ecc_dsa_ctrl_i.pubkey_input_invalid;
+    assign pcr_sign_input_invalid = tessera_ecc_top.ecc_dsa_ctrl_i.pcr_sign_input_invalid;
+    assign keygen_process = tessera_ecc_top.ecc_dsa_ctrl_i.keygen_process;
+    assign signing_process = tessera_ecc_top.ecc_dsa_ctrl_i.signing_process;
+    assign verifying_process = tessera_ecc_top.ecc_dsa_ctrl_i.verifying_process;
+    assign sharedkey_process = tessera_ecc_top.ecc_dsa_ctrl_i.sharedkey_process;
+    assign privkey_output_outofrange = tessera_ecc_top.ecc_dsa_ctrl_i.privkey_output_outofrange;
+    assign pubkeyx_output_outofrange = tessera_ecc_top.ecc_dsa_ctrl_i.pubkeyx_output_outofrange;
+    assign pubkeyy_output_outofrange = tessera_ecc_top.ecc_dsa_ctrl_i.pubkeyy_output_outofrange;
+    assign sharedkey_outofrange = tessera_ecc_top.ecc_dsa_ctrl_i.sharedkey_outofrange;
 
     covergroup ecc_top_cov_grp @(posedge clk);
         reset_cp: coverpoint reset_n;

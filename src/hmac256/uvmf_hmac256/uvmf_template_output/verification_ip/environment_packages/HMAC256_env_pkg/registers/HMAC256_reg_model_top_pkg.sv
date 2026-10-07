@@ -123,10 +123,10 @@ package HMAC256_reg_model_top_pkg;
    // Class: hmac256_reg_model_top
    // 
    //--------------------------------------------------------------------
-   class hmac256_reg_model_top extends arca_hmac256_reg;
+   class hmac256_reg_model_top extends tessera_hmac256_reg;
       `uvm_object_utils(hmac256_reg_model_top)
 // pragma uvmf custom instantiate_registers_within_block begin
-      // All HMAC256 register handles are inherited from arca_hmac256_reg
+      // All HMAC256 register handles are inherited from tessera_hmac256_reg
       // (HMAC256_CTRL, HMAC256_KEY[16], HMAC256_BLOCK[16],
       // HMAC256_TAG[8], HMAC256_LFSR_SEED[3], HMAC256_STATUS, etc.).
       // Alias the PeakRDL parent's default_map under the name the
@@ -151,10 +151,10 @@ package HMAC256_reg_model_top_pkg;
             void'(set_coverage(UVM_CVR_ADDR_MAP));
          end
 // pragma uvmf custom construct_configure_build_registers_within_block begin
-         // No extra registers to construct; arca_hmac256_reg::build() already did it all.
+         // No extra registers to construct; tessera_hmac256_reg::build() already did it all.
 // pragma uvmf custom construct_configure_build_registers_within_block end
 // pragma uvmf custom add_registers_to_block_map begin
-         // arca_hmac256_reg::build() added all registers to default_map already.
+         // tessera_hmac256_reg::build() added all registers to default_map already.
 // pragma uvmf custom add_registers_to_block_map end
       endfunction
 

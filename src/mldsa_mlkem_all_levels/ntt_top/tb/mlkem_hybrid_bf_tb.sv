@@ -20,8 +20,8 @@
 `default_nettype none
 
 module mlkem_hybrid_bf_tb 
-    import arca_ntt_defines_pkg::*;
-    import arca_abr_params_pkg::*;
+    import tessera_ntt_defines_pkg::*;
+    import tessera_abr_params_pkg::*;
     ();
 
     // Testbench signals
@@ -40,7 +40,7 @@ module mlkem_hybrid_bf_tb
     logic [((MLKEM_Q-1) * (MLKEM_Q-1))+(MLKEM_Q-1)-1:0][11:0] w_array;
 
     
-    arca_ntt_butterfly dut (
+    tessera_ntt_butterfly dut (
         .clk(clk_tb),
         .reset_n(reset_n_tb),
         .zeroize(zeroize_tb),

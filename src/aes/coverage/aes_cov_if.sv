@@ -17,9 +17,9 @@
 `ifndef VERILATOR
 
 interface aes_cov_if
-    import arca_aes_pkg::*;
+    import tessera_aes_pkg::*;
     import kv_defines_pkg::*;
-    import arca_aes_clp_reg_pkg::*;
+    import tessera_aes_clp_reg_pkg::*;
     #(
         parameter AHB_DATA_WIDTH = 32,
         parameter AHB_ADDR_WIDTH = 32,
@@ -75,7 +75,7 @@ interface aes_cov_if
         input logic notif_intr,
         input logic debugUnlock_or_scan_mode_switch,
 
-        // Internal signals in arca_aes_clp_wrapper
+        // Internal signals in tessera_aes_clp_wrapper
         input kv_write_ctrl_reg_t kv_write_ctrl_reg,
         input logic [KV_ENTRY_ADDR_W-1:0] kv_key_present_slot,
         input kv_write_filter_metrics_t kv_write_metrics,

@@ -6,11 +6,11 @@
 #
 # Layout
 # ------
-#   caliptra-rtl                          ARCA
-#   src/sha256/rtl/sha256.sv          ->  src/sha256/rtl/arca_sha256.sv
+#   caliptra-rtl                          Tessera
+#   src/sha256/rtl/sha256.sv          ->  src/sha256/rtl/tessera_sha256.sv
 #   src/sha256/coverage/...           ->  src/sha256/coverage/...
 #   src/sha256/tb|stimulus            ->  same path, upstream names kept
-#   src/sha256/config/sha256_ctrl.vf  ->  src/sha256/config/arca_sha256_ctrl.vf (generated)
+#   src/sha256/config/sha256_ctrl.vf  ->  src/sha256/config/tessera_sha256_ctrl.vf (generated)
 #
 # Block-specific notes
 # --------------------
@@ -22,7 +22,7 @@
 #   stimulus/, both imported as collateral.
 # * sha256_reg_uvm.sv and sha256_reg.rdl are excluded as regenerated artifacts.
 # * Upstream also ships sha256_random_test.vf; like every other .vf it is not
-#   imported, since ARCA generates its own filelist. Only sha256_ctrl.vf is read,
+#   imported, since Tessera generates its own filelist. Only sha256_ctrl.vf is read,
 #   and only to recover upstream's compile order.
 
 set -euo pipefail

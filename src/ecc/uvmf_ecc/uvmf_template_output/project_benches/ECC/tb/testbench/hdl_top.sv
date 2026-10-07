@@ -103,7 +103,7 @@ import uvmf_base_pkg_hdl::*;
   // verilog_dut         dut_verilog(   .clk(clk), .rst(rst), .in_signal(vhdl_to_verilog_signal), .out_signal(verilog_to_vhdl_signal));
   // vhdl_dut            dut_vhdl   (   .clk(clk), .rst(rst), .in_signal(verilog_to_vhdl_signal), .out_signal(vhdl_to_verilog_signal));
 
-  arca_ecc_top #(
+  tessera_ecc_top #(
       .AHB_DATA_WIDTH   (64),
       .AHB_ADDR_WIDTH   (15)
   ) dut (

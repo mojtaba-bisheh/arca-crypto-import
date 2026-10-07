@@ -40,20 +40,20 @@ interface hmac_ctrl_cov_if
     kv_write_filter_metrics_t kv_write_metrics;
     kv_write_ctrl_reg_t kv_write_ctrl_reg;
 
-    assign init = arca_hmac512_ctrl.hmac_inst.init_reg;
-    assign next = arca_hmac512_ctrl.hmac_inst.next_reg;
-    assign zeroize = arca_hmac512_ctrl.hmac_inst.zeroize_reg;
-    assign mode = arca_hmac512_ctrl.hmac_inst.mode_reg;
-    assign last = arca_hmac512_ctrl.hmac_inst.last_reg;
-    assign ready = arca_hmac512_ctrl.hmac_inst.ready_reg;
-    assign valid = arca_hmac512_ctrl.hmac_inst.tag_valid_reg;
+    assign init = tessera_hmac512_ctrl.hmac_inst.init_reg;
+    assign next = tessera_hmac512_ctrl.hmac_inst.next_reg;
+    assign zeroize = tessera_hmac512_ctrl.hmac_inst.zeroize_reg;
+    assign mode = tessera_hmac512_ctrl.hmac_inst.mode_reg;
+    assign last = tessera_hmac512_ctrl.hmac_inst.last_reg;
+    assign ready = tessera_hmac512_ctrl.hmac_inst.ready_reg;
+    assign valid = tessera_hmac512_ctrl.hmac_inst.tag_valid_reg;
 
-    assign core_tag_we = arca_hmac512_ctrl.hmac_inst.core_tag_we;
+    assign core_tag_we = tessera_hmac512_ctrl.hmac_inst.core_tag_we;
 
     assign hmac_cmd = {last, next, init};
 
-    assign kv_write_metrics = arca_hmac512_ctrl.hmac_inst.kv_write_metrics;
-    assign kv_write_ctrl_reg = arca_hmac512_ctrl.hmac_inst.kv_write_ctrl_reg;
+    assign kv_write_metrics = tessera_hmac512_ctrl.hmac_inst.kv_write_metrics;
+    assign kv_write_ctrl_reg = tessera_hmac512_ctrl.hmac_inst.kv_write_ctrl_reg;
 
     covergroup hmac_ctrl_cov_grp @(posedge clk);
         reset_cp: coverpoint reset_n;

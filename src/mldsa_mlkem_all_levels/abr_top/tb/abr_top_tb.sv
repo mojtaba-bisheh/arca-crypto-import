@@ -24,8 +24,8 @@ import "DPI-C" function string getenv(input string env_name);
 `include "mldsa_config_defines.svh"
 
 module abr_top_tb
-  import arca_abr_params_pkg::*;
-  import arca_abr_prim_alert_pkg::*;
+  import tessera_abr_params_pkg::*;
+  import tessera_abr_prim_alert_pkg::*;
 (
 `ifdef VERILATOR
   input bit clk_tb
@@ -108,7 +108,7 @@ module abr_top_tb
   
   assign hready_i_tb = hreadyout_o_tb;
 
-  arca_abr_top 
+  tessera_abr_top 
   dut (
   .clk(clk_i),
   .rst_b(rst_b),
@@ -274,21 +274,21 @@ module abr_top_tb
       $finish;
     end // main
 
-    // arca_abr_prim_alert_pkg::alert_tx_t [NumAlerts-1:0] alert_tx_o;
+    // tessera_abr_prim_alert_pkg::alert_tx_t [NumAlerts-1:0] alert_tx_o;
 
-    // `ARCA_ABR_ASSERT_PRIM_FSM_ERROR_TRIGGER_ALERT(SHA3FsmCheck_A,
+    // `TESSERA_ABR_ASSERT_PRIM_FSM_ERROR_TRIGGER_ALERT(SHA3FsmCheck_A,
     //   dut.sampler_top_inst.sha3_inst.u_state_regs, alert_tx_o[1])
   
-    // `ARCA_ABR_ASSERT_PRIM_FSM_ERROR_TRIGGER_ALERT(KeccakRoundFsmCheck_A,
+    // `TESSERA_ABR_ASSERT_PRIM_FSM_ERROR_TRIGGER_ALERT(KeccakRoundFsmCheck_A,
     //   dut.sampler_top_inst.sha3_inst.u_keccak.u_state_regs, alert_tx_o[1])
   
-    // `ARCA_ABR_ASSERT_PRIM_FSM_ERROR_TRIGGER_ALERT(SHA3padFsmCheck_A,
+    // `TESSERA_ABR_ASSERT_PRIM_FSM_ERROR_TRIGGER_ALERT(SHA3padFsmCheck_A,
     //   dut.sampler_top_inst.sha3_inst.u_pad.u_state_regs, alert_tx_o[1])
   
-    // `ARCA_ABR_ASSERT_PRIM_COUNT_ERROR_TRIGGER_ALERT(WrMsgCountCheck_A,
+    // `TESSERA_ABR_ASSERT_PRIM_COUNT_ERROR_TRIGGER_ALERT(WrMsgCountCheck_A,
     //   dut.sampler_top_inst.sha3_inst.u_pad.u_wrmsg_count, alert_tx_o[1])
   
-    // `ARCA_ABR_ASSERT_PRIM_COUNT_ERROR_TRIGGER_ALERT(RoundCountCheck_A,
+    // `TESSERA_ABR_ASSERT_PRIM_COUNT_ERROR_TRIGGER_ALERT(RoundCountCheck_A,
     //   dut.sampler_top_inst.sha3_inst.u_keccak.u_round_count, alert_tx_o[1])
 
 endmodule // mldsa_tb

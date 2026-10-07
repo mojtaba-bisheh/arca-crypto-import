@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# Python model of arca_barrett_reduction.sv
+# Python model of tessera_barrett_reduction.sv
 # Fixed for MLDSA prime (8380417)
 
 PRIME = 8380417
@@ -23,7 +23,7 @@ K = 2 * REG_SIZE
 M = (1 << K) // PRIME
 
 
-def arca_barrett_reduction(x: int):
+def tessera_barrett_reduction(x: int):
     """
     Barrett reduction: compute quotient (inv) and remainder (r)
     such that: x = inv * PRIME + r, with 0 <= r < PRIME
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         op_b = random.randrange(PRIME)
         x = op_a * op_b
 
-        inv, r = arca_barrett_reduction(x)
+        inv, r = tessera_barrett_reduction(x)
 
         # Reference division
         inv_ref = x // PRIME

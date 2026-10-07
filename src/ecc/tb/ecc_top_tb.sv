@@ -150,7 +150,7 @@ module ecc_top_tb
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_ecc_top #(
+  tessera_ecc_top #(
              .AHB_DATA_WIDTH(AHB_DATA_WIDTH),
              .AHB_ADDR_WIDTH(AHB_ADDR_WIDTH)
             )

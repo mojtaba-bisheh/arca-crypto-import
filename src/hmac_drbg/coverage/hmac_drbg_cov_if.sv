@@ -31,18 +31,18 @@ interface hmac_drbg_cov_if
     logic [383 : 0] prime;
     logic [383 : 0] drbg;
 
-    parameter logic [383:0] HMAC_DRBG_PRIME = arca_hmac_drbg.HMAC_DRBG_PRIME;
+    parameter logic [383:0] HMAC_DRBG_PRIME = tessera_hmac_drbg.HMAC_DRBG_PRIME;
     
-    assign init = arca_hmac_drbg.init_cmd;
-    assign next = arca_hmac_drbg.next_cmd;
-    assign zeroize = arca_hmac_drbg.zeroize;
-    assign ready = arca_hmac_drbg.ready_reg;
-    assign valid = arca_hmac_drbg.valid_reg;
+    assign init = tessera_hmac_drbg.init_cmd;
+    assign next = tessera_hmac_drbg.next_cmd;
+    assign zeroize = tessera_hmac_drbg.zeroize;
+    assign ready = tessera_hmac_drbg.ready_reg;
+    assign valid = tessera_hmac_drbg.valid_reg;
 
     assign hmac_drbg_cmd = {next, init};
 
-    assign drbg_state = arca_hmac_drbg.drbg_st_reg;
-    assign drbg = arca_hmac_drbg.drbg;
+    assign drbg_state = tessera_hmac_drbg.drbg_st_reg;
+    assign drbg = tessera_hmac_drbg.drbg;
 
     covergroup hmac_drbg_control_cg @(posedge clk);
         reset_cp: coverpoint reset_n;

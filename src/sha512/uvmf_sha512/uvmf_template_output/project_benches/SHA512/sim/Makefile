@@ -123,13 +123,13 @@ $(UVMF_PROJECT_DIR)/tb/tests/SHA512_tests_pkg.sv
 # pragma uvmf custom dut_files begin
 # UVMF_CHANGE_ME : Reference Verilog DUT source.
 SHA512_VERILOG_DUT ?=\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_sha512_ctrl.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_sha512.v\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_sha512_ctrl.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_sha512.v\
 $(UVMF_PROJECT_DIR)/../../../../rtl/sha512_param.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_sha512_core.v\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_sha512_h_constants.v\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_sha512_k_constants.v\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_sha512_w_mem.v\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_sha512_core.v\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_sha512_h_constants.v\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_sha512_k_constants.v\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_sha512_w_mem.v\
 $(UVMF_PROJECT_DIR)/../../../../../libs/rtl/ahb_slv_sif.sv\
 $(UVMF_PROJECT_DIR)/../../../../../libs/rtl/caliptra_macros.svh\
 $(UVMF_PROJECT_DIR)/../../../../../libs/rtl/caliptra_sva.svh

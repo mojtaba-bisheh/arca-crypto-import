@@ -144,7 +144,7 @@ class HMAC256_random_sequence extends HMAC256_bench_sequence_base;
       reg_model.HMAC256_LFSR_SEED[i].write(status, $urandom());
     end
 
-    // Drive each block. CTRL bit layout from src/hmac256/rtl/arca_hmac256_reg.rdl:
+    // Drive each block. CTRL bit layout from src/hmac256/rtl/tessera_hmac256_reg.rdl:
     //   [0]=INIT [1]=NEXT [3]=MODE [4]=LAST
     // BLOCK[] layout for block_length=B:
     //   BLOCK[0..B-2] : random message bytes (only present if B>1)

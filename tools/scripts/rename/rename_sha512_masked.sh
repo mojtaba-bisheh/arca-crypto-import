@@ -6,10 +6,10 @@
 #
 # Layout
 # ------
-#   caliptra-rtl                              ARCA
-#   src/sha512_masked/rtl/...             ->  src/sha512_masked/rtl/arca_...
+#   caliptra-rtl                              Tessera
+#   src/sha512_masked/rtl/...             ->  src/sha512_masked/rtl/tessera_...
 #   src/sha512_masked/tb/...              ->  src/sha512_masked/tb/...
-#   src/sha512_masked/config/..._core.vf  ->  src/sha512_masked/config/arca_... (generated)
+#   src/sha512_masked/config/..._core.vf  ->  src/sha512_masked/config/tessera_... (generated)
 #
 # Block-specific notes
 # --------------------

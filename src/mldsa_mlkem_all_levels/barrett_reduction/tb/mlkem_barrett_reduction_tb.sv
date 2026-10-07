@@ -18,7 +18,7 @@
 
 module mlkem_barrett_reduction_tb;
 
-    import arca_abr_params_pkg::*;
+    import tessera_abr_params_pkg::*;
 
     // Test Parameters
     localparam int prime = MLKEM_Q;
@@ -32,7 +32,7 @@ module mlkem_barrett_reduction_tb;
     logic [REG_SIZE-1:0] inv_ref, r_ref;
 
     // Instantiate the DUT
-    arca_barrett_reduction #(
+    tessera_barrett_reduction #(
         .prime(prime)
     ) dut (
         .x(x_tb),

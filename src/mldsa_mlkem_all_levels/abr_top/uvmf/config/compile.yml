@@ -3,7 +3,7 @@ provides: [uvmf_mldsa]
 schema_version: 2.4.0
 requires:
   - mldsa_uvmf_lib
-  - arca_abr_top
+  - tessera_abr_top
   - abr_uvm_pkg
   - abr_coverage
 targets:
@@ -69,7 +69,7 @@ provides: [uvmf_mldsa_sram2clk_nomasking]
 schema_version: 2.4.0
 requires:
   - mldsa_uvmf_lib
-  - arca_abr_top
+  - tessera_abr_top
   - abr_uvm_pkg
   - abr_coverage
 targets:
@@ -136,7 +136,7 @@ provides: [uvmf_mldsa_sram1clk_nomasking]
 schema_version: 2.4.0
 requires:
   - mldsa_uvmf_lib
-  - arca_abr_top
+  - tessera_abr_top
   - abr_uvm_pkg
   - abr_coverage
 targets:
@@ -202,7 +202,7 @@ provides: [uvmf_mldsa_sram2clk]
 schema_version: 2.4.0
 requires:
   - mldsa_uvmf_lib
-  - arca_abr_top
+  - tessera_abr_top
   - abr_uvm_pkg
   - abr_coverage
 targets:

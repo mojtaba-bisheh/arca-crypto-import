@@ -15,6 +15,6 @@
 
 module ecc_top_cov_bind;
     `ifdef FCOV
-    bind arca_ecc_top ecc_top_cov_if i_ecc_top_cov_if(.*);
+    bind tessera_ecc_top ecc_top_cov_if i_ecc_top_cov_if(.*);
     `endif
 endmodule

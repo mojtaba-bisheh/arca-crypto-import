@@ -16,14 +16,14 @@
 //
 // skencode_tb.sv
 // ---------------
-// Testbench for arca_skencode module
+// Testbench for tessera_skencode module
 //======================================================================
 
 `default_nettype none
 
 module skencode_tb
-    import arca_abr_params_pkg::*;
-    import arca_skdecode_defines_pkg::*;
+    import tessera_abr_params_pkg::*;
+    import tessera_skdecode_defines_pkg::*;
 #(
     parameter REG_SIZE = 24,
     parameter MEM_ADDR_WIDTH = MLDSA_MEM_ADDR_WIDTH,
@@ -59,7 +59,7 @@ reg [23:0] input_mem [0:NUM_OF_COEFF-1];
 reg [AHB_DATA_WIDTH*3-1:0] expected_output_mem [0:NUM_OF_COEFF/32-1];
 reg [AHB_DATA_WIDTH*3-1:0] actual_output_mem [0:NUM_OF_COEFF/32-1];
 
-arca_skencode #(
+tessera_skencode #(
     .MEM_ADDR_WIDTH(MEM_ADDR_WIDTH),
     .MLDSA_Q(MLDSA_Q),
     .REG_SIZE(REG_SIZE),
@@ -251,7 +251,7 @@ endtask
 
 task skencode_test(input reg [MEM_ADDR_WIDTH-1:0] dest_base_addr, input reg [MEM_ADDR_WIDTH-1:0] src_base_addr);
     int i, j;
-    $display("Starting arca_skencode test\n");
+    $display("Starting tessera_skencode test\n");
     read_test_vectors(src_base_addr);
     @(posedge clk_tb);
     skencode_enable_tb = 1;
@@ -262,7 +262,7 @@ task skencode_test(input reg [MEM_ADDR_WIDTH-1:0] dest_base_addr, input reg [MEM
     src_base_addr_tb = 0;
     dest_base_addr_tb = 0;
 
-    $display("Waiting for arca_skencode to complete\n");
+    $display("Waiting for tessera_skencode to complete\n");
     wait (skencode_done_tb);
     read_memory_content(dest_base_addr);
 
@@ -278,7 +278,7 @@ endtask
 
 task skencode_error_test(input reg [MEM_ADDR_WIDTH-1:0] dest_base_addr, input reg [MEM_ADDR_WIDTH-1:0] src_base_addr);
     int i, j;
-    $display("Starting arca_skencode error test\n");
+    $display("Starting tessera_skencode error test\n");
     read_error_test_vectors(src_base_addr);
     @(posedge clk_tb);
     skencode_enable_tb = 1;
@@ -289,7 +289,7 @@ task skencode_error_test(input reg [MEM_ADDR_WIDTH-1:0] dest_base_addr, input re
     src_base_addr_tb = 0;
     dest_base_addr_tb = 0;
 
-    $display("Waiting for arca_skencode to complete\n");
+    $display("Waiting for tessera_skencode to complete\n");
     wait (skencode_done_tb | skencode_error_tb);
     if (skencode_done_tb) begin
         $display("Error: Error flag should have been asserted...");
@@ -300,7 +300,7 @@ task skencode_error_test(input reg [MEM_ADDR_WIDTH-1:0] dest_base_addr, input re
         @(posedge clk_tb);
         zeroize_tb = 0;
         repeat(3) @(posedge clk_tb);
-        $display("Starting arca_skencode test again\n");
+        $display("Starting tessera_skencode test again\n");
         read_test_vectors(src_base_addr);
         @(posedge clk_tb);
         skencode_enable_tb = 1;
@@ -311,7 +311,7 @@ task skencode_error_test(input reg [MEM_ADDR_WIDTH-1:0] dest_base_addr, input re
         src_base_addr_tb = 0;
         dest_base_addr_tb = 0;
 
-        $display("Waiting for arca_skencode to complete\n");
+        $display("Waiting for tessera_skencode to complete\n");
         wait (skencode_done_tb);
         read_memory_content(dest_base_addr);
 

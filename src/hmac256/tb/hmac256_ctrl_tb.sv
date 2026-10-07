@@ -16,7 +16,7 @@
 //
 // hmac256_ctrl_tb.sv
 // --------
-// HMAC256 testbench for the arca_hmac256 AHb-Lite interface controller.
+// HMAC256 testbench for the tessera_hmac256 AHb-Lite interface controller.
 //
 //======================================================================
 
@@ -24,7 +24,7 @@
 `include "caliptra_reg_field_defines.svh"
 
 module hmac256_ctrl_tb
-  import arca_hmac256_param_pkg::*;
+  import tessera_hmac256_param_pkg::*;
   ();
 
   //----------------------------------------------------------------
@@ -75,7 +75,7 @@ module hmac256_ctrl_tb
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_hmac256_ctrl #(
+  tessera_hmac256_ctrl #(
              .AHB_DATA_WIDTH(AHB_DATA_WIDTH),
              .AHB_ADDR_WIDTH(AHB_ADDR_WIDTH)
             )

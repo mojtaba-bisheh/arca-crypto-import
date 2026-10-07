@@ -35,7 +35,7 @@ module abr_ntt_add_sub_mod_tb;
     logic ready_o;
 
     // Instantiate DUT
-    arca_abr_ntt_add_sub_mod #(
+    tessera_abr_ntt_add_sub_mod #(
         .REG_SIZE(REG_SIZE)
     ) dut (
         .clk(clk),

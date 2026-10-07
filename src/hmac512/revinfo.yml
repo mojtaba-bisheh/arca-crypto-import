@@ -1,12 +1,12 @@
-# ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
+# Tessera vendored-block provenance record -- GENERATED, do not edit by hand.
 #
 # To review what changed upstream since this import:
 #   git -C <caliptra-rtl> log --oneline b9ac0e466758d6ba8eac562d8acc3bc5483a2f6a..origin/main -- src/hmac/rtl src/hmac/coverage src/hmac_drbg/rtl src/hmac_drbg/coverage 
 #
 block: hmac512
-prefix: "arca_"
-macro_prefix: "ARCA_"
-imported_at: "2026-10-06T20:22:38Z"
+prefix: "tessera_"
+macro_prefix: "TESSERA_"
+imported_at: "2026-10-07T16:07:26Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -15,25 +15,25 @@ upstream:
   commit_date: "2026-10-06T08:53:38-07:00"
   commit_subject: "Feat/stash bank rfc 673 (#1395)"
   working_tree_dirty: false
-  subtrees:  # upstream path -> ARCA path
-    - { upstream: "src/hmac/rtl", arca: "src/hmac512/rtl" }
-    - { upstream: "src/hmac/coverage", arca: "src/hmac512/coverage" }
-    - { upstream: "src/hmac_drbg/rtl", arca: "src/hmac_drbg/rtl" }
-    - { upstream: "src/hmac_drbg/coverage", arca: "src/hmac_drbg/coverage" }
-  collateral_subtrees:  # upstream path -> ARCA path
-    - { upstream: "src/hmac/tb", arca: "src/hmac512/tb" }
-    - { upstream: "src/hmac/coverage/config", arca: "src/hmac512/coverage/config" }
-    - { upstream: "src/hmac/stimulus", arca: "src/hmac512/stimulus" }
-    - { upstream: "src/hmac/uvmf_2022", arca: "src/hmac512/uvmf_2022" }
-    - { upstream: "src/hmac_drbg/tb", arca: "src/hmac_drbg/tb" }
-    - { upstream: "src/hmac_drbg/coverage/config", arca: "src/hmac_drbg/coverage/config" }
-    - { upstream: "src/hmac_drbg/stimulus", arca: "src/hmac_drbg/stimulus" }
+  subtrees:  # upstream path -> Tessera path
+    - { upstream: "src/hmac/rtl", tessera: "src/hmac512/rtl" }
+    - { upstream: "src/hmac/coverage", tessera: "src/hmac512/coverage" }
+    - { upstream: "src/hmac_drbg/rtl", tessera: "src/hmac_drbg/rtl" }
+    - { upstream: "src/hmac_drbg/coverage", tessera: "src/hmac_drbg/coverage" }
+  collateral_subtrees:  # upstream path -> Tessera path
+    - { upstream: "src/hmac/tb", tessera: "src/hmac512/tb" }
+    - { upstream: "src/hmac/coverage/config", tessera: "src/hmac512/coverage/config" }
+    - { upstream: "src/hmac/stimulus", tessera: "src/hmac512/stimulus" }
+    - { upstream: "src/hmac/uvmf_2022", tessera: "src/hmac512/uvmf_2022" }
+    - { upstream: "src/hmac_drbg/tb", tessera: "src/hmac_drbg/tb" }
+    - { upstream: "src/hmac_drbg/coverage/config", tessera: "src/hmac_drbg/coverage/config" }
+    - { upstream: "src/hmac_drbg/stimulus", tessera: "src/hmac_drbg/stimulus" }
   compile_order_from: src/hmac/config/hmac_ctrl.vf
 
 importer:
   script: tools/scripts/rename/rename_hmac512.sh
   library_version: "2.1.1"
-  toolchain_fingerprint: "b5f41ab52a429a3455eba63259000506da955101de63323572dfe4da94d9ff14"
+  toolchain_fingerprint: "3674a5a38236d9ae6e420595ad633496591b027c5054610355991eadcb7cde0d"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -70,7 +70,7 @@ policy:
     - "src/hmac/uvmf_2022/HMAC_in_interface.yaml"
     - "src/hmac/uvmf_2022/HMAC_out_interface.yaml"
     - "src/hmac/uvmf_2022/HMAC_util_comp_HMAC_predictor.yaml"
-  keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed
+  keep_list:  # shared Tessera platform identifiers, deliberately NOT prefixed
     - "kv_defines_pkg"
     - "kv_read_t"
     - "kv_write_t"
@@ -92,7 +92,7 @@ artifacts:
     - src/hmac_drbg/tb
     - src/hmac_drbg/coverage/config
     - src/hmac_drbg/stimulus
-  filelist: src/hmac512/config/arca_hmac512_ctrl.vf
+  filelist: src/hmac512/config/tessera_hmac512_ctrl.vf
   rename_map: src/hmac512/revinfo.map
 
 source_manifest:  # sha256 of the upstream files as imported
@@ -281,31 +281,31 @@ source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "66a8e26465c591d1276a1a6a382f956c37e574b171d59818147dd3cb515d50af", path: "src/hmac_drbg/stimulus/testsuites/hmac_drbg_nightly_random_regression.yml" }
 
 renamed_manifest:  # sha256 of the committed, renamed files
-  - { sha256: "ec9d4d2f24aad61179cfa53dcbf7af9b34d95e97575e8c8228c537d90c64d91d", path: "src/hmac512/config/arca_hmac512_ctrl.vf" }
+  - { sha256: "30a8578dac0d46429543ad35ffafb945282d4cdaf9ea988ad50ae7819c1c58db", path: "src/hmac512/config/tessera_hmac512_ctrl.vf" }
   - { sha256: "743d94ae90a0891bcc04f317c7be479f195f166c10685561955ceb87a53c23c1", path: "src/hmac512/coverage/config/hmac_cm_hier.cfg" }
-  - { sha256: "bab7c7b853dcc1cb340fc298a6eedba6649484c732a443f8a1ba86b0032fa6a2", path: "src/hmac512/coverage/hmac_ctrl_cov_bind.sv" }
-  - { sha256: "1a4af73bfaf8b60f596865b271bdc263a573a5956ca9fcd8e2049908c4e97da4", path: "src/hmac512/coverage/hmac_ctrl_cov_if.sv" }
-  - { sha256: "bcb2867fec08ffc1864f48bcde53c8a0a8e05f61d7597d12f5100d51b87a66fc", path: "src/hmac512/rtl/arca_hmac512.sv" }
-  - { sha256: "13c29e76201741f11d2a91003d088d7148c83d00b0042dafa16a97b0f60848a1", path: "src/hmac512/rtl/arca_hmac512_config.svh" }
-  - { sha256: "c450143333999990013ec00054f871a4a85c786b83386cbe8317ddadee77ad59", path: "src/hmac512/rtl/arca_hmac512_core.sv" }
-  - { sha256: "d933a1e6e6d286da56fbcb8afa0f816d153682f01acd3d80ae932a5cd8e9b3f4", path: "src/hmac512/rtl/arca_hmac512_ctrl.sv" }
-  - { sha256: "c15392101d334b0cff40dffdded9c5a4e78bb4e90db0bc6953612e803deda074", path: "src/hmac512/rtl/arca_hmac512_param_pkg.sv" }
-  - { sha256: "cfc9c428e9465afeb79b9721003bae972089f9fd9e24f6ff9842ab5d7b866e5d", path: "src/hmac512/rtl/arca_hmac512_reg.sv" }
-  - { sha256: "3cb18de0a982354970c1e80c218537ff0f593c920dd4c8712909ca1b4b202f52", path: "src/hmac512/rtl/arca_hmac512_reg_pkg.sv" }
+  - { sha256: "be4391e0734f8e5acfe9af52dac39a30936f85185e60beb8d3e7117977385cf5", path: "src/hmac512/coverage/hmac_ctrl_cov_bind.sv" }
+  - { sha256: "26ae062021a4a86edce684cc0d469b6c93bf76c943ea4adeecb1c77099ec838c", path: "src/hmac512/coverage/hmac_ctrl_cov_if.sv" }
+  - { sha256: "51cd9108280fb969651ab5e718dbf6527b9d5b6cbfa1a1091054a75fb0b23894", path: "src/hmac512/rtl/tessera_hmac512.sv" }
+  - { sha256: "907597f519c4ea9a5e24d01f0a5bb81af87fc3dd8d3cf0e5bf6fde992564cff5", path: "src/hmac512/rtl/tessera_hmac512_config.svh" }
+  - { sha256: "07e2f450d7506cc8ff8d71477bf8be1ec239a82f6dbb146b76fb64a2826898d0", path: "src/hmac512/rtl/tessera_hmac512_core.sv" }
+  - { sha256: "ef542457f7b077d1d834f0f890b1e4c799d9b796a7506b84c91aa98ebcf176c4", path: "src/hmac512/rtl/tessera_hmac512_ctrl.sv" }
+  - { sha256: "c74d383ffcb5a4ccbc57d9ebde476181702e4376805ae3e1cb7e34ad611bdd8f", path: "src/hmac512/rtl/tessera_hmac512_param_pkg.sv" }
+  - { sha256: "71e9cd0581aea42dfde9fb210b955a7d9bfcdabf917338349df12ae31e8d1562", path: "src/hmac512/rtl/tessera_hmac512_reg.sv" }
+  - { sha256: "a738fa163a99c90d8d66bdf9bc1543126f035d7cba09a69565dee7e39fd3cf8d", path: "src/hmac512/rtl/tessera_hmac512_reg_pkg.sv" }
   - { sha256: "082aa2f600b131bd820e83237a96c34a2cb2739a7ac8e4b790a2cf5edec0f22e", path: "src/hmac512/stimulus/tests/directed/hmac_normal_test.yml" }
   - { sha256: "2c585cc29020fd2c021a600e11681f4c9b64a9093995bb3227e324bdd16404e4", path: "src/hmac512/stimulus/testsuites/hmac_nightly_directed_regression.yml" }
   - { sha256: "d887a67904e34619bfaa4f67655954266da7539872fac08b9983837a85ec9af2", path: "src/hmac512/stimulus/testsuites/hmac_nightly_random_regression.yml" }
-  - { sha256: "ff84421c900a24fc856a9b12c465a42f26899382b723316b81a17211196f50a9", path: "src/hmac512/tb/hmac_ctrl_tb.sv" }
+  - { sha256: "e140055384c4e81a0e825f5724e017c824f5752ce0d36473d0b83a7b7a07cb63", path: "src/hmac512/tb/hmac_ctrl_tb.sv" }
   - { sha256: "f120e7ef07b65af18c6c7c77ca0d0d8ec12b9e1043a36bb034b7cc4313362857", path: "src/hmac512/tb/hmac_vectors_multiblk.txt" }
   - { sha256: "03b1b62b37935341d0a052d76b9c2993d5130c07139347e5fd8a1e9055523813", path: "src/hmac512/tb/hmac_vectors_singleblk.txt" }
-  - { sha256: "c42e3ced267cb2e3b2f8f2584bf04b1a143aedf363a688b42dd23b24869ef3e8", path: "src/hmac512/tb/test_gen.py" }
+  - { sha256: "32cf41b0279a5403f4143b2420e86c376e06d3203aaf013964042cbea20c4c3c", path: "src/hmac512/tb/test_gen.py" }
   - { sha256: "8b03b5f00330d8beca2475a23b8a48da44fd26dbab47da5984d1ae86a4af9629", path: "src/hmac512/uvmf_2022/HMAC_bench.yaml" }
   - { sha256: "d6151e3984a1f9270c63aef587b46efadde927108a5820b3d9b3096b7c8f311b", path: "src/hmac512/uvmf_2022/HMAC_environment.yaml" }
   - { sha256: "44c221cb911c490d525b5577d02de6c5b691979a1b2c57692eb3f4f8519d9d32", path: "src/hmac512/uvmf_2022/HMAC_in_interface.yaml" }
   - { sha256: "974d86549467a8da9da72351025e53dc577befe92ec7c0b975e0dfa47735accc", path: "src/hmac512/uvmf_2022/HMAC_out_interface.yaml" }
   - { sha256: "c5b36fe8f6bd6dd31616af8f668366b004405206d4fe3c4345c72f86657a78ca", path: "src/hmac512/uvmf_2022/HMAC_util_comp_HMAC_predictor.yaml" }
-  - { sha256: "5cc9f176be137898317244f54ce5b175bf5ac846c62d30e3b891401cdf81806e", path: "src/hmac512/uvmf_2022/config/compile.yml" }
-  - { sha256: "8559fb92c31a09b034f7c4d4ab38031d3447b402d4b6b2a1848c1e225d4e32ea", path: "src/hmac512/uvmf_2022/config/uvmf_hmac.vf" }
+  - { sha256: "87e8e4401c39afc2b6a0a3b09b50ae5e4a8f708f9d4c6ba98b0697ff57822d0a", path: "src/hmac512/uvmf_2022/config/compile.yml" }
+  - { sha256: "593015a0953a161cdb1a4945e35fd66517d610ef5d0438a6c2422196ef269e4f", path: "src/hmac512/uvmf_2022/config/uvmf_hmac.vf" }
   - { sha256: "b3de8ccf495493570ff2745b2c806e41d9c28d1c590de77ee0cd68df4ab6731d", path: "src/hmac512/uvmf_2022/coverage/config/uvmf_hmac_cm_hier.cfg" }
   - { sha256: "40f065991dc0d6603bf08768c9591b3d0141e347e7ffbcc1d939d4a519154917", path: "src/hmac512/uvmf_2022/run_yaml_uvmf_scripts.bat" }
   - { sha256: "b8b45258ac85affb982cf722b62482645374211e7e2383f3ea512e1d3bf39bbf", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/.project" }
@@ -316,11 +316,11 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "05e84cbd9875d35be4583e4bd3a1be37f8f8c3345efae54028cbf33fd020451c", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/rtl/verilog/verilog_dut.v" }
   - { sha256: "20a1f41839f8279b6dd44a548e763c95476e3cfbe641f081129bf0785ec66670", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/rtl/verilog/verilog_dut.vinfo" }
   - { sha256: "3abc11418d80deb00513af9cb911ef50d645dcaa95f10815fc92cedbc8e9632f", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/rtl/vhdl/vhdl_dut.vhd" }
-  - { sha256: "96efb70d00a94f19d8da38a93ccb1ba36ad718bc0da2fa8d1e907b68dc037403", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/sim/Makefile" }
+  - { sha256: "8c507e1514b157bb6460c4d30aaae0eeb0e1b78d3d3f1d7ce55997e600d2a40c", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/sim/Makefile" }
   - { sha256: "243cbc2d42d139c3517782ba1ad6b081336dfe8ff4a6a1e98eacfc8a88542497", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/sim/bcr_testlist" }
   - { sha256: "bd9720ac8c629e47f13dceec8fd0f307cf40f2492f7d3db1017f49d917deeaae", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/sim/bcr_testlist.yaml" }
   - { sha256: "2f677b6f459eb90bbc0b5d66d86442b6725f44fcd5ecfa5978cc8eb00dca5108", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/sim/certe_dump.xml" }
-  - { sha256: "94ec9eb87a2d75851d39cf685247d94dead71ec9f3bf4e3aa0ffe81441c03311", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/sim/compile.do" }
+  - { sha256: "a2d8792ca010852670d73a15146c8aef41ca3aa5090dd11da171e0457141b9ed", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/sim/compile.do" }
   - { sha256: "b111d546bac795087121faa64a31e4c4cc098ad4f6aac270d1e97dabc24b1bfa", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/sim/hdl.compile" }
   - { sha256: "4611b057c356303b720c84a55a2691654dca258d419dda6b0a333f5c0a602e82", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/sim/hdl.vinfo" }
   - { sha256: "2d3193f0811dfa165d8ac4d005554138f91ceba84f9b99d1717c463d2b598437", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/sim/hvl.compile" }
@@ -347,7 +347,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "5d3fa63e7c79a87dbad7d6b025be1925e3d89719155dba3a1966c2d1e8950aaf", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/sequences/src/example_derived_test_sequence.svh" }
   - { sha256: "ac5bba3bcb94e6b8885ded659b32eb64dd217bf0abb612718f09ee36ff95c225", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/sequences/src/register_test_sequence.svh" }
   - { sha256: "d4719f6c288a3734b66f1f6d1e3f0419d8e7d6f0e1f6526d8b627c0d235c0b8f", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/testbench/hdl_top.compile" }
-  - { sha256: "3325032ef595e73f14bf75bb76853eb6e2e91b5a3a51d6bef3f4aee613abcea9", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/testbench/hdl_top.sv" }
+  - { sha256: "c500158b78346a5fe5e32a9c5f97793e2bbce4181b973a3b657e240441d79bd6", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/testbench/hdl_top.sv" }
   - { sha256: "5a1a891251ae9846a9da67a4e98311aab0634b27bccc656af0b75f390395e8aa", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/testbench/hdl_top.vinfo" }
   - { sha256: "fc0eeff1325292b5b65c2d49d7b14c750e6c33f4ed4870ea953596d1b071f2ff", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/testbench/hvl_top.compile" }
   - { sha256: "a7c5d0539fe21ba97023b43ef658d41dc9050ff0c0b396c6bc12428f4f8bc6c1", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/testbench/hvl_top.sv" }
@@ -357,7 +357,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "b2def8b0feea3e02393ae934abd05fe292d43ef21733a98cf95851881f8f27fd", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/tests/HMAC_tests_pkg.compile" }
   - { sha256: "1b8c62ff85f1fb2e7e3a0a639c2123462e1e1393f8d346e30057383b35a3c119", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/tests/HMAC_tests_pkg.sv" }
   - { sha256: "01d0e9f59b63534ca57cf4003aad935856f8237394f30e75f9b916127986bdc1", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/tests/HMAC_tests_pkg.vinfo" }
-  - { sha256: "77c5a06f1d248534145cce1012e46ef83f597648a4e3a006483797e745d090a1", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/tests/src/HMAC_last_alone_error_test.svh" }
+  - { sha256: "0112d0a434dce17769bd8e402fae7a9c7842198e5169c32af528b8d5e30c72d7", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/tests/src/HMAC_last_alone_error_test.svh" }
   - { sha256: "56a7545c6adf40903ed8ffb3dee25f36d4874f27dc04a71cabd8a09d8fb32bc5", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/tests/src/HMAC_last_alone_error_test.yml" }
   - { sha256: "4566b82de23bb8eec54b7eadc18c1a762e54080385a44d23a676a995fc945e64", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/tests/src/HMAC_otf_reset_test.svh" }
   - { sha256: "0c0cf5f3f1466dd3a521ce1d0901187a150c5517e8e8441a5f4eaed089ed9c12", path: "src/hmac512/uvmf_2022/uvmf_template_output/project_benches/HMAC/tb/tests/src/HMAC_otf_reset_test.yml" }
@@ -456,13 +456,13 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "71021dbe91d252bf1d7cb4ad8202ebfc5b347679693ff9edeab9cb012a7f680e", path: "src/hmac512/uvmf_2022/uvmf_template_output/verification_ip/interface_packages/HMAC_out_pkg/src/HMAC_out_typedefs_hdl.svh" }
   - { sha256: "610fb87089c6b032f803ad8c0a2ea1ad1ff3bdf4100b11aba4188bb4fd5178a6", path: "src/hmac512/uvmf_2022/uvmf_template_output/verification_ip/interface_packages/HMAC_out_pkg/yaml/HMAC_out_interface.yaml" }
   - { sha256: "67c0c0f7dfd27f7c4d66848691db76751bc97d4ea9d954de459816165b6a928e", path: "src/hmac_drbg/coverage/config/hmac_drbg_cm_hier.cfg" }
-  - { sha256: "b49f172e5455c11daa7cc31fd2c49c2ca4f0f2bb49da92e1b356f7d73da3bfb3", path: "src/hmac_drbg/coverage/hmac_drbg_cov_bind.sv" }
-  - { sha256: "87aa70387f444472442b467ad631beab3906e02a6d1388651aba9feb0e6416da", path: "src/hmac_drbg/coverage/hmac_drbg_cov_if.sv" }
-  - { sha256: "5b9ae8b26adf27ce0172bfe67e09e289d5402e5bf07981d9acc8938cd1f2a0bf", path: "src/hmac_drbg/rtl/arca_hmac_drbg.sv" }
+  - { sha256: "0818787887780820fa590643c4750fdf19cb99cb2337405315f7fabf72a406e3", path: "src/hmac_drbg/coverage/hmac_drbg_cov_bind.sv" }
+  - { sha256: "deb756f632e972c11e928f7bc2654c7d5436bd5f6e0578e1c86f68de4cc52e95", path: "src/hmac_drbg/coverage/hmac_drbg_cov_if.sv" }
+  - { sha256: "aa72709c47eaff88fb2117741bbe3052ca6830339159440e6c93e0a862a8d8ed", path: "src/hmac_drbg/rtl/tessera_hmac_drbg.sv" }
   - { sha256: "7579a3e6aefa170a14a89a24bea6cd40a8fc192a3eac4a04b5d7ccda27e83eba", path: "src/hmac_drbg/stimulus/tests/directed/hmac_drbg_directed_test.yml" }
   - { sha256: "5634846ab592b79d721f18ee9e2249c37c94fd83fea8ee3c2453abef7fb69550", path: "src/hmac_drbg/stimulus/tests/randomized/hmac_drbg_randomized_test.yml" }
   - { sha256: "a211d8f6f5b7e4c5379ad91979244bbaa3d699000212d45095716a58fff86497", path: "src/hmac_drbg/stimulus/testsuites/hmac_drbg_nightly_directed_regression.yml" }
   - { sha256: "66a8e26465c591d1276a1a6a382f956c37e574b171d59818147dd3cb515d50af", path: "src/hmac_drbg/stimulus/testsuites/hmac_drbg_nightly_random_regression.yml" }
-  - { sha256: "66fec391e53df99d2378c5ad1b2ac2577068074e291ec7f407bec8c969fdaebe", path: "src/hmac_drbg/tb/hmac_drbg_ref.py" }
-  - { sha256: "6228188b0e48b30d7d4b1de7737d3175f0b8cc43ac275791308f4ec6ff2a9fc8", path: "src/hmac_drbg/tb/hmac_drbg_tb.sv" }
+  - { sha256: "6fec263026576dc8edc3af03383b88f37b0d0c4217e34b9cc0f7a1d870a0dea1", path: "src/hmac_drbg/tb/hmac_drbg_ref.py" }
+  - { sha256: "fbac16e508a5f774ee6fa49d273679e5c3ef4c5db449c090308116954bef67ef", path: "src/hmac_drbg/tb/hmac_drbg_tb.sv" }
   - { sha256: "177c05aeaa4b28719f7bb6b663088308487051b7586efa0c3d6421c3982307b2", path: "src/hmac_drbg/tb/test_vectors/hmac_drbg_tb.hex" }

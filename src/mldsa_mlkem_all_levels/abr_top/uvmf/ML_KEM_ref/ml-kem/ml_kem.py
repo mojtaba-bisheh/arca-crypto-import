@@ -230,11 +230,11 @@ class ML_KEM:
 
         u = (A_hat_T @ y_hat).from_ntt() + e1
 
-        mu = self.R.decode(m, 1).arca_decompress(1)
+        mu = self.R.decode(m, 1).tessera_decompress(1)
         v = t_hat.dot(y_hat).from_ntt() + e2 + mu
 
-        c1 = u.arca_compress(self.du).encode(self.du)
-        c2 = v.arca_compress(self.dv).encode(self.dv)
+        c1 = u.tessera_compress(self.du).encode(self.du)
+        c2 = v.tessera_compress(self.dv).encode(self.dv)
 
         return c1 + c2
 
@@ -246,13 +246,13 @@ class ML_KEM:
         n = self.k * self.du * 32
         c1, c2 = c[:n], c[n:]
 
-        u = self.M.decode_vector(c1, self.k, self.du).arca_decompress(self.du)
-        v = self.R.decode(c2, self.dv).arca_decompress(self.dv)
+        u = self.M.decode_vector(c1, self.k, self.du).tessera_decompress(self.du)
+        v = self.R.decode(c2, self.dv).tessera_decompress(self.dv)
         s_hat = self.M.decode_vector(dk_pke, self.k, 12, is_ntt=True)
 
         u_hat = u.to_ntt()
         w = v - (s_hat.dot(u_hat)).from_ntt()
-        m = w.arca_compress(1).encode(1)
+        m = w.tessera_compress(1).encode(1)
 
         return m
 

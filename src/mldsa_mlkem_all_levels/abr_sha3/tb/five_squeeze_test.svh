@@ -91,9 +91,9 @@ task five_squeeze_test();
           end
 
           @(posedge clk_tb);
-          sha3_done = arca_abr_prim_mubi_pkg::MuBi4True;
+          sha3_done = tessera_abr_prim_mubi_pkg::MuBi4True;
           @(posedge clk_tb);
-          sha3_done = arca_abr_prim_mubi_pkg::MuBi4False;
+          sha3_done = tessera_abr_prim_mubi_pkg::MuBi4False;
 
         end
         begin

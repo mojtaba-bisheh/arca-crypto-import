@@ -24,7 +24,7 @@
 `default_nettype none
 
 module sigdecode_h_tb
-    import arca_abr_params_pkg::*;
+    import tessera_abr_params_pkg::*;
 #(
     parameter NUM_WR = 4,
     parameter NUM_RD = 4,
@@ -51,7 +51,7 @@ reg [MLDSA_K-1:0][7:0] hintsum;
 reg [MLDSA_OMEGA-1:0][7:0] y_bytes, padding;
 
 
-arca_sigdecode_h #(
+tessera_sigdecode_h #(
     .REG_SIZE(REG_SIZE)
 ) dut (
     .clk(clk_tb),

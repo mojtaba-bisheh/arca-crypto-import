@@ -15,6 +15,6 @@
 
 module hmac256_ctrl_cov_bind;
     `ifdef FCOV
-    bind arca_hmac256_ctrl hmac256_ctrl_cov_if i_hmac256_ctrl_cov_if(.*);
+    bind tessera_hmac256_ctrl hmac256_ctrl_cov_if i_hmac256_ctrl_cov_if(.*);
     `endif
 endmodule

@@ -6,10 +6,10 @@
 #
 # Layout
 # ------
-#   caliptra-rtl                   ARCA
-#   src/aes/rtl/aes.sv         ->  src/aes/rtl/arca_aes.sv
+#   caliptra-rtl                   Tessera
+#   src/aes/rtl/aes.sv         ->  src/aes/rtl/tessera_aes.sv
 #   src/aes/coverage/...       ->  src/aes/coverage/...
-#   src/aes/config/aes.vf      ->  src/aes/config/arca_aes.vf (generated)
+#   src/aes/config/aes.vf      ->  src/aes/config/tessera_aes.vf (generated)
 #
 # Block-specific notes
 # --------------------
@@ -29,7 +29,7 @@
 #   rtl_lint waiver.
 # * aes_clp_reg_uvm.sv and aes_clp_reg.rdl are excluded as regenerated artifacts.
 # * Upstream splits the filelist in two: aes_pkg.vf (packages, compiled first)
-#   and aes.vf. Only aes.vf is read for compile order; ARCA emits one filelist.
+#   and aes.vf. Only aes.vf is read for compile order; Tessera emits one filelist.
 
 set -euo pipefail
 

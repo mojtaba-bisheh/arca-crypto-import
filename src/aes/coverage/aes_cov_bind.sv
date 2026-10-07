@@ -15,7 +15,7 @@
 
 module aes_cov_bind;
     `ifdef FCOV
-    bind arca_aes_clp_wrapper aes_cov_if #(
+    bind tessera_aes_clp_wrapper aes_cov_if #(
         .AHB_ADDR_WIDTH(`CALIPTRA_SLAVE_ADDR_WIDTH(`CALIPTRA_SLAVE_SEL_AES)),
         .AHB_DATA_WIDTH(`CALIPTRA_AHB_HDATA_SIZE),
         .CIF_DATA_WIDTH(32) // FIXME hardcoded value?

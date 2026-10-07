@@ -13,7 +13,7 @@
 #
 # Why a single pass with one alternation instead of N sequential sed calls:
 #   * Sequential passes can re-rename an already-renamed token
-#     (e.g. `hmac` -> `arca_hmac` -> `arca_arca_hmac`).
+#     (e.g. `hmac` -> `tessera_hmac` -> `tessera_tessera_hmac`).
 #   * Perl alternation is leftmost-FIRST (not leftmost-longest), so the
 #     alternation is sorted by descending length to guarantee that
 #     `hmac_reg_pkg` wins over `hmac`.
@@ -22,7 +22,7 @@
 # SV identifiers may contain [A-Za-z0-9_$] and escaped identifiers start with a
 # backslash. We therefore use explicit look-around character classes. A leading
 # backtick (macro usage) is *not* in the class, so `` `HMAC_PARAM_PKG `` is
-# matched and renamed correctly, and `arca_hmac` is skipped because the
+# matched and renamed correctly, and `tessera_hmac` is skipped because the
 # character before `hmac` is `_`, which makes the rename idempotent.
 
 use strict;

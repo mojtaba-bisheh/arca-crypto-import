@@ -21,8 +21,8 @@
 `default_nettype none
 
 module skdecode_tb
-    import arca_abr_params_pkg::*;
-    import arca_skdecode_defines_pkg::*;
+    import tessera_abr_params_pkg::*;
+    import tessera_skdecode_defines_pkg::*;
 #(
     parameter REG_SIZE = 24,
     parameter MEM_ADDR_WIDTH = 15,
@@ -78,7 +78,7 @@ mem_if_t keymem_a_rd_req_tb;
 mem_if_t keymem_b_rd_req_tb;
 logic skdecode_error_tb;
 
-arca_skdecode_top dut (
+tessera_skdecode_top dut (
     .clk(clk_tb),
     .reset_n(reset_n_tb),
     .zeroize(zeroize_tb),

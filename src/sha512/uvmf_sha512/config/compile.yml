@@ -3,7 +3,7 @@ provides: [uvmf_sha512]
 schema_version: 2.4.0
 requires:
   - uvmf_lib
-  - arca_sha512_ctrl
+  - tessera_sha512_ctrl
   - sha512_coverage
 targets:
   tb:

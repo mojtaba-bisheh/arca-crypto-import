@@ -128,7 +128,7 @@ rand hmac256_env_sequence_base_t hmac256_env_seq;
 
   // ----------------------------------------------------------------
   // Write CTRL.ZEROIZE and wait for STATUS.READY. Required between
-  // back-to-back operations because arca_hmac256.sv gates ready_reg on the
+  // back-to-back operations because tessera_hmac256.sv gates ready_reg on the
   // awaiting_zeroize flag after every final tag write.
   // ----------------------------------------------------------------
   task zeroize_and_wait();

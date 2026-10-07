@@ -24,8 +24,8 @@
 `default_nettype none
 
 module decompose_tb
-    import arca_decompose_defines_pkg::*;
-    import arca_abr_params_pkg::*;
+    import tessera_decompose_defines_pkg::*;
+    import tessera_abr_params_pkg::*;
 #(
     parameter NUM_WR = 4, //TODO: sample_buffer needs more writes than reads?
     parameter NUM_RD = 4,
@@ -53,7 +53,7 @@ logic [3:0][3:0] coeff_high_tb;
 logic kdone_tb;
 logic verify_tb;
 logic mode_tb;
-arca_decompose dut(
+tessera_decompose dut(
     .clk(clk_tb),
     .reset_n(reset_n_tb),
     .zeroize(zeroize_tb),
@@ -163,7 +163,7 @@ task r1_lut_test;
 endtask
 
 task ctrl_test;
-    $display("Starting arca_decompose ctrl test\n");
+    $display("Starting tessera_decompose ctrl test\n");
     @(posedge clk_tb);
     en_tb = 1'b1;
     @(posedge clk_tb);
@@ -224,7 +224,7 @@ task dcmp_test(logic vfy);
     end
     begin
         // @(posedge clk_tb); //wait for mod_ready to go high
-        //Check arca_decompose outputs w0 and w1
+        //Check tessera_decompose outputs w0 and w1
         while(dut.mod_ready != 'hf) @(posedge clk_tb);
         for(int i = 0; i < 256; i = i+4) begin
             if ({REG_SIZE'(dut.r1_reg[i%4]), REG_SIZE'(dut.r1_reg[i%4+1]), REG_SIZE'(dut.r1_reg[i%4+2]), REG_SIZE'(dut.r1_reg[i%4+3])} != {coeff_high[i], coeff_high[i+1], coeff_high[i+2], coeff_high[i+3]}) begin
@@ -274,7 +274,7 @@ task dcmp_test(logic vfy);
     end
     join
     
-    //Wait for arca_decompose done (i.e., w1 encode done)
+    //Wait for tessera_decompose done (i.e., w1 encode done)
     //Then wait for a fixed time to emulate keccak done and assert it
     while(dut.decompose_done != 1) @(posedge clk_tb);
     repeat(100) @(posedge clk_tb);
@@ -329,10 +329,10 @@ initial begin
     // sample_buffer_test();
     // r1_lut_test();
     // ctrl_test();
-    $display("Signing arca_decompose\n");
+    $display("Signing tessera_decompose\n");
     mode_tb = sign_op;
     dcmp_test(0);
-    $display("Verify arca_decompose\n");
+    $display("Verify tessera_decompose\n");
     mode_tb = verify_op;
     dcmp_test(1);
     // encode_test();

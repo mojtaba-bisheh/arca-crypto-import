@@ -24,8 +24,8 @@
 `default_nettype none
 
 module norm_check_tb
-  import arca_abr_params_pkg::*;
-    import arca_norm_check_defines_pkg::*;
+  import tessera_abr_params_pkg::*;
+    import tessera_norm_check_defines_pkg::*;
 #(
     parameter NUM_WR = 4,
     parameter NUM_RD = 4,
@@ -91,7 +91,7 @@ generate
     end
 endgenerate
 
-arca_norm_check_top dut(
+tessera_norm_check_top dut(
     .clk(clk_tb),
     .reset_n(reset_n_tb),
     .zeroize(zeroize_tb),

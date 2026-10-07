@@ -61,7 +61,7 @@ def cbd(seed):
     global MLKEM_ETA
     global buff_arr
 
-    def arca_cbd_sampler(xof):
+    def tessera_cbd_sampler(xof):
         global buff_arr
         while True:
             js = []
@@ -98,7 +98,7 @@ def cbd(seed):
     buff_arr = bytearray()
     coeffs = []
     while len(coeffs) < MLKEM_N:
-        js = arca_cbd_sampler(Shake256)
+        js = tessera_cbd_sampler(Shake256)
         coeffs += js
 
     # Remove the last byte if we ended up overfilling
@@ -111,7 +111,7 @@ def cbd(seed):
 input_seeds = open("input_seeds.txt", "r")
 input_vectors = open("input_vectors.txt", "w")
 exp_results = open("exp_results.txt", "w")
-log_file = open("arca_cbd_sampler.log", "w")
+log_file = open("tessera_cbd_sampler.log", "w")
 Lines = input_seeds.readlines()
 
 for line in Lines:

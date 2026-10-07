@@ -39,28 +39,28 @@ interface hmac256_ctrl_cov_if
 
     logic [4:0] hmac256_cmd;
 
-    assign init       = arca_hmac256_ctrl.hmac256_inst.init_reg;
-    assign next       = arca_hmac256_ctrl.hmac256_inst.next_reg;
-    assign zeroize    = arca_hmac256_ctrl.hmac256_inst.zeroize_reg;
-    assign mode       = arca_hmac256_ctrl.hmac256_inst.mode_reg;
-    assign last       = arca_hmac256_ctrl.hmac256_inst.last_reg;
-    assign ready      = arca_hmac256_ctrl.hmac256_inst.ready_reg;
-    assign valid      = arca_hmac256_ctrl.hmac256_inst.tag_valid_reg;
-    assign restore    = arca_hmac256_ctrl.hmac256_inst.restore_reg;
-    assign is_last_op = arca_hmac256_ctrl.hmac256_inst.is_last_op_reg;
+    assign init       = tessera_hmac256_ctrl.hmac256_inst.init_reg;
+    assign next       = tessera_hmac256_ctrl.hmac256_inst.next_reg;
+    assign zeroize    = tessera_hmac256_ctrl.hmac256_inst.zeroize_reg;
+    assign mode       = tessera_hmac256_ctrl.hmac256_inst.mode_reg;
+    assign last       = tessera_hmac256_ctrl.hmac256_inst.last_reg;
+    assign ready      = tessera_hmac256_ctrl.hmac256_inst.ready_reg;
+    assign valid      = tessera_hmac256_ctrl.hmac256_inst.tag_valid_reg;
+    assign restore    = tessera_hmac256_ctrl.hmac256_inst.restore_reg;
+    assign is_last_op = tessera_hmac256_ctrl.hmac256_inst.is_last_op_reg;
 
-    assign core_tag_we = arca_hmac256_ctrl.hmac256_inst.core_tag_we;
+    assign core_tag_we = tessera_hmac256_ctrl.hmac256_inst.core_tag_we;
 
-    assign awaiting_zeroize       = arca_hmac256_ctrl.hmac256_inst.awaiting_zeroize;
-    assign invalid_cmd_error_edge = arca_hmac256_ctrl.hmac256_inst.invalid_cmd_error_edge;
-    assign debug_scan_zeroize     = arca_hmac256_ctrl.hmac256_inst.debugUnlock_or_scan_mode_switch;
+    assign awaiting_zeroize       = tessera_hmac256_ctrl.hmac256_inst.awaiting_zeroize;
+    assign invalid_cmd_error_edge = tessera_hmac256_ctrl.hmac256_inst.invalid_cmd_error_edge;
+    assign debug_scan_zeroize     = tessera_hmac256_ctrl.hmac256_inst.debugUnlock_or_scan_mode_switch;
 
     // hmac256_cmd bit layout: {restore, last, next, init, zeroize}.
-    assign hmac256_cmd = {arca_hmac256_ctrl.hmac256_inst.hwif_out.HMAC256_CTRL.RESTORE.value,
-                          arca_hmac256_ctrl.hmac256_inst.hwif_out.HMAC256_CTRL.LAST.value,
-                          arca_hmac256_ctrl.hmac256_inst.hwif_out.HMAC256_CTRL.NEXT.value,
-                          arca_hmac256_ctrl.hmac256_inst.hwif_out.HMAC256_CTRL.INIT.value,
-                          arca_hmac256_ctrl.hmac256_inst.hwif_out.HMAC256_CTRL.ZEROIZE.value};
+    assign hmac256_cmd = {tessera_hmac256_ctrl.hmac256_inst.hwif_out.HMAC256_CTRL.RESTORE.value,
+                          tessera_hmac256_ctrl.hmac256_inst.hwif_out.HMAC256_CTRL.LAST.value,
+                          tessera_hmac256_ctrl.hmac256_inst.hwif_out.HMAC256_CTRL.NEXT.value,
+                          tessera_hmac256_ctrl.hmac256_inst.hwif_out.HMAC256_CTRL.INIT.value,
+                          tessera_hmac256_ctrl.hmac256_inst.hwif_out.HMAC256_CTRL.ZEROIZE.value};
 
     covergroup hmac256_ctrl_cov_grp @(posedge clk);
         reset_cp: coverpoint reset_n;

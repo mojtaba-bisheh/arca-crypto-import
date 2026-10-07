@@ -10,7 +10,7 @@
 // Description: HMAC256_invalid_cmd_error_sequence
 //   Walk every 5-bit CTRL encoding {restore, last, next, init, zeroize}
 //   for both HMAC256 modes (HMAC-224 and HMAC-256). For each combination:
-//     - predict whether it is legal or illegal per arca_hmac256.sv
+//     - predict whether it is legal or illegal per tessera_hmac256.sv
 //       invalid_cmd_error
 //     - drive the CTRL beat
 //     - if illegal: check STATUS.VALID stays 0 and error0_sts asserts
@@ -34,7 +34,7 @@ class HMAC256_invalid_cmd_error_sequence extends HMAC256_bench_sequence_base;
     super.new(name);
   endfunction
 
-  // Mirrors arca_hmac256.sv invalid_cmd_error.
+  // Mirrors tessera_hmac256.sv invalid_cmd_error.
   function bit is_illegal(bit [4:0] cmd);
     bit init_b    = cmd[CMD_INIT];
     bit next_b    = cmd[CMD_NEXT];

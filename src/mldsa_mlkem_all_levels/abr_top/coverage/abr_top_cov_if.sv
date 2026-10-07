@@ -15,9 +15,9 @@
 `ifndef VERILATOR
 
 interface abr_top_cov_if
-    import arca_abr_params_pkg::*;
-    import arca_abr_ctrl_pkg::*;
-    import arca_abr_sampler_pkg::*;
+    import tessera_abr_params_pkg::*;
+    import tessera_abr_ctrl_pkg::*;
+    import tessera_abr_sampler_pkg::*;
     `ifdef CALIPTRA
     import kv_defines_pkg::*; 
     `endif  
@@ -69,20 +69,20 @@ interface abr_top_cov_if
     logic kv_mlkem_seed_data_present;
     logic kv_mlkem_msg_data_present;
 
-    assign pcr_sign_input_invalid = arca_abr_top.abr_ctrl_inst.pcr_sign_input_invalid;
-    assign pcr_sign_mode = arca_abr_top.abr_ctrl_inst.pcr_sign_mode;
+    assign pcr_sign_input_invalid = tessera_abr_top.abr_ctrl_inst.pcr_sign_input_invalid;
+    assign pcr_sign_mode = tessera_abr_top.abr_ctrl_inst.pcr_sign_mode;
     
-    assign kv_mldsa_seed_data_present = arca_abr_top.abr_ctrl_inst.kv_mldsa_seed_data_present;
-    assign kv_mlkem_seed_data_present = arca_abr_top.abr_ctrl_inst.kv_mlkem_seed_data_present;
-    assign kv_mlkem_msg_data_present  = arca_abr_top.abr_ctrl_inst.kv_mlkem_msg_data_present;
+    assign kv_mldsa_seed_data_present = tessera_abr_top.abr_ctrl_inst.kv_mldsa_seed_data_present;
+    assign kv_mlkem_seed_data_present = tessera_abr_top.abr_ctrl_inst.kv_mlkem_seed_data_present;
+    assign kv_mlkem_msg_data_present  = tessera_abr_top.abr_ctrl_inst.kv_mlkem_msg_data_present;
 
     logic mldsa_seed_zero_error;
     logic mlkem_seed_zero_error;
     logic mlkem_msg_zero_error;
 
-    assign mldsa_seed_zero_error = arca_abr_top.abr_ctrl_inst.mldsa_seed_zero_error;
-    assign mlkem_seed_zero_error = arca_abr_top.abr_ctrl_inst.mlkem_seed_zero_error;
-    assign mlkem_msg_zero_error  = arca_abr_top.abr_ctrl_inst.mlkem_msg_zero_error;
+    assign mldsa_seed_zero_error = tessera_abr_top.abr_ctrl_inst.mldsa_seed_zero_error;
+    assign mlkem_seed_zero_error = tessera_abr_top.abr_ctrl_inst.mlkem_seed_zero_error;
+    assign mlkem_msg_zero_error  = tessera_abr_top.abr_ctrl_inst.mlkem_msg_zero_error;
 
     always_ff @(posedge clk) begin
         if (!rst_b) begin
@@ -100,128 +100,128 @@ interface abr_top_cov_if
     kv_write_ctrl_reg_t kv_write_ctrl_reg;
     kv_read_ctrl_reg_t kv_read_ctrl_reg;
 
-    assign kv_write_metrics = arca_abr_top.abr_ctrl_inst.kv_mlkem_sharedkey_write_metrics;
-    assign kv_write_ctrl_reg = arca_abr_top.abr_ctrl_inst.kv_mlkem_sharedkey_write_ctrl_reg;
-    assign kv_read_ctrl_reg = arca_abr_top.abr_ctrl_inst.kv_mldsa_seed_read_ctrl_reg;
+    assign kv_write_metrics = tessera_abr_top.abr_ctrl_inst.kv_mlkem_sharedkey_write_metrics;
+    assign kv_write_ctrl_reg = tessera_abr_top.abr_ctrl_inst.kv_mlkem_sharedkey_write_ctrl_reg;
+    assign kv_read_ctrl_reg = tessera_abr_top.abr_ctrl_inst.kv_mldsa_seed_read_ctrl_reg;
     `endif
 
-    assign mldsa_cmd = arca_abr_top.abr_ctrl_inst.mldsa_cmd_reg;
-    assign mlkem_cmd = arca_abr_top.abr_ctrl_inst.mlkem_cmd_reg;
-    assign zeroize = arca_abr_top.abr_ctrl_inst.zeroize;
-    assign ready = arca_abr_top.abr_ctrl_inst.abr_ready;
-    assign mldsa_valid = arca_abr_top.abr_ctrl_inst.mldsa_valid_reg;
-    assign mlkem_valid = arca_abr_top.abr_ctrl_inst.mlkem_valid_reg;
+    assign mldsa_cmd = tessera_abr_top.abr_ctrl_inst.mldsa_cmd_reg;
+    assign mlkem_cmd = tessera_abr_top.abr_ctrl_inst.mlkem_cmd_reg;
+    assign zeroize = tessera_abr_top.abr_ctrl_inst.zeroize;
+    assign ready = tessera_abr_top.abr_ctrl_inst.abr_ready;
+    assign mldsa_valid = tessera_abr_top.abr_ctrl_inst.mldsa_valid_reg;
+    assign mlkem_valid = tessera_abr_top.abr_ctrl_inst.mlkem_valid_reg;
 
     always_ff @(posedge clk) begin
         if (!rst_b) begin
             mldsa_sw_cmd <= '0;
         end
-        else if (arca_abr_top.abr_reg_inst.decoded_reg_strb.MLDSA_CTRL && arca_abr_top.abr_reg_inst.decoded_req_is_wr) begin // SW write
-            mldsa_sw_cmd <= (arca_abr_top.abr_reg_inst.field_storage.MLDSA_CTRL.CTRL.value & ~arca_abr_top.abr_reg_inst.decoded_wr_biten[2:0]) | (arca_abr_top.abr_reg_inst.decoded_wr_data[2:0] & arca_abr_top.abr_reg_inst.decoded_wr_biten[2:0]);
+        else if (tessera_abr_top.abr_reg_inst.decoded_reg_strb.MLDSA_CTRL && tessera_abr_top.abr_reg_inst.decoded_req_is_wr) begin // SW write
+            mldsa_sw_cmd <= (tessera_abr_top.abr_reg_inst.field_storage.MLDSA_CTRL.CTRL.value & ~tessera_abr_top.abr_reg_inst.decoded_wr_biten[2:0]) | (tessera_abr_top.abr_reg_inst.decoded_wr_data[2:0] & tessera_abr_top.abr_reg_inst.decoded_wr_biten[2:0]);
         end
     end
 
 
-    assign error_flag = arca_abr_top.abr_ctrl_inst.error_flag | arca_abr_top.abr_ctrl_inst.error_flag_reg;
-    assign skdecode_error = arca_abr_top.abr_ctrl_inst.skdecode_error_i;
+    assign error_flag = tessera_abr_top.abr_ctrl_inst.error_flag | tessera_abr_top.abr_ctrl_inst.error_flag_reg;
+    assign skdecode_error = tessera_abr_top.abr_ctrl_inst.skdecode_error_i;
 
-    assign mldsa_keygen_process = arca_abr_top.abr_ctrl_inst.mldsa_keygen_process;
-    assign mldsa_signing_process = arca_abr_top.abr_ctrl_inst.mldsa_signing_process;
-    assign mldsa_verifying_process = arca_abr_top.abr_ctrl_inst.mldsa_verifying_process;
-    assign mldsa_keygen_signing_process = arca_abr_top.abr_ctrl_inst.mldsa_keygen_signing_process;
-    assign mlkem_keygen_process = arca_abr_top.abr_ctrl_inst.mlkem_keygen_process;
-    assign mlkem_encaps_process = arca_abr_top.abr_ctrl_inst.mlkem_encaps_process;
-    assign mlkem_decaps_process = arca_abr_top.abr_ctrl_inst.mlkem_decaps_process;
-    assign mlkem_keygen_decaps_process = arca_abr_top.abr_ctrl_inst.mlkem_keygen_decaps_process;
+    assign mldsa_keygen_process = tessera_abr_top.abr_ctrl_inst.mldsa_keygen_process;
+    assign mldsa_signing_process = tessera_abr_top.abr_ctrl_inst.mldsa_signing_process;
+    assign mldsa_verifying_process = tessera_abr_top.abr_ctrl_inst.mldsa_verifying_process;
+    assign mldsa_keygen_signing_process = tessera_abr_top.abr_ctrl_inst.mldsa_keygen_signing_process;
+    assign mlkem_keygen_process = tessera_abr_top.abr_ctrl_inst.mlkem_keygen_process;
+    assign mlkem_encaps_process = tessera_abr_top.abr_ctrl_inst.mlkem_encaps_process;
+    assign mlkem_decaps_process = tessera_abr_top.abr_ctrl_inst.mlkem_decaps_process;
+    assign mlkem_keygen_decaps_process = tessera_abr_top.abr_ctrl_inst.mlkem_keygen_decaps_process;
 
-    assign verify_failure = arca_abr_top.abr_ctrl_inst.clear_verify_valid;
-    assign normcheck_failure = arca_abr_top.abr_ctrl_inst.normcheck_done_i & arca_abr_top.abr_ctrl_inst.normcheck_invalid_i;
-    assign normcheck_mode[0] = (arca_abr_top.abr_ctrl_inst.normcheck_mode_o == 2'b00);
-    assign normcheck_mode[1] = (arca_abr_top.abr_ctrl_inst.normcheck_mode_o == 2'b01);
-    assign normcheck_mode[2] = (arca_abr_top.abr_ctrl_inst.normcheck_mode_o == 2'b10);
-    assign makehint_failure = arca_abr_top.abr_ctrl_inst.makehint_done_i & arca_abr_top.abr_ctrl_inst.makehint_invalid_i;
-    assign invalid_hint = arca_abr_top.abr_ctrl_inst.sigdecode_h_invalid_i;
-    assign external_mu_mode = arca_abr_top.abr_ctrl_inst.external_mu_mode;
-    assign stream_msg_mode = arca_abr_top.abr_ctrl_inst.stream_msg_mode;
-    assign stream_msg_ip = arca_abr_top.abr_ctrl_inst.stream_msg_ip;
+    assign verify_failure = tessera_abr_top.abr_ctrl_inst.clear_verify_valid;
+    assign normcheck_failure = tessera_abr_top.abr_ctrl_inst.normcheck_done_i & tessera_abr_top.abr_ctrl_inst.normcheck_invalid_i;
+    assign normcheck_mode[0] = (tessera_abr_top.abr_ctrl_inst.normcheck_mode_o == 2'b00);
+    assign normcheck_mode[1] = (tessera_abr_top.abr_ctrl_inst.normcheck_mode_o == 2'b01);
+    assign normcheck_mode[2] = (tessera_abr_top.abr_ctrl_inst.normcheck_mode_o == 2'b10);
+    assign makehint_failure = tessera_abr_top.abr_ctrl_inst.makehint_done_i & tessera_abr_top.abr_ctrl_inst.makehint_invalid_i;
+    assign invalid_hint = tessera_abr_top.abr_ctrl_inst.sigdecode_h_invalid_i;
+    assign external_mu_mode = tessera_abr_top.abr_ctrl_inst.external_mu_mode;
+    assign stream_msg_mode = tessera_abr_top.abr_ctrl_inst.stream_msg_mode;
+    assign stream_msg_ip = tessera_abr_top.abr_ctrl_inst.stream_msg_ip;
 
     // =========================================================================
     // SCA / Masking Coverage Signals
     // =========================================================================
 
-    // Masking control signals from arca_abr_ctrl
+    // Masking control signals from tessera_abr_ctrl
     logic sca_ntt_masking_en;
     logic sca_ntt_shuffling_en;
     logic sca_split_en;
     logic sca_recombine_en;
 
-    assign sca_ntt_masking_en   = arca_abr_top.ntt_masking_en_ctrl;
-    assign sca_ntt_shuffling_en = arca_abr_top.ntt_shuffling_en_ctrl;
-    assign sca_split_en         = arca_abr_top.split_en;
-    assign sca_recombine_en     = arca_abr_top.recombine_en;
+    assign sca_ntt_masking_en   = tessera_abr_top.ntt_masking_en_ctrl;
+    assign sca_ntt_shuffling_en = tessera_abr_top.ntt_shuffling_en_ctrl;
+    assign sca_split_en         = tessera_abr_top.split_en;
+    assign sca_recombine_en     = tessera_abr_top.recombine_en;
 
     // NTT[1] enable (dual-NTT activation) — only exists when MASKING_EN=1
     logic sca_ntt1_enable;
-    assign sca_ntt1_enable = (arca_abr_top.ABR_NUM_NTT > 1) ? arca_abr_top.ntt_enable[arca_abr_top.MASKED_IDX] : 1'b0;
+    assign sca_ntt1_enable = (tessera_abr_top.ABR_NUM_NTT > 1) ? tessera_abr_top.ntt_enable[tessera_abr_top.MASKED_IDX] : 1'b0;
 
     // NTT[0] enable (primary NTT — always active for NTT ops)
     logic sca_ntt0_enable;
-    assign sca_ntt0_enable = arca_abr_top.ntt_enable[0];
+    assign sca_ntt0_enable = tessera_abr_top.ntt_enable[0];
 
     // NTT mode for NTT[0] (primary) — covers all operation types including RECOMBINE
     // NOTE: Use packed logic instead of enum types to avoid VCS partition-compile
     // "different enum types" errors when this cov_if is elaborated in both RTL
     // and TB scopes (the imported pkg ends up duplicated across scopes).
     logic [4:0] sca_ntt0_mode;
-    assign sca_ntt0_mode = arca_abr_top.ntt_mode[0];
+    assign sca_ntt0_mode = tessera_abr_top.ntt_mode[0];
 
     // NTT mode for NTT[1] — should exercise subset of modes when MASKING_EN=1
     logic [4:0] sca_ntt1_mode;
-    assign sca_ntt1_mode = (arca_abr_top.ABR_NUM_NTT > 1) ? 5'(arca_abr_top.ntt_mode[arca_abr_top.MASKED_IDX]) : 5'(ABR_NTT_NONE);
+    assign sca_ntt1_mode = (tessera_abr_top.ABR_NUM_NTT > 1) ? 5'(tessera_abr_top.ntt_mode[tessera_abr_top.MASKED_IDX]) : 5'(ABR_NTT_NONE);
 
     // Opcode masking/shuffling bits from the instruction
     logic sca_opcode_masking_en;
     logic sca_opcode_shuffling_en;
     logic sca_opcode_ntt_en;
 
-    assign sca_opcode_masking_en   = arca_abr_top.abr_ctrl_inst.abr_instr.opcode.masking_en;
-    assign sca_opcode_shuffling_en = arca_abr_top.abr_ctrl_inst.abr_instr.opcode.shuffling_en;
-    assign sca_opcode_ntt_en       = arca_abr_top.abr_ctrl_inst.abr_instr.opcode.ntt_en;
+    assign sca_opcode_masking_en   = tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.masking_en;
+    assign sca_opcode_shuffling_en = tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.shuffling_en;
+    assign sca_opcode_ntt_en       = tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.ntt_en;
 
     // Splitter activity — sampler splitter (one of the three splitter instances)
     logic sca_sampler_splitter_en;
     logic sca_sampler_splitter_ready;
-    assign sca_sampler_splitter_en    = arca_abr_top.sampler_top_inst.u_splitter.en_i;
-    assign sca_sampler_splitter_ready = arca_abr_top.sampler_top_inst.u_splitter.ready_o;
+    assign sca_sampler_splitter_en    = tessera_abr_top.sampler_top_inst.u_splitter.en_i;
+    assign sca_sampler_splitter_ready = tessera_abr_top.sampler_top_inst.u_splitter.ready_o;
 
     // Splitter activity — skdecode has two splitters (port A and port B)
     logic sca_skdecode_splitter_a_en;
     logic sca_skdecode_splitter_b_en;
-    assign sca_skdecode_splitter_a_en = arca_abr_top.skdecode_inst.u_splitter_a.en_i;
-    assign sca_skdecode_splitter_b_en = arca_abr_top.skdecode_inst.u_splitter_b.en_i;
+    assign sca_skdecode_splitter_a_en = tessera_abr_top.skdecode_inst.u_splitter_a.en_i;
+    assign sca_skdecode_splitter_b_en = tessera_abr_top.skdecode_inst.u_splitter_b.en_i;
 
-    // Splitter activity — arca_decompress splitter
+    // Splitter activity — tessera_decompress splitter
     logic sca_decompress_splitter_en;
-    assign sca_decompress_splitter_en = arca_abr_top.decompress_top_inst.u_splitter.en_i;
+    assign sca_decompress_splitter_en = tessera_abr_top.decompress_top_inst.u_splitter.en_i;
 
     // Splitter rand reduction — detect when LFSR rand >= q (reduction path exercised)
     logic sca_splitter_rand_reduced;
-    assign sca_splitter_rand_reduced = arca_abr_top.sampler_top_inst.u_splitter.rand_raw[0] >=
-                                       arca_abr_top.sampler_top_inst.u_splitter.prime;
+    assign sca_splitter_rand_reduced = tessera_abr_top.sampler_top_inst.u_splitter.rand_raw[0] >=
+                                       tessera_abr_top.sampler_top_inst.u_splitter.prime;
 
     // Recombine pipeline depth tracking
     logic sca_recombine_en_pipe_last;
-    assign sca_recombine_en_pipe_last = arca_abr_top.recombine_en_pipe[arca_abr_top.SRAM_LATENCY];
+    assign sca_recombine_en_pipe_last = tessera_abr_top.recombine_en_pipe[tessera_abr_top.SRAM_LATENCY];
 
     // NTT[1] SIB read pipeline (bug 9 fix — ntt_sib_rd_detect_d1[0] gates NTT[1] valid)
     logic sca_ntt_sib_rd_detect_d1;
-    assign sca_ntt_sib_rd_detect_d1 = arca_abr_top.ntt_sib_rd_detect_d1[0];
+    assign sca_ntt_sib_rd_detect_d1 = tessera_abr_top.ntt_sib_rd_detect_d1[0];
 
     // Recombine pipeline first stage (bug 3 fix — recombine_en_pipe timing)
     logic sca_recombine_en_pipe_first;
-    assign sca_recombine_en_pipe_first = arca_abr_top.recombine_en_pipe[0];
+    assign sca_recombine_en_pipe_first = tessera_abr_top.recombine_en_pipe[0];
 
-    // Per-consumer fused-recombine coverage taps — re-derived from arca_abr_ctrl
+    // Per-consumer fused-recombine coverage taps — re-derived from tessera_abr_ctrl
     // opcode (per-consumer enables collapsed to single recombine_en at source).
     logic sca_pws_recombine_en;
     logic sca_normchk_recombine_en;
@@ -232,57 +232,57 @@ interface abr_top_cov_if
     logic sca_pwr2rnd_recombine_en;
 
     // NOTE: cast both sides of enum comparisons to packed logic to avoid VCS
-    // DTIE/DTIIO "different enum types" errors caused by arca_abr_ctrl_pkg being
+    // DTIE/DTIIO "different enum types" errors caused by tessera_abr_ctrl_pkg being
     // elaborated in both RTL and TB scopes (see note above at sca_ntt0_mode).
-    assign sca_pws_recombine_en       = arca_abr_top.MASKING_EN
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.ntt_en
-                                      & (5'(arca_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.ntt_mode) inside {5'(MLDSA_PWS), 5'(MLKEM_PWS), 5'(MLDSA_PWA)});
-    assign sca_normchk_recombine_en   = arca_abr_top.MASKING_EN
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.aux_en
-                                      & (5'(arca_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.aux_mode) == 5'(MLDSA_NORMCHK));
-    assign sca_sigencode_recombine_en = arca_abr_top.MASKING_EN
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.aux_en
-                                      & (5'(arca_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.aux_mode) == 5'(MLDSA_SIGENC));
-    assign sca_compress_recombine_en  = arca_abr_top.MASKING_EN
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.aux_en
-                                      & (5'(arca_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.aux_mode) == 5'(MLKEM_COMPRESS));
-    assign sca_skencode_recombine_en  = arca_abr_top.MASKING_EN
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.aux_en
-                                      & (5'(arca_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.aux_mode) == 5'(MLDSA_SKENCODE));
-    assign sca_decompose_recombine_en = arca_abr_top.MASKING_EN
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.aux_en
-                                      & (5'(arca_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.aux_mode) == 5'(MLDSA_DECOMP));
-    assign sca_pwr2rnd_recombine_en   = arca_abr_top.MASKING_EN
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
-                                      & arca_abr_top.abr_ctrl_inst.abr_instr.opcode.aux_en
-                                      & (5'(arca_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.aux_mode) == 5'(MLDSA_PWR2RND));
+    assign sca_pws_recombine_en       = tessera_abr_top.MASKING_EN
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.ntt_en
+                                      & (5'(tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.ntt_mode) inside {5'(MLDSA_PWS), 5'(MLKEM_PWS), 5'(MLDSA_PWA)});
+    assign sca_normchk_recombine_en   = tessera_abr_top.MASKING_EN
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.aux_en
+                                      & (5'(tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.aux_mode) == 5'(MLDSA_NORMCHK));
+    assign sca_sigencode_recombine_en = tessera_abr_top.MASKING_EN
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.aux_en
+                                      & (5'(tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.aux_mode) == 5'(MLDSA_SIGENC));
+    assign sca_compress_recombine_en  = tessera_abr_top.MASKING_EN
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.aux_en
+                                      & (5'(tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.aux_mode) == 5'(MLKEM_COMPRESS));
+    assign sca_skencode_recombine_en  = tessera_abr_top.MASKING_EN
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.aux_en
+                                      & (5'(tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.aux_mode) == 5'(MLDSA_SKENCODE));
+    assign sca_decompose_recombine_en = tessera_abr_top.MASKING_EN
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.aux_en
+                                      & (5'(tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.aux_mode) == 5'(MLDSA_DECOMP));
+    assign sca_pwr2rnd_recombine_en   = tessera_abr_top.MASKING_EN
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.recombine_en
+                                      & tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.aux_en
+                                      & (5'(tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.aux_mode) == 5'(MLDSA_PWR2RND));
 
     // Build-time MASKING_EN tap for cross axes.
     logic sca_masking_en_param;
-    assign sca_masking_en_param = arca_abr_top.MASKING_EN;
+    assign sca_masking_en_param = tessera_abr_top.MASKING_EN;
 
     // Sampler opcode mode (covers masked-sampling dispatch).
     // Packed logic to dodge VCS dual-scope enum mismatch (see note above).
     logic [4:0] sca_sampler_mode;
-    assign sca_sampler_mode = arca_abr_top.sampler_mode;
+    assign sca_sampler_mode = tessera_abr_top.sampler_mode;
 
     // NTT[0]/NTT[1] mode match indicator — when masking, modes should be identical
     logic sca_ntt_modes_match;
-    assign sca_ntt_modes_match = (arca_abr_top.ABR_NUM_NTT > 1) ?
-                                 (arca_abr_top.ntt_mode[0] == arca_abr_top.ntt_mode[arca_abr_top.MASKED_IDX]) : 1'b1;
+    assign sca_ntt_modes_match = (tessera_abr_top.ABR_NUM_NTT > 1) ?
+                                 (tessera_abr_top.ntt_mode[0] == tessera_abr_top.ntt_mode[tessera_abr_top.MASKED_IDX]) : 1'b1;
 
     // MASKED_NTT_NOSHUF detection (bug 6 fix — masking=1, shuffling=0, mode=MLDSA_NTT for NTT(c))
     // Distinguished from REJS_MASKED_* which also have masking=1,shuffling=0 but use PWM_SMPL modes.
     // Re-tap the RTL ntt_mode into a packed-logic local so the == compares values, not
     // cross-scope enum types (VCS partcomp duplicates the pkg across RTL/TB scopes).
     logic [4:0] sca_instr_ntt_mode;
-    assign sca_instr_ntt_mode = arca_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.ntt_mode;
+    assign sca_instr_ntt_mode = tessera_abr_top.abr_ctrl_inst.abr_instr.opcode.mode.ntt_mode;
     logic sca_masked_noshuf;
     assign sca_masked_noshuf = sca_opcode_masking_en & ~sca_opcode_shuffling_en &
                                sca_opcode_ntt_en &
@@ -290,18 +290,18 @@ interface abr_top_cov_if
 
     // Zeroize signal (re-tap for SCA covergroup local use)
     logic sca_zeroize;
-    assign sca_zeroize = arca_abr_top.abr_ctrl_inst.zeroize;
+    assign sca_zeroize = tessera_abr_top.abr_ctrl_inst.zeroize;
 
     // VERIFY_RES poison-init: re-tap signals that drive `clear_verify_valid`
-    // so we can cover that both abort paths fire. By design (arca_abr_ctrl.sv:806-810,
+    // so we can cover that both abort paths fire. By design (tessera_abr_ctrl.sv:806-810,
     // hwclr = zeroize only), VERIFY_RES retains the poison `~c~` whenever
     // clear_verify_valid asserts — coverage on the two source bits is sufficient.
     logic sca_clear_verify_valid;
     logic sca_normcheck_invalid;
     logic sca_sigdecode_h_invalid;
-    assign sca_clear_verify_valid  = arca_abr_top.abr_ctrl_inst.clear_verify_valid;
-    assign sca_normcheck_invalid   = arca_abr_top.abr_ctrl_inst.normcheck_invalid_i;
-    assign sca_sigdecode_h_invalid = arca_abr_top.abr_ctrl_inst.sigdecode_h_invalid_i;
+    assign sca_clear_verify_valid  = tessera_abr_top.abr_ctrl_inst.clear_verify_valid;
+    assign sca_normcheck_invalid   = tessera_abr_top.abr_ctrl_inst.normcheck_invalid_i;
+    assign sca_sigdecode_h_invalid = tessera_abr_top.abr_ctrl_inst.sigdecode_h_invalid_i;
 
     // =========================================================================
     // SCA Covergroup
@@ -405,7 +405,7 @@ interface abr_top_cov_if
             bins none      = {ABR_SAMPLER_NONE};
             bins mldsa_rej = {MLDSA_REJ_SAMPLER};
             bins mlkem_rej = {MLKEM_REJ_SAMPLER};
-            bins arca_exp_mask  = {ABR_EXP_MASK};
+            bins tessera_exp_mask  = {ABR_EXP_MASK};
             bins rej_bnd   = {ABR_REJ_BOUNDED};
             bins sib       = {ABR_SAMPLE_IN_BALL};
             bins cbd       = {ABR_CBD_SAMPLER};
@@ -574,7 +574,7 @@ interface abr_top_cov_if
         compress_recombineXmlkem_decaps:    cross compress_recombine_en_cp,  sca_mlkem_decaps_cp;
 
         // --- Per-splitter masking-off invariant ---
-        // Each splitter instance (sampler / skdecode_a / skdecode_b / arca_decompress) is
+        // Each splitter instance (sampler / skdecode_a / skdecode_b / tessera_decompress) is
         // driven by local module logic, NOT directly by the top-level split_en.
         // The local enable is allowed only during a masked opcode → en_i=1 with
         // opcode.masking_en=0 indicates the local gate is broken.
@@ -599,7 +599,7 @@ interface abr_top_cov_if
                 binsof(opcode_masking_en_cp) intersect {0};
         }
 
-        // VERIFY_RES poison-init coverage (arca_abr_ctrl.sv:806-810). With hwclr = zeroize
+        // VERIFY_RES poison-init coverage (tessera_abr_ctrl.sv:806-810). With hwclr = zeroize
         // only, the poison `~c~` survives any abort; covering both abort sources
         // proves the retention path was exercised.
         verify_abort_path_cp: coverpoint {sca_normcheck_invalid, sca_sigdecode_h_invalid}
@@ -653,11 +653,11 @@ interface abr_top_cov_if
         normcheck_failure_cp: coverpoint normcheck_failure;
         makehint_failure_cp: coverpoint makehint_failure;
         invalid_hint_cp: coverpoint invalid_hint;
-        clear_decaps_valid_cp: coverpoint arca_abr_top.abr_ctrl_inst.clear_decaps_valid;
-        encaps_input_check_failure_cp: coverpoint arca_abr_top.abr_ctrl_inst.encaps_input_check_failure;
-        decaps_input_check_failure_cp: coverpoint arca_abr_top.abr_ctrl_inst.decaps_input_check_failure;
+        clear_decaps_valid_cp: coverpoint tessera_abr_top.abr_ctrl_inst.clear_decaps_valid;
+        encaps_input_check_failure_cp: coverpoint tessera_abr_top.abr_ctrl_inst.encaps_input_check_failure;
+        decaps_input_check_failure_cp: coverpoint tessera_abr_top.abr_ctrl_inst.decaps_input_check_failure;
 
-        stream_msg_strobe_cp: coverpoint arca_abr_top.abr_ctrl_inst.stream_msg_strobe {
+        stream_msg_strobe_cp: coverpoint tessera_abr_top.abr_ctrl_inst.stream_msg_strobe {
             bins one_byte = {4'b0001};
             bins two_bytes = {4'b0011};
             bins three_bytes = {4'b0111};
@@ -772,21 +772,21 @@ interface abr_top_cov_if
     generate
         for(sig_enc_i = 0; sig_enc_i < NUM_ENC; sig_enc_i++) begin : enc_loop
         // For the upper instance
-        assign eq_flags[sig_enc_i*2]   = (arca_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].upper_encode.data_i == MLDSA_GAMMA1_RANGE);
-        assign less_flags[sig_enc_i*2] = (arca_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].upper_encode.data_i <  MLDSA_GAMMA1_RANGE);
-        assign greater_flags[sig_enc_i*2] = (arca_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].upper_encode.data_i > MLDSA_GAMMA1_RANGE);
+        assign eq_flags[sig_enc_i*2]   = (tessera_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].upper_encode.data_i == MLDSA_GAMMA1_RANGE);
+        assign less_flags[sig_enc_i*2] = (tessera_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].upper_encode.data_i <  MLDSA_GAMMA1_RANGE);
+        assign greater_flags[sig_enc_i*2] = (tessera_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].upper_encode.data_i > MLDSA_GAMMA1_RANGE);
         
         // For the lower instance
-        assign eq_flags[sig_enc_i*2+1]   = (arca_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].lower_encode.data_i == MLDSA_GAMMA1_RANGE);
-        assign less_flags[sig_enc_i*2+1] = (arca_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].lower_encode.data_i <  MLDSA_GAMMA1_RANGE);
-        assign greater_flags[sig_enc_i*2+1] = (arca_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].lower_encode.data_i > MLDSA_GAMMA1_RANGE);
+        assign eq_flags[sig_enc_i*2+1]   = (tessera_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].lower_encode.data_i == MLDSA_GAMMA1_RANGE);
+        assign less_flags[sig_enc_i*2+1] = (tessera_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].lower_encode.data_i <  MLDSA_GAMMA1_RANGE);
+        assign greater_flags[sig_enc_i*2+1] = (tessera_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].lower_encode.data_i > MLDSA_GAMMA1_RANGE);
         end
     endgenerate
 
     // OR-reduce the flags: if any instance meets the condition, the corresponding signal is 1.
-    assign enc_unit_equal   = (|eq_flags) & (arca_abr_top.sigencode_z_inst.state != arca_abr_top.sigencode_z_inst.SIGENCODE_IDLE);
-    assign enc_unit_less    = (|less_flags) & (arca_abr_top.sigencode_z_inst.state != arca_abr_top.sigencode_z_inst.SIGENCODE_IDLE);
-    assign enc_unit_greater = (|greater_flags) & (arca_abr_top.sigencode_z_inst.state != arca_abr_top.sigencode_z_inst.SIGENCODE_IDLE);
+    assign enc_unit_equal   = (|eq_flags) & (tessera_abr_top.sigencode_z_inst.state != tessera_abr_top.sigencode_z_inst.SIGENCODE_IDLE);
+    assign enc_unit_less    = (|less_flags) & (tessera_abr_top.sigencode_z_inst.state != tessera_abr_top.sigencode_z_inst.SIGENCODE_IDLE);
+    assign enc_unit_greater = (|greater_flags) & (tessera_abr_top.sigencode_z_inst.state != tessera_abr_top.sigencode_z_inst.SIGENCODE_IDLE);
     // Sign_z to cover the aggregated conditions
     covergroup mldsa_sign_z_enc_agg_cg @(posedge clk);
         coverpoint enc_unit_equal {
@@ -812,27 +812,27 @@ interface abr_top_cov_if
     generate
     for (sk_enc_i = 0; sk_enc_i < NUM_ENC; sk_enc_i++) begin : sk_enc_loop
         // For mem_a_rd_data element
-        assign skenc_state0_flags[sk_enc_i*2]    = (arca_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == 'h0);
-        assign skenc_state1_flags[sk_enc_i*2]    = (arca_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == 'h1);
-        assign skenc_state2_flags[sk_enc_i*2]    = (arca_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == 'h2);
-        assign skenc_state_mq1_flags[sk_enc_i*2] = (arca_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == MLDSA_Q - 1);
-        assign skenc_state_mq2_flags[sk_enc_i*2] = (arca_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == MLDSA_Q - 2);
+        assign skenc_state0_flags[sk_enc_i*2]    = (tessera_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == 'h0);
+        assign skenc_state1_flags[sk_enc_i*2]    = (tessera_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == 'h1);
+        assign skenc_state2_flags[sk_enc_i*2]    = (tessera_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == 'h2);
+        assign skenc_state_mq1_flags[sk_enc_i*2] = (tessera_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == MLDSA_Q - 1);
+        assign skenc_state_mq2_flags[sk_enc_i*2] = (tessera_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == MLDSA_Q - 2);
         // For mem_b_rd_data element
-        assign skenc_state0_flags[sk_enc_i*2+1]    = (arca_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == 'h0);
-        assign skenc_state1_flags[sk_enc_i*2+1]    = (arca_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == 'h1);
-        assign skenc_state2_flags[sk_enc_i*2+1]    = (arca_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == 'h2);
-        assign skenc_state_mq1_flags[sk_enc_i*2+1] = (arca_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == MLDSA_Q - 1);
-        assign skenc_state_mq2_flags[sk_enc_i*2+1] = (arca_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == MLDSA_Q - 2);
+        assign skenc_state0_flags[sk_enc_i*2+1]    = (tessera_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == 'h0);
+        assign skenc_state1_flags[sk_enc_i*2+1]    = (tessera_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == 'h1);
+        assign skenc_state2_flags[sk_enc_i*2+1]    = (tessera_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == 'h2);
+        assign skenc_state_mq1_flags[sk_enc_i*2+1] = (tessera_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == MLDSA_Q - 1);
+        assign skenc_state_mq2_flags[sk_enc_i*2+1] = (tessera_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == MLDSA_Q - 2);
     end
     endgenerate
 
     // OR-reduce each set of flags and ensure the FSM is not in IDLE.
-    // (Assuming arca_abr_top.skencode_inst.state and its IDLE constant are accessible.)
-    assign skenc_state0_agg    = (|skenc_state0_flags)    & (arca_abr_top.skencode_inst.main_state != arca_abr_top.skencode_inst.SKENC_IDLE);
-    assign skenc_state1_agg    = (|skenc_state1_flags)    & (arca_abr_top.skencode_inst.main_state != arca_abr_top.skencode_inst.SKENC_IDLE);
-    assign skenc_state2_agg    = (|skenc_state2_flags)    & (arca_abr_top.skencode_inst.main_state != arca_abr_top.skencode_inst.SKENC_IDLE);
-    assign skenc_state_mq1_agg = (|skenc_state_mq1_flags) & (arca_abr_top.skencode_inst.main_state != arca_abr_top.skencode_inst.SKENC_IDLE);
-    assign skenc_state_mq2_agg = (|skenc_state_mq2_flags) & (arca_abr_top.skencode_inst.main_state != arca_abr_top.skencode_inst.SKENC_IDLE);
+    // (Assuming tessera_abr_top.skencode_inst.state and its IDLE constant are accessible.)
+    assign skenc_state0_agg    = (|skenc_state0_flags)    & (tessera_abr_top.skencode_inst.main_state != tessera_abr_top.skencode_inst.SKENC_IDLE);
+    assign skenc_state1_agg    = (|skenc_state1_flags)    & (tessera_abr_top.skencode_inst.main_state != tessera_abr_top.skencode_inst.SKENC_IDLE);
+    assign skenc_state2_agg    = (|skenc_state2_flags)    & (tessera_abr_top.skencode_inst.main_state != tessera_abr_top.skencode_inst.SKENC_IDLE);
+    assign skenc_state_mq1_agg = (|skenc_state_mq1_flags) & (tessera_abr_top.skencode_inst.main_state != tessera_abr_top.skencode_inst.SKENC_IDLE);
+    assign skenc_state_mq2_agg = (|skenc_state_mq2_flags) & (tessera_abr_top.skencode_inst.main_state != tessera_abr_top.skencode_inst.SKENC_IDLE);
 
     // Now create a covergroup that samples these aggregated flags.
     covergroup mldsa_skencode_agg_cg @(posedge clk);

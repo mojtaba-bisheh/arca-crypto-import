@@ -1,6 +1,6 @@
 uvmf:
   benches:
-    arca_hmac256:
+    tessera_hmac256:
       active_passive:
       - bfm_name: HMAC256_rst_agent
         value: ACTIVE
@@ -14,5 +14,5 @@ uvmf:
       interface_params: []
       reset_assertion_level: 'False'
       reset_duration: 200ns
-      top_env: arca_hmac256
+      top_env: tessera_hmac256
       use_dpi_link: 'False'

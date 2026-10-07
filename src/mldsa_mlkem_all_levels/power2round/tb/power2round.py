@@ -46,7 +46,7 @@ def power2round(coeff):
     r0 = r - (r1 << DILITHIUM_D)
     return r1, r0
 
-def arca_skencode(value):
+def tessera_skencode(value):
     value_encodede = (1 << (DILITHIUM_D-1)) - value
     return f"{value_encodede:0X}"
 
@@ -66,4 +66,4 @@ with open("coeff_input.hex", "w") as input_file, \
         for i in range(DILITHIUM_N):
             input_file.write(f"{vec[poly_index][i]:06X}\n")
             high_file.write(f"{r1_coeffs[i]:X}\n")
-            low_file.write(f"{arca_skencode(r0_coeffs[i])}\n")
+            low_file.write(f"{tessera_skencode(r0_coeffs[i])}\n")

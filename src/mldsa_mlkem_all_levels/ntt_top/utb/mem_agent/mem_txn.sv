@@ -13,7 +13,7 @@
 // limitations under the License.
 //
 // import ntt_utb_defines::*;
-// import arca_ntt_defines_pkg::*;
+// import tessera_ntt_defines_pkg::*;
 // import uvm_pkg::*;
 
 

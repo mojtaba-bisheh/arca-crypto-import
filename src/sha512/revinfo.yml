@@ -1,12 +1,12 @@
-# ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
+# Tessera vendored-block provenance record -- GENERATED, do not edit by hand.
 #
 # To review what changed upstream since this import:
 #   git -C <caliptra-rtl> log --oneline b9ac0e466758d6ba8eac562d8acc3bc5483a2f6a..origin/main -- src/sha512/rtl src/sha512/coverage 
 #
 block: sha512
-prefix: "arca_"
-macro_prefix: "ARCA_"
-imported_at: "2026-10-06T20:22:55Z"
+prefix: "tessera_"
+macro_prefix: "TESSERA_"
+imported_at: "2026-10-07T16:09:13Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -15,20 +15,20 @@ upstream:
   commit_date: "2026-10-06T08:53:38-07:00"
   commit_subject: "Feat/stash bank rfc 673 (#1395)"
   working_tree_dirty: false
-  subtrees:  # upstream path -> ARCA path
-    - { upstream: "src/sha512/rtl", arca: "src/sha512/rtl" }
-    - { upstream: "src/sha512/coverage", arca: "src/sha512/coverage" }
-  collateral_subtrees:  # upstream path -> ARCA path
-    - { upstream: "src/sha512/tb", arca: "src/sha512/tb" }
-    - { upstream: "src/sha512/coverage/config", arca: "src/sha512/coverage/config" }
-    - { upstream: "src/sha512/stimulus", arca: "src/sha512/stimulus" }
-    - { upstream: "src/sha512/uvmf_sha512", arca: "src/sha512/uvmf_sha512" }
+  subtrees:  # upstream path -> Tessera path
+    - { upstream: "src/sha512/rtl", tessera: "src/sha512/rtl" }
+    - { upstream: "src/sha512/coverage", tessera: "src/sha512/coverage" }
+  collateral_subtrees:  # upstream path -> Tessera path
+    - { upstream: "src/sha512/tb", tessera: "src/sha512/tb" }
+    - { upstream: "src/sha512/coverage/config", tessera: "src/sha512/coverage/config" }
+    - { upstream: "src/sha512/stimulus", tessera: "src/sha512/stimulus" }
+    - { upstream: "src/sha512/uvmf_sha512", tessera: "src/sha512/uvmf_sha512" }
   compile_order_from: src/sha512/config/sha512_ctrl.vf
 
 importer:
   script: tools/scripts/rename/rename_sha512.sh
   library_version: "2.1.1"
-  toolchain_fingerprint: "1284e58781c8289a2c3cd42eec109f8598d88650e53189c46693fe0660d56bb7"
+  toolchain_fingerprint: "5af22977c044b5759067967c1e9e3acd69368602818a1d72f07ce977fda4ca2e"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -63,7 +63,7 @@ policy:
     - "src/sha512/uvmf_sha512/SHA512_env_cfg.yaml"
     - "src/sha512/uvmf_sha512/SHA512_interface_cfg.yaml"
     - "src/sha512/uvmf_sha512/SHA512_util_comp.yaml"
-  keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed
+  keep_list:  # shared Tessera platform identifiers, deliberately NOT prefixed
     - "kv_defines_pkg"
     - "kv_read_t"
     - "kv_write_t"
@@ -80,7 +80,7 @@ artifacts:
     - src/sha512/coverage/config
     - src/sha512/stimulus
     - src/sha512/uvmf_sha512
-  filelist: src/sha512/config/arca_sha512_ctrl.vf
+  filelist: src/sha512/config/tessera_sha512_ctrl.vf
   rename_map: src/sha512/revinfo.map
 
 source_manifest:  # sha256 of the upstream files as imported
@@ -257,23 +257,23 @@ source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "a5a65f5101425da8fb477ccd93ee82b49a57bd6ebc13fecd4bfbde9ef6bb5275", path: "src/sha512/uvmf_sha512/uvmf_template_output/verification_ip/interface_packages/SHA512_out_pkg/yaml/SHA512_out_interface.yaml" }
 
 renamed_manifest:  # sha256 of the committed, renamed files
-  - { sha256: "3ab3be926401ba3e7496351489019c02eb92ba9ac43e7d43be596825ff5dc545", path: "src/sha512/config/arca_sha512_ctrl.vf" }
+  - { sha256: "c2fb603da446d7d030e1df3ad34b22d366b7b8d83fa3b14d4b8ef3d81fa3cda7", path: "src/sha512/config/tessera_sha512_ctrl.vf" }
   - { sha256: "43e8c2de78e7da66023af40ffef7e3716b835f82e53de734c280042250a46e32", path: "src/sha512/coverage/config/sha512_cm_hier.cfg" }
-  - { sha256: "62cb2d6e504a7698163184ad71ced3a8aad8eb427c979336040678ea3eaa37dc", path: "src/sha512/coverage/sha512_ctrl_cov_bind.sv" }
-  - { sha256: "203b274a745212f6a32bc4fe22a4b780789fdcafaf71fc8c1e0fea5f18438e78", path: "src/sha512/coverage/sha512_ctrl_cov_if.sv" }
-  - { sha256: "8b5328a61773f10adcff63a477f137e1e9099d4e0062a54fcf9c77dcc69cc905", path: "src/sha512/rtl/arca_sha512.sv" }
-  - { sha256: "0f66215871168fa670567568cc66501ea8abac6196e8e14154c747b8e2a2e6dd", path: "src/sha512/rtl/arca_sha512_core.v" }
-  - { sha256: "aa1f6e51be598393e1d6019e95bb7916465237bb78409b01453d6388f6d04e20", path: "src/sha512/rtl/arca_sha512_ctrl.sv" }
-  - { sha256: "49205b4c2ffea9a54d82907b4abc271a08a5a8be9c35e3144f4a235ecafdebe2", path: "src/sha512/rtl/arca_sha512_h_constants.v" }
-  - { sha256: "765cc7d7f2d806ad93a08ef5d7ad88780aef1df34b0eda41c4901ce6b7c7fa37", path: "src/sha512/rtl/arca_sha512_k_constants.v" }
-  - { sha256: "d7969227f236715c61ce1d45c2d7227daa8d4428a8b11ff0386e62bb1bd47d9b", path: "src/sha512/rtl/arca_sha512_params_pkg.sv" }
-  - { sha256: "831680bfc9ea7416466ae095169833cec8e761033ca4390cadf0d98b83e04436", path: "src/sha512/rtl/arca_sha512_reg.sv" }
-  - { sha256: "c8b6bf57c195f7d093eaa848bca5e26599d70cf17b7e2785f9337691036f6f71", path: "src/sha512/rtl/arca_sha512_reg_pkg.sv" }
-  - { sha256: "9ce2931057c5ffba653ad39fc0e6d60e6e52600c41ae2e5fa8104cc07c94fea4", path: "src/sha512/rtl/arca_sha512_w_mem.v" }
+  - { sha256: "10714124d4267a19f0c7d948889e8638e5656b685e41914a94f9c8977fd95556", path: "src/sha512/coverage/sha512_ctrl_cov_bind.sv" }
+  - { sha256: "f6c55223ee10ff6d7c61fe911d88d7c49c78a02c3bd252c6c196880655f4dc55", path: "src/sha512/coverage/sha512_ctrl_cov_if.sv" }
+  - { sha256: "7ce4564e953eb91c1dcea566dd6ea3e900ed256cc34c2adba5ac29e983a422c5", path: "src/sha512/rtl/tessera_sha512.sv" }
+  - { sha256: "e47737e20c882b0a39a91c02abbeaf94750bd0d11772e8c7f0cce87746d200ab", path: "src/sha512/rtl/tessera_sha512_core.v" }
+  - { sha256: "3ddec73de70185695da3961869b9bb6c8243d10973dd194ff18665b2d392beb9", path: "src/sha512/rtl/tessera_sha512_ctrl.sv" }
+  - { sha256: "a501bd9a36ba603fe898060627400f4b016be93c6cae9541d6a91201b837a8be", path: "src/sha512/rtl/tessera_sha512_h_constants.v" }
+  - { sha256: "acd61185575221546f428f48b26db85e4a49a7a2117b7e965d24ef6bb81a9113", path: "src/sha512/rtl/tessera_sha512_k_constants.v" }
+  - { sha256: "7b1c67e1c62cef19495602615bbbbf69f7dc3c27259dd46617b937094bff0627", path: "src/sha512/rtl/tessera_sha512_params_pkg.sv" }
+  - { sha256: "04581bcdb2bc774c80548adadcea59e407cb8ef93a3743ff6487ee47a1aa4be1", path: "src/sha512/rtl/tessera_sha512_reg.sv" }
+  - { sha256: "a94c4d9eb858bb4cd213a1fcded125c50314d863334a124c669f711b16a06d79", path: "src/sha512/rtl/tessera_sha512_reg_pkg.sv" }
+  - { sha256: "c471f113912c2eeea726c5a41607e7b7a46052807146b90f43f7cbfe480a6196", path: "src/sha512/rtl/tessera_sha512_w_mem.v" }
   - { sha256: "c3a407115ed3baad3192d8a5d58103370a3197a2fbfb42fa1efa90915053f02f", path: "src/sha512/stimulus/tests/directed/sha512_normal_test.yml" }
   - { sha256: "faf6fff087125ddbe14ca8246f3b914aa683107aa997655baeb857a6fe06f63e", path: "src/sha512/stimulus/testsuites/sha512_nightly_directed_regression.yml" }
   - { sha256: "799603460319da06a03d3437151d1805be777c16e9b4889979ae0857fc5b533d", path: "src/sha512/stimulus/testsuites/sha512_nightly_random_regression.yml" }
-  - { sha256: "3bdd506908fa66d9e3b1cfed1d93612ec5fa531e0572d4794b58cab397e77f14", path: "src/sha512/tb/sha512_ctrl_tb.sv" }
+  - { sha256: "ee93e15d0c8c7017fc46c856a71ed7cca989b890e6b4d632b0f8683f2224b233", path: "src/sha512/tb/sha512_ctrl_tb.sv" }
   - { sha256: "536171765a4278c000ac3c9913edb2eed0ca7ccd5a10b72ed79fdfe7901a6d6a", path: "src/sha512/tb/vectors/SHA384LongMsg.rsp" }
   - { sha256: "7ea7bcf00fadc20949fae63703e40681ddf288fea808471cb3cbc95f3ec16811", path: "src/sha512/tb/vectors/SHA384ShortMsg.rsp" }
   - { sha256: "b1f3f05d5c209777954d49521d7ea1349447c36a0c52849e044bc397a27dd410", path: "src/sha512/tb/vectors/SHA512LongMsg.rsp" }
@@ -287,8 +287,8 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "ccd79be73017b60f8c9f1acd5c985692cd9dfaa29b5df0cd20d2ec2be6862744", path: "src/sha512/uvmf_sha512/SHA512_env_cfg.yaml" }
   - { sha256: "0ef61dbea978dc8a4486b675cbc579f76dcf064acec593f31246f29b65be4fa7", path: "src/sha512/uvmf_sha512/SHA512_interface_cfg.yaml" }
   - { sha256: "9acf5c9d8621fde69ed42078d776824bf12d3f32e80c0b41294b3086cb5c780b", path: "src/sha512/uvmf_sha512/SHA512_util_comp.yaml" }
-  - { sha256: "89d3c0c9a3379da662100edb0e8b85270d0464cc068a2d6974098f9a47cf3afb", path: "src/sha512/uvmf_sha512/config/compile.yml" }
-  - { sha256: "cfe8eaade252c7e8b86bb46eb2c4aa79a2bd6bbd08b668c89213309bca50aeda", path: "src/sha512/uvmf_sha512/config/uvmf_sha512.vf" }
+  - { sha256: "b98b2daaf9e61dce3e33e75b901c2275663b221b7b97c8573febcd286731691a", path: "src/sha512/uvmf_sha512/config/compile.yml" }
+  - { sha256: "bd8ec6aa8f5a4a81428f316ace0113a50556ece8ceea8e684970e257ea36764f", path: "src/sha512/uvmf_sha512/config/uvmf_sha512.vf" }
   - { sha256: "b3de8ccf495493570ff2745b2c806e41d9c28d1c590de77ee0cd68df4ab6731d", path: "src/sha512/uvmf_sha512/coverage/config/uvmf_sha512_cm_hier.cfg" }
   - { sha256: "23043030372bc06b3764bffcbb9c6620aa4517836a214451d34ecdcde8a3614f", path: "src/sha512/uvmf_sha512/run_yaml_uvmf_scripts.bat" }
   - { sha256: "773a88035f038b18d5d7d277b0012b4c15333e30ec71b37cc8a6879bec5dee05", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/.project" }
@@ -299,10 +299,10 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "05e84cbd9875d35be4583e4bd3a1be37f8f8c3345efae54028cbf33fd020451c", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/rtl/verilog/verilog_dut.v" }
   - { sha256: "20a1f41839f8279b6dd44a548e763c95476e3cfbe641f081129bf0785ec66670", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/rtl/verilog/verilog_dut.vinfo" }
   - { sha256: "3abc11418d80deb00513af9cb911ef50d645dcaa95f10815fc92cedbc8e9632f", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/rtl/vhdl/vhdl_dut.vhd" }
-  - { sha256: "fe8aa4212acab7630aca78da11e46243d62bfa6b13c603aa9eda6e1b48886dae", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/sim/Makefile" }
+  - { sha256: "13a63b9d94dc795711f5a2f5dd0861b6b238f5c64161bcba8872df0ffe9def3b", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/sim/Makefile" }
   - { sha256: "69d95ef244b4aa6f6227a6a7001e00e2a57e6eca0642e79a44be1658227b776d", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/sim/bcr_testlist" }
   - { sha256: "9e2233af6f402c339837a403a9082bdad1d519a8982162e038e243893f32ee73", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/sim/certe_dump.xml" }
-  - { sha256: "0d372e9a5be6ca43e66e339bb8aefff23b2684dc2f771d28b5a3aa1aa56d65b8", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/sim/compile.do" }
+  - { sha256: "4237e6a14bc54d67450d100e8bfbc8750586ef7287bc30e29bdebcd6793e2e3c", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/sim/compile.do" }
   - { sha256: "b111d546bac795087121faa64a31e4c4cc098ad4f6aac270d1e97dabc24b1bfa", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/sim/hdl.compile" }
   - { sha256: "4611b057c356303b720c84a55a2691654dca258d419dda6b0a333f5c0a602e82", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/sim/hdl.vinfo" }
   - { sha256: "2d3193f0811dfa165d8ac4d005554138f91ceba84f9b99d1717c463d2b598437", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/sim/hvl.compile" }
@@ -326,7 +326,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "28c344e87f3272e01cbf2c692335d3bd54f768d6bd1134ee674f2912acf52d04", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/tb/sequences/src/example_derived_test_sequence.svh" }
   - { sha256: "0312225dac67ebe3de4c3dd4dbab4d087afc99292ecbd481c2a06a6325bc4a7a", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/tb/sequences/src/register_test_sequence.svh" }
   - { sha256: "7a161b0da81852338f1b1a75962014e2786f25c495379a62749cc61c3f04b5bf", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/tb/testbench/hdl_top.compile" }
-  - { sha256: "94d53bf0668e83491b09d7e0ae189acdad7af2a2e3eddffa004fc852d76a4012", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/tb/testbench/hdl_top.sv" }
+  - { sha256: "ba160238c0ce9e1577a54413542e9f554da844cca4cf26a5d9cc2473e9a1d6fd", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/tb/testbench/hdl_top.sv" }
   - { sha256: "a61bc933a88bf905f5902f324645cac882af2bf318b1bd0207f3de33eb81435d", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/tb/testbench/hdl_top.vinfo" }
   - { sha256: "39df05205553d42879eb5a97ad27f2a29cf07feee309e09fdb092162fb77526a", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/tb/testbench/hvl_top.compile" }
   - { sha256: "0aac8afe8f353cd86970563abd16caed55b8dd4199e6f90c2d5cb4c492d7e6f7", path: "src/sha512/uvmf_sha512/uvmf_template_output/project_benches/SHA512/tb/testbench/hvl_top.sv" }
@@ -379,7 +379,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "451d0677ef11dabfc628bed6cc9c1d8d16568236d014a198706890cce09bde0d", path: "src/sha512/uvmf_sha512/uvmf_template_output/verification_ip/interface_packages/SHA512_in_pkg/src/SHA512_in_agent.svh" }
   - { sha256: "1334ebe8cf6e87a8024d9c1113f86d618b510f498b5a3c7d9d188ca6f2f639f3", path: "src/sha512/uvmf_sha512/uvmf_template_output/verification_ip/interface_packages/SHA512_in_pkg/src/SHA512_in_configuration.svh" }
   - { sha256: "620e63786fc4d0d281873391481d6b03d41bb0ba4980c8ee1eacef6fd03b7a86", path: "src/sha512/uvmf_sha512/uvmf_template_output/verification_ip/interface_packages/SHA512_in_pkg/src/SHA512_in_driver.svh" }
-  - { sha256: "7b64b6ae98440a8531e32d5955055131254b598c5ec62ccad451a6f7863155b6", path: "src/sha512/uvmf_sha512/uvmf_template_output/verification_ip/interface_packages/SHA512_in_pkg/src/SHA512_in_driver_bfm.sv" }
+  - { sha256: "4a5b0db874006b42caf123866d285598aefc292f5492fa8e6060ec4762b3cab2", path: "src/sha512/uvmf_sha512/uvmf_template_output/verification_ip/interface_packages/SHA512_in_pkg/src/SHA512_in_driver_bfm.sv" }
   - { sha256: "4e2d35c029ce43f792a797bbfd5feeb8d01dee5adeb0244ceb5ad32b1fac7d1e", path: "src/sha512/uvmf_sha512/uvmf_template_output/verification_ip/interface_packages/SHA512_in_pkg/src/SHA512_in_if.sv" }
   - { sha256: "46f04026f3d35bb104aa9476fd226884d769b1de5e1767b7f46367911e5be67b", path: "src/sha512/uvmf_sha512/uvmf_template_output/verification_ip/interface_packages/SHA512_in_pkg/src/SHA512_in_infact_coverage_strategy.csv" }
   - { sha256: "e201a76645bdb64e2938f260bc6b9f224442e29fdc40b09c4ffa40873a25d1a2", path: "src/sha512/uvmf_sha512/uvmf_template_output/verification_ip/interface_packages/SHA512_in_pkg/src/SHA512_in_macros.svh" }

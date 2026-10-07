@@ -39,22 +39,22 @@ interface sha256_ctrl_cov_if
     logic wntz_mode_invalid;
     logic wntz_j_invalid;
     
-    assign init = arca_sha256_ctrl.sha256_inst.init_reg;
-    assign next = arca_sha256_ctrl.sha256_inst.next_reg;
-    assign mode = arca_sha256_ctrl.sha256_inst.mode_reg;
-    assign zeroize = arca_sha256_ctrl.sha256_inst.zeroize_reg;
-    assign ready = arca_sha256_ctrl.sha256_inst.ready_reg;
-    assign valid = arca_sha256_ctrl.sha256_inst.digest_valid_reg;
+    assign init = tessera_sha256_ctrl.sha256_inst.init_reg;
+    assign next = tessera_sha256_ctrl.sha256_inst.next_reg;
+    assign mode = tessera_sha256_ctrl.sha256_inst.mode_reg;
+    assign zeroize = tessera_sha256_ctrl.sha256_inst.zeroize_reg;
+    assign ready = tessera_sha256_ctrl.sha256_inst.ready_reg;
+    assign valid = tessera_sha256_ctrl.sha256_inst.digest_valid_reg;
 
-    assign wntz_mode = arca_sha256_ctrl.sha256_inst.wntz_mode;
-    assign wntz_w = arca_sha256_ctrl.sha256_inst.wntz_w;
-    assign wntz_n_mode = arca_sha256_ctrl.sha256_inst.wntz_n_mode;
+    assign wntz_mode = tessera_sha256_ctrl.sha256_inst.wntz_mode;
+    assign wntz_w = tessera_sha256_ctrl.sha256_inst.wntz_w;
+    assign wntz_n_mode = tessera_sha256_ctrl.sha256_inst.wntz_n_mode;
 
     assign hash_cmd = {next, init};
 
-    assign wntz_w_invalid = arca_sha256_ctrl.sha256_inst.wntz_w_invalid;
-    assign wntz_mode_invalid = arca_sha256_ctrl.sha256_inst.wntz_mode_invalid;
-    assign wntz_j_invalid = arca_sha256_ctrl.sha256_inst.wntz_j_invalid;
+    assign wntz_w_invalid = tessera_sha256_ctrl.sha256_inst.wntz_w_invalid;
+    assign wntz_mode_invalid = tessera_sha256_ctrl.sha256_inst.wntz_mode_invalid;
+    assign wntz_j_invalid = tessera_sha256_ctrl.sha256_inst.wntz_j_invalid;
 
     covergroup sha256_ctrl_cov_grp @(posedge clk);
         reset_cp: coverpoint reset_n;

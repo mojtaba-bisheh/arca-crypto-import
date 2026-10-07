@@ -6,9 +6,9 @@
 #
 # Layout
 # ------
-#   caliptra-rtl                        ARCA
-#   src/sha3/rtl/sha3.sv            ->  src/sha3/rtl/arca_sha3.sv
-#   src/sha3/config/sha3_ctrl.vf    ->  src/sha3/config/arca_sha3_ctrl.vf (generated)
+#   caliptra-rtl                        Tessera
+#   src/sha3/rtl/sha3.sv            ->  src/sha3/rtl/tessera_sha3.sv
+#   src/sha3/config/sha3_ctrl.vf    ->  src/sha3/config/tessera_sha3_ctrl.vf (generated)
 #
 # Block-specific notes
 # --------------------

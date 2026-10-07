@@ -1,4 +1,4 @@
-# Tcl do file for compile of arca_hmac256 interface
+# Tcl do file for compile of tessera_hmac256 interface
 
 # pragma uvmf custom additional begin
 # pragma uvmf custom additional end

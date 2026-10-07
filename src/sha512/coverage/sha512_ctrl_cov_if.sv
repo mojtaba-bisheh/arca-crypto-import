@@ -37,18 +37,18 @@ interface sha512_ctrl_cov_if
 
     logic [1 : 0] hash_cmd;
     
-    assign init = arca_sha512_ctrl.sha512_inst.init_reg;
-    assign next = arca_sha512_ctrl.sha512_inst.next_reg;
-    assign mode = arca_sha512_ctrl.sha512_inst.mode_reg;
-    assign restore = arca_sha512_ctrl.sha512_inst.restore_reg;
-    assign zeroize = arca_sha512_ctrl.sha512_inst.zeroize_reg;
-    assign ready = arca_sha512_ctrl.sha512_inst.ready_reg;
-    assign valid = arca_sha512_ctrl.sha512_inst.digest_valid_reg;
+    assign init = tessera_sha512_ctrl.sha512_inst.init_reg;
+    assign next = tessera_sha512_ctrl.sha512_inst.next_reg;
+    assign mode = tessera_sha512_ctrl.sha512_inst.mode_reg;
+    assign restore = tessera_sha512_ctrl.sha512_inst.restore_reg;
+    assign zeroize = tessera_sha512_ctrl.sha512_inst.zeroize_reg;
+    assign ready = tessera_sha512_ctrl.sha512_inst.ready_reg;
+    assign valid = tessera_sha512_ctrl.sha512_inst.digest_valid_reg;
 
-    assign pcr_sign_we = arca_sha512_ctrl.sha512_inst.pcr_sign_we;
-    assign gen_hash_start = arca_sha512_ctrl.sha512_inst.gen_hash_start;
-    assign gen_hash_ip = arca_sha512_ctrl.sha512_inst.gen_hash_ip;
-    assign dest_data_avail = arca_sha512_ctrl.sha512_inst.dest_data_avail;
+    assign pcr_sign_we = tessera_sha512_ctrl.sha512_inst.pcr_sign_we;
+    assign gen_hash_start = tessera_sha512_ctrl.sha512_inst.gen_hash_start;
+    assign gen_hash_ip = tessera_sha512_ctrl.sha512_inst.gen_hash_ip;
+    assign dest_data_avail = tessera_sha512_ctrl.sha512_inst.dest_data_avail;
 
     assign hash_cmd = {next, init};
 

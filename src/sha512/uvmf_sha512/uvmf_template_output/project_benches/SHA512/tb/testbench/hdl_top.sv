@@ -93,7 +93,7 @@ initial begin
     pv_wr_resp = '{default:0};
 end
 
-  arca_sha512_ctrl #(
+  tessera_sha512_ctrl #(
              .AHB_DATA_WIDTH(64),
              .AHB_ADDR_WIDTH(15)
             )

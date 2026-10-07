@@ -6,14 +6,14 @@
 #
 # Layout
 # ------
-# The ARCA tree mirrors the caliptra-rtl hierarchy, so the correspondence
+# The Tessera tree mirrors the caliptra-rtl hierarchy, so the correspondence
 # between the two trees is 1:1:
 #
-#   caliptra-rtl                          ARCA
-#   src/ecc/rtl/ecc_top.sv            ->  src/ecc/rtl/arca_ecc_top.sv
-#   src/ecc/coverage/ecc_top_cov_if.sv -> src/ecc/coverage/arca_ecc_top_cov_if.sv
-#   src/ecc/config/ecc_top.vf         ->  src/ecc/config/arca_ecc_top.vf (generated)
-#   src/ecc/tb/ecc_top_tb.sv          ->  src/ecc/tb/arca_ecc_top_tb.sv
+#   caliptra-rtl                          Tessera
+#   src/ecc/rtl/ecc_top.sv            ->  src/ecc/rtl/tessera_ecc_top.sv
+#   src/ecc/coverage/ecc_top_cov_if.sv -> src/ecc/coverage/tessera_ecc_top_cov_if.sv
+#   src/ecc/config/ecc_top.vf         ->  src/ecc/config/tessera_ecc_top.vf (generated)
+#   src/ecc/tb/ecc_top_tb.sv          ->  src/ecc/tb/tessera_ecc_top_tb.sv
 #   src/ecc/stimulus/...              ->  src/ecc/stimulus/...
 #   src/ecc/uvmf_ecc/...              ->  src/ecc/uvmf_ecc/...
 #
@@ -23,7 +23,7 @@
 # section in rename_common.sh.
 #
 # src/ecc/formal/ is deliberately not imported: the formal properties are a
-# caliptra-rtl verification asset, not part of the deliverable, and ARCA has no
+# caliptra-rtl verification asset, not part of the deliverable, and Tessera has no
 # formal flow to run them in. Vendoring them would mean maintaining 42 files of
 # bound properties through every upstream bump for no benefit.
 #
@@ -36,8 +36,8 @@
 #   against the same `<prefix>hmac_drbg` module. See EXTRA_RENAME_IDENTS.
 # * Those two cross-block names are renamed under *different* policies, and
 #   neither policy is stated here. hmac_param_pkg belongs to the SHA-512 HMAC
-#   engine, which ARCA shelves as hmac512, so it becomes arca_hmac512_param_pkg;
-#   hmac_drbg is on the stem keep list and stays arca_hmac_drbg. Both follow
+#   engine, which Tessera shelves as hmac512, so it becomes tessera_hmac512_param_pkg;
+#   hmac_drbg is on the stem keep list and stays tessera_hmac_drbg. Both follow
 #   from the repo-wide stem policy in rename_common.sh, which is exactly why
 #   that policy is declared there and not in rename_hmac512.sh -- two drivers
 #   holding two copies of the same naming decision is how they drift apart.
@@ -49,17 +49,17 @@
 #   headers which are not part of the RTL delivery; it is excluded.
 # * ecc_reg.rdl is the upstream register description. It is excluded from the
 #   renamed fileset because regenerating from it would produce unprefixed RTL;
-#   if ARCA ever needs to regenerate, re-run this script afterwards.
+#   if Tessera ever needs to regenerate, re-run this script afterwards.
 # * The coverage/ directory is imported too. It exercises a case the rtl/
 #   directories do not: `bind ecc_top ecc_top_cov_if ...` -- the rename engine
 #   has to rewrite the bind target as well as the interface name.
 # * coverage/config/ecc_cm_hier.cfg IS imported now that the testbench comes
 #   along; the hierarchy path it names (ecc_top_tb.dut) is renamed with
 #   everything else.
-# * src/ecc/config/ is deliberately NOT collateral. ARCA generates its own
+# * src/ecc/config/ is deliberately NOT collateral. Tessera generates its own
 #   filelist there, and the upstream ecc_top.vf / ecc_top_tb.vf / compile.yml
 #   resolve $COMPILE_ROOT against the caliptra-rtl build environment. Copying
-#   them would both collide with the generated arca_ecc_top.vf and re-introduce
+#   them would both collide with the generated tessera_ecc_top.vf and re-introduce
 #   a dependency on an upstream build system.
 # * src/ecc/tb/ecc_secp384r1.exe and the three uvmf .ucdb coverage databases are
 #   build/simulation *outputs* checked into upstream. They are skipped by
@@ -84,7 +84,7 @@ COLLATERAL_SUBTREES=(
     "src/ecc/uvmf_ecc"
 )
 
-# Where each upstream subtree lands in ARCA. The identity mapping keeps the
+# Where each upstream subtree lands in Tessera. The identity mapping keeps the
 # caliptra-rtl hierarchy; set an explicit path only to shelve the block
 # elsewhere, e.g. DEST_SUBTREES=("src/ecc384/rtl" "src/ecc384/coverage").
 
@@ -106,9 +106,9 @@ EXCLUDE_GLOBS=(
 # Declared by other imports, referenced here. ECC instantiates hmac_drbg and
 # imports hmac_param_pkg, both owned by rename_hmac512.sh; this block must rewrite
 # its references to them even though it does not own them. Omitting the package
-# left ARCA's ECC importing an hmac_param_pkg that no longer existed under that
+# left Tessera's ECC importing an hmac_param_pkg that no longer existed under that
 # name -- it did not fail CI because the generated filelist still resolved the
-# dependency against ${CALIPTRA_ROOT} rather than against the ARCA copy.
+# dependency against ${CALIPTRA_ROOT} rather than against the Tessera copy.
 EXTRA_RENAME_IDENTS=(
     "module:hmac_drbg"
     "package:hmac_param_pkg"
@@ -133,7 +133,7 @@ GENERATOR_INPUTS=(
 ENV_MACRO_SPECS=()
 ENV_HEADER_REPLACE=()
 
-# Shared ARCA platform identifiers: version-pinned separately, never prefixed.
+# Shared Tessera platform identifiers: version-pinned separately, never prefixed.
 KEEP_IDENTS=(
     "kv_defines_pkg"
     "kv_read_t"

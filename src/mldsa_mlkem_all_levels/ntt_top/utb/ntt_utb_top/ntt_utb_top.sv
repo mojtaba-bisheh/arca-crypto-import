@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// import arca_ntt_defines_pkg::*;
+// import tessera_ntt_defines_pkg::*;
 
 module ntt_utb_top
-    import arca_abr_params_pkg::*;
+    import tessera_abr_params_pkg::*;
     #(
     parameter REG_SIZE = 24,
     parameter RADIX = 23,
@@ -164,7 +164,7 @@ module ntt_utb_top
         .load_tb_addr({MLDSA_MEM_ADDR_WIDTH{1'b0}})
     );
 
-    arca_ntt_top #(
+    tessera_ntt_top #(
         .REG_SIZE(REG_SIZE),
         .MLDSA_Q(MLDSA_Q),
         .MLDSA_N(MLDSA_N),

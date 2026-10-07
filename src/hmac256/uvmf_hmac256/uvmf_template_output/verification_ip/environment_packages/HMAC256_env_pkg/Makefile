@@ -1,4 +1,4 @@
-# arca_hmac256 environment packages source and make target
+# tessera_hmac256 environment packages source and make target
 
 # pragma uvmf custom additional begin
 # pragma uvmf custom additional end

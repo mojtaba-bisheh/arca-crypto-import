@@ -21,8 +21,8 @@
 `default_nettype none
 
 module ntt_top_tb
-    import arca_ntt_defines_pkg::*;
-    import arca_abr_params_pkg::*;
+    import tessera_ntt_defines_pkg::*;
+    import tessera_abr_params_pkg::*;
 ();
 
 parameter CLK_HALF_PERIOD = 5; // 100 MHz clock
@@ -448,7 +448,7 @@ task pwm_test(input logic mlkem, input logic acc_en, input logic sampler, input 
                                                                 });
                     else begin
                         expected_data = ABR_MEM_MASKED_DATA_WIDTH'({24'((46'(dut.pwm_mem_a.mem[i/4][94:72]*sampler_mem[i/4][94:72])) % MLDSA_Q), 24'((46'(dut.pwm_mem_a.mem[i/4][70:48]*sampler_mem[i/4][70:48])) % MLDSA_Q), 24'((46'(dut.pwm_mem_a.mem[i/4][46:24]*sampler_mem[i/4][46:24])) % MLDSA_Q), 24'((46'(dut.pwm_mem_a.mem[i/4][22:0]*sampler_mem[i/4][22:0])) % MLDSA_Q)});
-                        // $display("Debug: i=%0d, pwm_mem_a=%h, sampler_mem[i/4]=%h, expected_data=%h", i, dut.pwm_mem_a.mem[i/4][22:0], sampler_mem[i/4][22:0], 46'(dut.pwm_mem_a.mem[i/4][22:0]*sampler_mem[i/4][22:0]) % arca_abr_params_pkg::MLDSA_Q);
+                        // $display("Debug: i=%0d, pwm_mem_a=%h, sampler_mem[i/4]=%h, expected_data=%h", i, dut.pwm_mem_a.mem[i/4][22:0], sampler_mem[i/4][22:0], 46'(dut.pwm_mem_a.mem[i/4][22:0]*sampler_mem[i/4][22:0]) % tessera_abr_params_pkg::MLDSA_Q);
                     end
                 end
                 else begin
@@ -470,7 +470,7 @@ task pwm_test(input logic mlkem, input logic acc_en, input logic sampler, input 
                                                                     24'(2 * ((24'((dut.pwm_mem_a.mem[i/4][35:24])*dut.pwm_mem_a.mem[i/4][11:0]) % MLKEM_Q)) % MLKEM_Q), 
                                                                     24'((((36'(dut.pwm_mem_a.mem[i/4][35:24]*dut.pwm_mem_a.mem[i/4][35:24]*kyber_zeta_tb[i/2])) % MLKEM_Q) + ((24'(dut.pwm_mem_a.mem[i/4][11:0]*dut.pwm_mem_a.mem[i/4][11:0])) % MLKEM_Q)) % MLKEM_Q) 
                                                                 });
-                        // $display("Debug: i=%0d, pwm_mem_a=%h, sampler_mem[i/4]=%h, expected_data=%h", i, dut.pwm_mem_a.mem[i/4][22:0], sampler_mem[i/4][22:0], 46'(dut.pwm_mem_a.mem[i/4][22:0]*sampler_mem[i/4][22:0]) % arca_abr_params_pkg::MLDSA_Q);
+                        // $display("Debug: i=%0d, pwm_mem_a=%h, sampler_mem[i/4]=%h, expected_data=%h", i, dut.pwm_mem_a.mem[i/4][22:0], sampler_mem[i/4][22:0], 46'(dut.pwm_mem_a.mem[i/4][22:0]*sampler_mem[i/4][22:0]) % tessera_abr_params_pkg::MLDSA_Q);
                     else
                         expected_data = ABR_MEM_MASKED_DATA_WIDTH'({24'(46'(dut.pwm_mem_a.mem[i/4][94:72]*dut.pwm_mem_a.mem[i/4][94:72])%MLDSA_Q), 24'(46'(dut.pwm_mem_a.mem[i/4][70:48]*dut.pwm_mem_a.mem[i/4][70:48])%MLDSA_Q), 24'(46'(dut.pwm_mem_a.mem[i/4][46:24]*dut.pwm_mem_a.mem[i/4][46:24]) % MLDSA_Q), 24'(46'(dut.pwm_mem_a.mem[i/4][22:0]*dut.pwm_mem_a.mem[i/4][22:0]) % MLDSA_Q)});
                 end

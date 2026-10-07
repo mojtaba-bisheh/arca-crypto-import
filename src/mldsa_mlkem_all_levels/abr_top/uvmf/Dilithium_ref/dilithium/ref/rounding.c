@@ -23,7 +23,7 @@ int32_t power2round(int32_t *a0, int32_t a)  {
 }
 
 /*************************************************
-* Name:        arca_decompose
+* Name:        tessera_decompose
 *
 * Description: For finite field element a, compute high and low bits a0, a1 such
 *              that a mod^+ Q = a1*ALPHA + a0 with -ALPHA/2 < a0 <= ALPHA/2 except
@@ -36,7 +36,7 @@ int32_t power2round(int32_t *a0, int32_t a)  {
 *
 * Returns a1.
 **************************************************/
-int32_t arca_decompose(int32_t *a0, int32_t a) {
+int32_t tessera_decompose(int32_t *a0, int32_t a) {
   int32_t a1;
 
   a1  = (a + 127) >> 7;
@@ -84,7 +84,7 @@ unsigned int make_hint(int32_t a0, int32_t a1) {
 int32_t use_hint(int32_t a, unsigned int hint) {
   int32_t a0, a1;
 
-  a1 = arca_decompose(&a0, a);
+  a1 = tessera_decompose(&a0, a);
   if(hint == 0)
     return a1;
 

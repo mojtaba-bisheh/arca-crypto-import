@@ -5,13 +5,13 @@
 #
 #   ./tools/scripts/rename/rename_mldsa_mlkem_all_levels.sh --upstream /path/to/caliptra-rtl
 #
-# The ARCA directory is named for what the engine implements rather than for
+# The Tessera directory is named for what the engine implements rather than for
 # its upstream codename: upstream calls it "abr" (Adams Bridge), which says
 # nothing about ML-DSA, ML-KEM, or the security levels it covers.
 #
 # The directory name and the identifier stem are deliberately different knobs.
 # The directory is mldsa_mlkem_all_levels; the identifiers keep the short
-# upstream abr_ stem, so modules stay arca_abr_top rather than growing a
+# upstream abr_ stem, so modules stay tessera_abr_top rather than growing a
 # 22-character prefix across all 222 of them. See the stem policy in
 # rename_common.sh for the case where the two are tied together instead.
 #
@@ -22,9 +22,9 @@
 # and the ~160 RTL files live in a separate repository, chipsalliance/adams-bridge,
 # wired in as the git submodule submodules/adams-bridge.
 #
-# ARCA does not carry that split: the engineering decision was to keep ABR as a
+# Tessera does not carry that split: the engineering decision was to keep ABR as a
 # normal src/<block>/ tree like every other engine. So this driver flattens two
-# repositories into one ARCA block:
+# repositories into one Tessera block:
 #
 #   caliptra-rtl    src/abr/coverage/        -> src/mldsa_mlkem_all_levels/coverage/
 #   adams-bridge    src/<unit>/rtl/          -> src/mldsa_mlkem_all_levels/<unit>/rtl/

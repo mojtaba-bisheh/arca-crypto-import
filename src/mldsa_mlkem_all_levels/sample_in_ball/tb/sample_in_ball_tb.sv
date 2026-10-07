@@ -22,8 +22,8 @@
 import "DPI-C" function string getenv(input string env_name);
 
 module sample_in_ball_tb
-  import arca_abr_sampler_pkg::*;
-  import arca_abr_params_pkg::*;
+  import tessera_abr_sampler_pkg::*;
+  import tessera_abr_params_pkg::*;
 (
 `ifdef VERILATOR
   input bit clk_tb
@@ -104,7 +104,7 @@ module sample_in_ball_tb
   assign rst_ni = reset_n_tb;
   
   //SRAM
-  arca_sib_mem
+  tessera_sib_mem
   #(
       .DATA_WIDTH((MLDSA_Q_WIDTH-1)*4),
       .DEPTH     (MLDSA_N/4  ),
@@ -126,7 +126,7 @@ module sample_in_ball_tb
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_abr_piso #(
+  tessera_abr_piso #(
      .PISO_BUFFER_W(SIB_PISO_BUFFER_W),
      .PISO_INPUT_RATE(SIB_PISO_INPUT_RATE),
      .PISO_OUTPUT_RATE(SIB_PISO_OUTPUT_RATE)
@@ -142,7 +142,7 @@ module sample_in_ball_tb
   .data_o(piso_data)
   );
 
-  arca_sample_in_ball_ctrl #(
+  tessera_sample_in_ball_ctrl #(
     .SIB_NUM_SAMPLERS(SIB_NUM_SAMPLERS),
     .SIB_SAMPLE_W(SIB_SAMPLE_W),
     .SIB_TAU(SIB_TAU)
@@ -364,7 +364,7 @@ module sample_in_ball_tb
     end
     $fclose(fd_w);
     //generate input vectors and expected results
-    $system($sformatf("python arca_sample_in_ball.py"));
+    $system($sformatf("python tessera_sample_in_ball.py"));
 
 
     //open expected results files

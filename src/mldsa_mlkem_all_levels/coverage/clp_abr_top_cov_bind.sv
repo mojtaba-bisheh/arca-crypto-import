@@ -15,8 +15,8 @@
 
 module clp_abr_top_cov_bind;
     `ifdef FCOV
-    bind arca_abr_top clp_abr_top_cov_if i_clp_abr_top_cov_if(.*);
+    bind tessera_abr_top clp_abr_top_cov_if i_clp_abr_top_cov_if(.*);
     //put this back when the two cover if's are distinct
-    //bind arca_abr_top abr_top_cov_if i_abr_top_cov_if(.*);
+    //bind tessera_abr_top abr_top_cov_if i_abr_top_cov_if(.*);
     `endif
 endmodule

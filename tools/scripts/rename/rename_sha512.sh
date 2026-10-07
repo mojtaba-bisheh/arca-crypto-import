@@ -6,11 +6,11 @@
 #
 # Layout
 # ------
-#   caliptra-rtl                          ARCA
-#   src/sha512/rtl/sha512.sv          ->  src/sha512/rtl/arca_sha512.sv
+#   caliptra-rtl                          Tessera
+#   src/sha512/rtl/sha512.sv          ->  src/sha512/rtl/tessera_sha512.sv
 #   src/sha512/coverage/...           ->  src/sha512/coverage/...
 #   src/sha512/tb|stimulus|uvmf_...   ->  same path, upstream names kept
-#   src/sha512/config/sha512_ctrl.vf  ->  src/sha512/config/arca_sha512_ctrl.vf (generated)
+#   src/sha512/config/sha512_ctrl.vf  ->  src/sha512/config/tessera_sha512_ctrl.vf (generated)
 #
 # Block-specific notes
 # --------------------
@@ -18,7 +18,7 @@
 #   constant ROMs are Verilog-2001. The rename engine keys off file *extension*
 #   for the HDL set, so .v is prefixed and rewritten exactly like .sv.
 # * sha512_masked is NOT imported here. It is its own upstream directory and its
-#   own ARCA block (rename_sha512_masked.sh), which in turn references the four
+#   own Tessera block (rename_sha512_masked.sh), which in turn references the four
 #   identifiers this block declares and it consumes. Keeping the ownership split
 #   the same as upstream is what lets either side be bumped independently.
 # * sha512_reg_uvm.sv and sha512_reg.rdl are excluded: both are regenerated from

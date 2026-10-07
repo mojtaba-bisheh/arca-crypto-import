@@ -16,15 +16,15 @@
 //
 // sigencode_z_tb.sv
 // ---------------
-// Testbench for arca_sigencode_z_top module
+// Testbench for tessera_sigencode_z_top module
 //======================================================================
 
 `default_nettype none
 
 module sigencode_z_tb
-    import arca_abr_params_pkg::*;
-    import arca_ntt_defines_pkg::*;
-    import arca_sigencode_z_defines_pkg::*;
+    import tessera_abr_params_pkg::*;
+    import tessera_ntt_defines_pkg::*;
+    import tessera_sigencode_z_defines_pkg::*;
 #(
     parameter REG_SIZE = 24,
     parameter MEM_ADDR_WIDTH = 15,
@@ -61,7 +61,7 @@ reg [19:0] actual_output_mem [0:NUM_OF_COEFF-1];
 
 
 
-arca_sigencode_z_top #(
+tessera_sigencode_z_top #(
     .MEM_ADDR_WIDTH(MEM_ADDR_WIDTH),
     .REG_SIZE(REG_SIZE),
     .GAMMA1(GAMMA1)

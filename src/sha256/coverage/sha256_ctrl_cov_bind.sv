@@ -15,6 +15,6 @@
 
 module sha256_ctrl_cov_bind;
     `ifdef FCOV
-    bind arca_sha256_ctrl sha256_ctrl_cov_if i_sha256_ctrl_cov_if(.*);
+    bind tessera_sha256_ctrl sha256_ctrl_cov_if i_sha256_ctrl_cov_if(.*);
     `endif
 endmodule

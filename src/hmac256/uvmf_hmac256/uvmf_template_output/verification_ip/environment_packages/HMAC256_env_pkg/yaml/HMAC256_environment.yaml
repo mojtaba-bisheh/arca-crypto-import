@@ -1,6 +1,6 @@
 uvmf:
   environments:
-    arca_hmac256:
+    tessera_hmac256:
       agents:
       - initiator_responder: INITIATOR
         name: HMAC256_rst_agent

@@ -35,7 +35,7 @@ def generate_expected_hmac384_tag():
             msg_str = msg_str + line.strip()[8:]
 
     #Generate digest using OpenSSL HMAC SHA384
-    command = 'echo '+msg_str+' | xxd -r -p | openssl dgst -sha384 -mac arca_hmac512 -macopt hexkey:'+key_str+' -hex'
+    command = 'echo '+msg_str+' | xxd -r -p | openssl dgst -sha384 -mac tessera_hmac512 -macopt hexkey:'+key_str+' -hex'
     tag = subprocess.check_output(command, shell=True)
     tag_str = str(tag)
 
@@ -72,7 +72,7 @@ def generate_expected_hmac512_tag():
             msg_str = msg_str + line.strip()[8:]
 
     #Generate digest using OpenSSL HMAC SHA384
-    command = 'echo '+msg_str+' | xxd -r -p | openssl dgst -sha512 -mac arca_hmac512 -macopt hexkey:'+key_str+' -hex'
+    command = 'echo '+msg_str+' | xxd -r -p | openssl dgst -sha512 -mac tessera_hmac512 -macopt hexkey:'+key_str+' -hex'
     tag = subprocess.check_output(command, shell=True)
     tag_str = str(tag)
 

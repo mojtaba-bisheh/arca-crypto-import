@@ -15,7 +15,7 @@
 //----------------------------------------------------------------------
 // Description: HMAC_last_alone_error_test
 //   Directed test that exercises the LAST-alone CTRL write so the
-//   arca_hmac512.last_alone_error path raises error2_sts and the
+//   tessera_hmac512.last_alone_error path raises error2_sts and the
 //   last_alone_ignored covergroup bin gets hit.
 //----------------------------------------------------------------------
 

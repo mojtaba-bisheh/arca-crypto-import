@@ -205,7 +205,7 @@ void poly_decompose(poly *a1, poly *a0, const poly *a) {
   DBENCH_START();
 
   for(i = 0; i < N; ++i)
-    a1->coeffs[i] = arca_decompose(&a0->coeffs[i], a->coeffs[i]);
+    a1->coeffs[i] = tessera_decompose(&a0->coeffs[i], a->coeffs[i]);
 
   DBENCH_STOP(*tround);
 }

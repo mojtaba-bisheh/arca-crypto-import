@@ -71,10 +71,10 @@ module hmac_drbg_tb();
 
   initial begin
     if ($value$plusargs("HMAC_DRBG_TEST=%s", hmac_drbg_test_to_run)) begin
-      $display("%m: Running arca_hmac_drbg test = %s", hmac_drbg_test_to_run);
+      $display("%m: Running tessera_hmac_drbg test = %s", hmac_drbg_test_to_run);
     end else begin
       hmac_drbg_test_to_run = "HMAC_DRBG_directed_test";
-      $display("%m: Running arca_hmac_drbg test = %s", hmac_drbg_test_to_run);
+      $display("%m: Running tessera_hmac_drbg test = %s", hmac_drbg_test_to_run);
     end
 
     if (hmac_drbg_test_to_run == "HMAC_DRBG_directed_test") begin
@@ -100,7 +100,7 @@ module hmac_drbg_tb();
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_hmac_drbg 
+  tessera_hmac_drbg 
   #(
         .REG_SIZE(REG_SIZE),
         .HMAC_DRBG_PRIME(HMAC_DRBG_PRIME)

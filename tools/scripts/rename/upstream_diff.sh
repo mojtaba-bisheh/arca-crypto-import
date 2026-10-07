@@ -50,7 +50,7 @@ fi
 for b in "${blocks[@]}"; do
     revinfo="$(ri_path "$DEST" "$b" || true)"
     sha="$(sed -nE 's/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/\1/p' "$revinfo" | head -1)"
-    # subtrees are recorded as: - { upstream: "src/ecc/rtl", arca: "src/ecc/rtl" }
+    # subtrees are recorded as: - { upstream: "src/ecc/rtl", tessera: "src/ecc/rtl" }
     # The changelog is an *upstream* question, so pull the upstream side only.
     mapfile -t subtrees < <(sed -nE '/^  subtrees:/,/^  [a-z_]+:/ s/^    -.*upstream:[[:space:]]*"([^"]+)".*/\1/p' "$revinfo")
     # the collateral tier is imported too, so upstream changes there matter as

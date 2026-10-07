@@ -19,7 +19,7 @@
 
 package abr_sha3_tb_pkg;
 
-    import arca_abr_sha3_pkg::*;
+    import tessera_abr_sha3_pkg::*;
 
     //input vector size in bytes
     parameter INPUT_VECTOR_W = 2592;
@@ -58,8 +58,8 @@ package abr_sha3_tb_pkg;
 
     //test vector struct
     typedef struct {
-        rand arca_abr_sha3_pkg::sha3_mode_e mode;
-        rand arca_abr_sha3_pkg::keccak_strength_e strength;
+        rand tessera_abr_sha3_pkg::sha3_mode_e mode;
+        rand tessera_abr_sha3_pkg::keccak_strength_e strength;
         rand logic [MAX_MSG_WR-1:0][MsgWidth-1:0] input_vector;
         logic [MAX_MSG_WR-1:0][MsgStrbW-1:0] input_valid;
     } keccak_test_vector_t;
@@ -70,11 +70,11 @@ package abr_sha3_tb_pkg;
 
         constraint length_c { vector_length inside {[1:MAX_MSG_WR*(MsgWidth/8)]}; }
 
-        constraint mode_c { vector.mode inside {arca_abr_sha3_pkg::Shake, arca_abr_sha3_pkg::Sha3}; }
+        constraint mode_c { vector.mode inside {tessera_abr_sha3_pkg::Shake, tessera_abr_sha3_pkg::Sha3}; }
 
         constraint strength_c { 
-        (vector.mode == arca_abr_sha3_pkg::Sha3) -> vector.strength inside {arca_abr_sha3_pkg::L256, arca_abr_sha3_pkg::L512};
-        (vector.mode == arca_abr_sha3_pkg::Shake) -> vector.strength inside {arca_abr_sha3_pkg::L256, arca_abr_sha3_pkg::L128}; 
+        (vector.mode == tessera_abr_sha3_pkg::Sha3) -> vector.strength inside {tessera_abr_sha3_pkg::L256, tessera_abr_sha3_pkg::L512};
+        (vector.mode == tessera_abr_sha3_pkg::Shake) -> vector.strength inside {tessera_abr_sha3_pkg::L256, tessera_abr_sha3_pkg::L128}; 
         solve vector.mode before vector.strength;
         }
 

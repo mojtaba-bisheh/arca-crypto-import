@@ -1,12 +1,12 @@
-# ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
+# Tessera vendored-block provenance record -- GENERATED, do not edit by hand.
 #
 # To review what changed upstream since this import:
 #   git -C <caliptra-rtl> log --oneline b9ac0e466758d6ba8eac562d8acc3bc5483a2f6a..origin/main -- submodules/adams-bridge/src/abr_libs/rtl submodules/adams-bridge/src/abr_prim/rtl submodules/adams-bridge/src/abr_prim_generic/rtl submodules/adams-bridge/src/abr_sampler_top/rtl submodules/adams-bridge/src/abr_sha3/rtl submodules/adams-bridge/src/abr_top/rtl submodules/adams-bridge/src/barrett_reduction/rtl submodules/adams-bridge/src/cbd_sampler/rtl submodules/adams-bridge/src/compress/rtl submodules/adams-bridge/src/decompose/rtl submodules/adams-bridge/src/decompress/rtl submodules/adams-bridge/src/exp_mask/rtl submodules/adams-bridge/src/makehint/rtl submodules/adams-bridge/src/norm_check/rtl submodules/adams-bridge/src/ntt_top/rtl submodules/adams-bridge/src/pk_decode/rtl submodules/adams-bridge/src/power2round/rtl submodules/adams-bridge/src/rej_bounded/rtl submodules/adams-bridge/src/rej_sampler/rtl submodules/adams-bridge/src/sample_in_ball/rtl submodules/adams-bridge/src/sigdecode_h/rtl submodules/adams-bridge/src/sig_decode_z/rtl submodules/adams-bridge/src/sig_encode_z/rtl submodules/adams-bridge/src/sk_decode/rtl submodules/adams-bridge/src/sk_encode/rtl src/abr/coverage submodules/adams-bridge/src/abr_top/coverage 
 #
 block: mldsa_mlkem_all_levels
-prefix: "arca_"
-macro_prefix: "ARCA_"
-imported_at: "2026-10-07T14:09:15Z"
+prefix: "tessera_"
+macro_prefix: "TESSERA_"
+imported_at: "2026-10-07T16:08:41Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -22,86 +22,86 @@ upstream:
       commit_date: "2026-08-31T09:04:56-07:00"
       commit_subject: "[RTL] Add explicit MLDSA signature verification result to MLDSA_STATUS (#297)"
       working_tree_dirty: false
-  subtrees:  # upstream path -> ARCA path
-    - { upstream: "submodules/adams-bridge/src/abr_libs/rtl", arca: "src/mldsa_mlkem_all_levels/abr_libs/rtl" }
-    - { upstream: "submodules/adams-bridge/src/abr_prim/rtl", arca: "src/mldsa_mlkem_all_levels/abr_prim/rtl" }
-    - { upstream: "submodules/adams-bridge/src/abr_prim_generic/rtl", arca: "src/mldsa_mlkem_all_levels/abr_prim_generic/rtl" }
-    - { upstream: "submodules/adams-bridge/src/abr_sampler_top/rtl", arca: "src/mldsa_mlkem_all_levels/abr_sampler_top/rtl" }
-    - { upstream: "submodules/adams-bridge/src/abr_sha3/rtl", arca: "src/mldsa_mlkem_all_levels/abr_sha3/rtl" }
-    - { upstream: "submodules/adams-bridge/src/abr_top/rtl", arca: "src/mldsa_mlkem_all_levels/abr_top/rtl" }
-    - { upstream: "submodules/adams-bridge/src/barrett_reduction/rtl", arca: "src/mldsa_mlkem_all_levels/barrett_reduction/rtl" }
-    - { upstream: "submodules/adams-bridge/src/cbd_sampler/rtl", arca: "src/mldsa_mlkem_all_levels/cbd_sampler/rtl" }
-    - { upstream: "submodules/adams-bridge/src/compress/rtl", arca: "src/mldsa_mlkem_all_levels/compress/rtl" }
-    - { upstream: "submodules/adams-bridge/src/decompose/rtl", arca: "src/mldsa_mlkem_all_levels/decompose/rtl" }
-    - { upstream: "submodules/adams-bridge/src/decompress/rtl", arca: "src/mldsa_mlkem_all_levels/decompress/rtl" }
-    - { upstream: "submodules/adams-bridge/src/exp_mask/rtl", arca: "src/mldsa_mlkem_all_levels/exp_mask/rtl" }
-    - { upstream: "submodules/adams-bridge/src/makehint/rtl", arca: "src/mldsa_mlkem_all_levels/makehint/rtl" }
-    - { upstream: "submodules/adams-bridge/src/norm_check/rtl", arca: "src/mldsa_mlkem_all_levels/norm_check/rtl" }
-    - { upstream: "submodules/adams-bridge/src/ntt_top/rtl", arca: "src/mldsa_mlkem_all_levels/ntt_top/rtl" }
-    - { upstream: "submodules/adams-bridge/src/pk_decode/rtl", arca: "src/mldsa_mlkem_all_levels/pk_decode/rtl" }
-    - { upstream: "submodules/adams-bridge/src/power2round/rtl", arca: "src/mldsa_mlkem_all_levels/power2round/rtl" }
-    - { upstream: "submodules/adams-bridge/src/rej_bounded/rtl", arca: "src/mldsa_mlkem_all_levels/rej_bounded/rtl" }
-    - { upstream: "submodules/adams-bridge/src/rej_sampler/rtl", arca: "src/mldsa_mlkem_all_levels/rej_sampler/rtl" }
-    - { upstream: "submodules/adams-bridge/src/sample_in_ball/rtl", arca: "src/mldsa_mlkem_all_levels/sample_in_ball/rtl" }
-    - { upstream: "submodules/adams-bridge/src/sigdecode_h/rtl", arca: "src/mldsa_mlkem_all_levels/sigdecode_h/rtl" }
-    - { upstream: "submodules/adams-bridge/src/sig_decode_z/rtl", arca: "src/mldsa_mlkem_all_levels/sig_decode_z/rtl" }
-    - { upstream: "submodules/adams-bridge/src/sig_encode_z/rtl", arca: "src/mldsa_mlkem_all_levels/sig_encode_z/rtl" }
-    - { upstream: "submodules/adams-bridge/src/sk_decode/rtl", arca: "src/mldsa_mlkem_all_levels/sk_decode/rtl" }
-    - { upstream: "submodules/adams-bridge/src/sk_encode/rtl", arca: "src/mldsa_mlkem_all_levels/sk_encode/rtl" }
-    - { upstream: "src/abr/coverage", arca: "src/mldsa_mlkem_all_levels/coverage" }
-    - { upstream: "submodules/adams-bridge/src/abr_top/coverage", arca: "src/mldsa_mlkem_all_levels/abr_top/coverage" }
-  collateral_subtrees:  # upstream path -> ARCA path
-    - { upstream: "submodules/adams-bridge/src/abr_libs/tb", arca: "src/mldsa_mlkem_all_levels/abr_libs/tb" }
-    - { upstream: "submodules/adams-bridge/src/abr_sha3/tb", arca: "src/mldsa_mlkem_all_levels/abr_sha3/tb" }
-    - { upstream: "submodules/adams-bridge/src/abr_top/tb", arca: "src/mldsa_mlkem_all_levels/abr_top/tb" }
-    - { upstream: "submodules/adams-bridge/src/barrett_reduction/tb", arca: "src/mldsa_mlkem_all_levels/barrett_reduction/tb" }
-    - { upstream: "submodules/adams-bridge/src/cbd_sampler/tb", arca: "src/mldsa_mlkem_all_levels/cbd_sampler/tb" }
-    - { upstream: "submodules/adams-bridge/src/compress/tb", arca: "src/mldsa_mlkem_all_levels/compress/tb" }
-    - { upstream: "submodules/adams-bridge/src/decompose/tb", arca: "src/mldsa_mlkem_all_levels/decompose/tb" }
-    - { upstream: "submodules/adams-bridge/src/exp_mask/tb", arca: "src/mldsa_mlkem_all_levels/exp_mask/tb" }
-    - { upstream: "submodules/adams-bridge/src/makehint/tb", arca: "src/mldsa_mlkem_all_levels/makehint/tb" }
-    - { upstream: "submodules/adams-bridge/src/norm_check/tb", arca: "src/mldsa_mlkem_all_levels/norm_check/tb" }
-    - { upstream: "submodules/adams-bridge/src/ntt_top/tb", arca: "src/mldsa_mlkem_all_levels/ntt_top/tb" }
-    - { upstream: "submodules/adams-bridge/src/pk_decode/tb", arca: "src/mldsa_mlkem_all_levels/pk_decode/tb" }
-    - { upstream: "submodules/adams-bridge/src/power2round/tb", arca: "src/mldsa_mlkem_all_levels/power2round/tb" }
-    - { upstream: "submodules/adams-bridge/src/rej_bounded/tb", arca: "src/mldsa_mlkem_all_levels/rej_bounded/tb" }
-    - { upstream: "submodules/adams-bridge/src/rej_sampler/tb", arca: "src/mldsa_mlkem_all_levels/rej_sampler/tb" }
-    - { upstream: "submodules/adams-bridge/src/sample_in_ball/tb", arca: "src/mldsa_mlkem_all_levels/sample_in_ball/tb" }
-    - { upstream: "submodules/adams-bridge/src/sigdecode_h/tb", arca: "src/mldsa_mlkem_all_levels/sigdecode_h/tb" }
-    - { upstream: "submodules/adams-bridge/src/sig_decode_z/tb", arca: "src/mldsa_mlkem_all_levels/sig_decode_z/tb" }
-    - { upstream: "submodules/adams-bridge/src/sig_encode_z/tb", arca: "src/mldsa_mlkem_all_levels/sig_encode_z/tb" }
-    - { upstream: "submodules/adams-bridge/src/sk_decode/tb", arca: "src/mldsa_mlkem_all_levels/sk_decode/tb" }
-    - { upstream: "submodules/adams-bridge/src/sk_encode/tb", arca: "src/mldsa_mlkem_all_levels/sk_encode/tb" }
-    - { upstream: "submodules/adams-bridge/src/abr_libs/stimulus", arca: "src/mldsa_mlkem_all_levels/abr_libs/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/abr_sha3/stimulus", arca: "src/mldsa_mlkem_all_levels/abr_sha3/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/abr_top/stimulus", arca: "src/mldsa_mlkem_all_levels/abr_top/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/cbd_sampler/stimulus", arca: "src/mldsa_mlkem_all_levels/cbd_sampler/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/compress/stimulus", arca: "src/mldsa_mlkem_all_levels/compress/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/decompose/stimulus", arca: "src/mldsa_mlkem_all_levels/decompose/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/exp_mask/stimulus", arca: "src/mldsa_mlkem_all_levels/exp_mask/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/makehint/stimulus", arca: "src/mldsa_mlkem_all_levels/makehint/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/norm_check/stimulus", arca: "src/mldsa_mlkem_all_levels/norm_check/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/ntt_top/stimulus", arca: "src/mldsa_mlkem_all_levels/ntt_top/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/pk_decode/stimulus", arca: "src/mldsa_mlkem_all_levels/pk_decode/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/power2round/stimulus", arca: "src/mldsa_mlkem_all_levels/power2round/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/rej_bounded/stimulus", arca: "src/mldsa_mlkem_all_levels/rej_bounded/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/rej_sampler/stimulus", arca: "src/mldsa_mlkem_all_levels/rej_sampler/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/sample_in_ball/stimulus", arca: "src/mldsa_mlkem_all_levels/sample_in_ball/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/sigdecode_h/stimulus", arca: "src/mldsa_mlkem_all_levels/sigdecode_h/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/sig_decode_z/stimulus", arca: "src/mldsa_mlkem_all_levels/sig_decode_z/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/sig_encode_z/stimulus", arca: "src/mldsa_mlkem_all_levels/sig_encode_z/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/sk_decode/stimulus", arca: "src/mldsa_mlkem_all_levels/sk_decode/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/sk_encode/stimulus", arca: "src/mldsa_mlkem_all_levels/sk_encode/stimulus" }
-    - { upstream: "submodules/adams-bridge/src/abr_libs/uvmf", arca: "src/mldsa_mlkem_all_levels/abr_libs/uvmf" }
-    - { upstream: "submodules/adams-bridge/src/abr_top/uvmf", arca: "src/mldsa_mlkem_all_levels/abr_top/uvmf" }
-    - { upstream: "submodules/adams-bridge/src/ntt_top/utb", arca: "src/mldsa_mlkem_all_levels/ntt_top/utb" }
-    - { upstream: "src/abr/coverage/config", arca: "src/mldsa_mlkem_all_levels/coverage/config" }
+  subtrees:  # upstream path -> Tessera path
+    - { upstream: "submodules/adams-bridge/src/abr_libs/rtl", tessera: "src/mldsa_mlkem_all_levels/abr_libs/rtl" }
+    - { upstream: "submodules/adams-bridge/src/abr_prim/rtl", tessera: "src/mldsa_mlkem_all_levels/abr_prim/rtl" }
+    - { upstream: "submodules/adams-bridge/src/abr_prim_generic/rtl", tessera: "src/mldsa_mlkem_all_levels/abr_prim_generic/rtl" }
+    - { upstream: "submodules/adams-bridge/src/abr_sampler_top/rtl", tessera: "src/mldsa_mlkem_all_levels/abr_sampler_top/rtl" }
+    - { upstream: "submodules/adams-bridge/src/abr_sha3/rtl", tessera: "src/mldsa_mlkem_all_levels/abr_sha3/rtl" }
+    - { upstream: "submodules/adams-bridge/src/abr_top/rtl", tessera: "src/mldsa_mlkem_all_levels/abr_top/rtl" }
+    - { upstream: "submodules/adams-bridge/src/barrett_reduction/rtl", tessera: "src/mldsa_mlkem_all_levels/barrett_reduction/rtl" }
+    - { upstream: "submodules/adams-bridge/src/cbd_sampler/rtl", tessera: "src/mldsa_mlkem_all_levels/cbd_sampler/rtl" }
+    - { upstream: "submodules/adams-bridge/src/compress/rtl", tessera: "src/mldsa_mlkem_all_levels/compress/rtl" }
+    - { upstream: "submodules/adams-bridge/src/decompose/rtl", tessera: "src/mldsa_mlkem_all_levels/decompose/rtl" }
+    - { upstream: "submodules/adams-bridge/src/decompress/rtl", tessera: "src/mldsa_mlkem_all_levels/decompress/rtl" }
+    - { upstream: "submodules/adams-bridge/src/exp_mask/rtl", tessera: "src/mldsa_mlkem_all_levels/exp_mask/rtl" }
+    - { upstream: "submodules/adams-bridge/src/makehint/rtl", tessera: "src/mldsa_mlkem_all_levels/makehint/rtl" }
+    - { upstream: "submodules/adams-bridge/src/norm_check/rtl", tessera: "src/mldsa_mlkem_all_levels/norm_check/rtl" }
+    - { upstream: "submodules/adams-bridge/src/ntt_top/rtl", tessera: "src/mldsa_mlkem_all_levels/ntt_top/rtl" }
+    - { upstream: "submodules/adams-bridge/src/pk_decode/rtl", tessera: "src/mldsa_mlkem_all_levels/pk_decode/rtl" }
+    - { upstream: "submodules/adams-bridge/src/power2round/rtl", tessera: "src/mldsa_mlkem_all_levels/power2round/rtl" }
+    - { upstream: "submodules/adams-bridge/src/rej_bounded/rtl", tessera: "src/mldsa_mlkem_all_levels/rej_bounded/rtl" }
+    - { upstream: "submodules/adams-bridge/src/rej_sampler/rtl", tessera: "src/mldsa_mlkem_all_levels/rej_sampler/rtl" }
+    - { upstream: "submodules/adams-bridge/src/sample_in_ball/rtl", tessera: "src/mldsa_mlkem_all_levels/sample_in_ball/rtl" }
+    - { upstream: "submodules/adams-bridge/src/sigdecode_h/rtl", tessera: "src/mldsa_mlkem_all_levels/sigdecode_h/rtl" }
+    - { upstream: "submodules/adams-bridge/src/sig_decode_z/rtl", tessera: "src/mldsa_mlkem_all_levels/sig_decode_z/rtl" }
+    - { upstream: "submodules/adams-bridge/src/sig_encode_z/rtl", tessera: "src/mldsa_mlkem_all_levels/sig_encode_z/rtl" }
+    - { upstream: "submodules/adams-bridge/src/sk_decode/rtl", tessera: "src/mldsa_mlkem_all_levels/sk_decode/rtl" }
+    - { upstream: "submodules/adams-bridge/src/sk_encode/rtl", tessera: "src/mldsa_mlkem_all_levels/sk_encode/rtl" }
+    - { upstream: "src/abr/coverage", tessera: "src/mldsa_mlkem_all_levels/coverage" }
+    - { upstream: "submodules/adams-bridge/src/abr_top/coverage", tessera: "src/mldsa_mlkem_all_levels/abr_top/coverage" }
+  collateral_subtrees:  # upstream path -> Tessera path
+    - { upstream: "submodules/adams-bridge/src/abr_libs/tb", tessera: "src/mldsa_mlkem_all_levels/abr_libs/tb" }
+    - { upstream: "submodules/adams-bridge/src/abr_sha3/tb", tessera: "src/mldsa_mlkem_all_levels/abr_sha3/tb" }
+    - { upstream: "submodules/adams-bridge/src/abr_top/tb", tessera: "src/mldsa_mlkem_all_levels/abr_top/tb" }
+    - { upstream: "submodules/adams-bridge/src/barrett_reduction/tb", tessera: "src/mldsa_mlkem_all_levels/barrett_reduction/tb" }
+    - { upstream: "submodules/adams-bridge/src/cbd_sampler/tb", tessera: "src/mldsa_mlkem_all_levels/cbd_sampler/tb" }
+    - { upstream: "submodules/adams-bridge/src/compress/tb", tessera: "src/mldsa_mlkem_all_levels/compress/tb" }
+    - { upstream: "submodules/adams-bridge/src/decompose/tb", tessera: "src/mldsa_mlkem_all_levels/decompose/tb" }
+    - { upstream: "submodules/adams-bridge/src/exp_mask/tb", tessera: "src/mldsa_mlkem_all_levels/exp_mask/tb" }
+    - { upstream: "submodules/adams-bridge/src/makehint/tb", tessera: "src/mldsa_mlkem_all_levels/makehint/tb" }
+    - { upstream: "submodules/adams-bridge/src/norm_check/tb", tessera: "src/mldsa_mlkem_all_levels/norm_check/tb" }
+    - { upstream: "submodules/adams-bridge/src/ntt_top/tb", tessera: "src/mldsa_mlkem_all_levels/ntt_top/tb" }
+    - { upstream: "submodules/adams-bridge/src/pk_decode/tb", tessera: "src/mldsa_mlkem_all_levels/pk_decode/tb" }
+    - { upstream: "submodules/adams-bridge/src/power2round/tb", tessera: "src/mldsa_mlkem_all_levels/power2round/tb" }
+    - { upstream: "submodules/adams-bridge/src/rej_bounded/tb", tessera: "src/mldsa_mlkem_all_levels/rej_bounded/tb" }
+    - { upstream: "submodules/adams-bridge/src/rej_sampler/tb", tessera: "src/mldsa_mlkem_all_levels/rej_sampler/tb" }
+    - { upstream: "submodules/adams-bridge/src/sample_in_ball/tb", tessera: "src/mldsa_mlkem_all_levels/sample_in_ball/tb" }
+    - { upstream: "submodules/adams-bridge/src/sigdecode_h/tb", tessera: "src/mldsa_mlkem_all_levels/sigdecode_h/tb" }
+    - { upstream: "submodules/adams-bridge/src/sig_decode_z/tb", tessera: "src/mldsa_mlkem_all_levels/sig_decode_z/tb" }
+    - { upstream: "submodules/adams-bridge/src/sig_encode_z/tb", tessera: "src/mldsa_mlkem_all_levels/sig_encode_z/tb" }
+    - { upstream: "submodules/adams-bridge/src/sk_decode/tb", tessera: "src/mldsa_mlkem_all_levels/sk_decode/tb" }
+    - { upstream: "submodules/adams-bridge/src/sk_encode/tb", tessera: "src/mldsa_mlkem_all_levels/sk_encode/tb" }
+    - { upstream: "submodules/adams-bridge/src/abr_libs/stimulus", tessera: "src/mldsa_mlkem_all_levels/abr_libs/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/abr_sha3/stimulus", tessera: "src/mldsa_mlkem_all_levels/abr_sha3/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/abr_top/stimulus", tessera: "src/mldsa_mlkem_all_levels/abr_top/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/cbd_sampler/stimulus", tessera: "src/mldsa_mlkem_all_levels/cbd_sampler/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/compress/stimulus", tessera: "src/mldsa_mlkem_all_levels/compress/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/decompose/stimulus", tessera: "src/mldsa_mlkem_all_levels/decompose/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/exp_mask/stimulus", tessera: "src/mldsa_mlkem_all_levels/exp_mask/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/makehint/stimulus", tessera: "src/mldsa_mlkem_all_levels/makehint/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/norm_check/stimulus", tessera: "src/mldsa_mlkem_all_levels/norm_check/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/ntt_top/stimulus", tessera: "src/mldsa_mlkem_all_levels/ntt_top/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/pk_decode/stimulus", tessera: "src/mldsa_mlkem_all_levels/pk_decode/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/power2round/stimulus", tessera: "src/mldsa_mlkem_all_levels/power2round/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/rej_bounded/stimulus", tessera: "src/mldsa_mlkem_all_levels/rej_bounded/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/rej_sampler/stimulus", tessera: "src/mldsa_mlkem_all_levels/rej_sampler/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/sample_in_ball/stimulus", tessera: "src/mldsa_mlkem_all_levels/sample_in_ball/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/sigdecode_h/stimulus", tessera: "src/mldsa_mlkem_all_levels/sigdecode_h/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/sig_decode_z/stimulus", tessera: "src/mldsa_mlkem_all_levels/sig_decode_z/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/sig_encode_z/stimulus", tessera: "src/mldsa_mlkem_all_levels/sig_encode_z/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/sk_decode/stimulus", tessera: "src/mldsa_mlkem_all_levels/sk_decode/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/sk_encode/stimulus", tessera: "src/mldsa_mlkem_all_levels/sk_encode/stimulus" }
+    - { upstream: "submodules/adams-bridge/src/abr_libs/uvmf", tessera: "src/mldsa_mlkem_all_levels/abr_libs/uvmf" }
+    - { upstream: "submodules/adams-bridge/src/abr_top/uvmf", tessera: "src/mldsa_mlkem_all_levels/abr_top/uvmf" }
+    - { upstream: "submodules/adams-bridge/src/ntt_top/utb", tessera: "src/mldsa_mlkem_all_levels/ntt_top/utb" }
+    - { upstream: "src/abr/coverage/config", tessera: "src/mldsa_mlkem_all_levels/coverage/config" }
   compile_order_from: submodules/adams-bridge/src/abr_top/config/abr_top.vf
 
 importer:
   script: tools/scripts/rename/rename_mldsa_mlkem_all_levels.sh
   library_version: "2.1.1"
-  toolchain_fingerprint: "a88af8fdc8c6717e15cdb38dbc63109307e176b4f3345ff3017c7a20fddcb0c9"
+  toolchain_fingerprint: "5d23736d8c78e4f34c602b2cffebbb443de57cb4e75a57bf72007a693aed1707"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -157,7 +157,7 @@ policy:
     []
   generator_inputs:  # fed to a code generator, must stay byte-identical to upstream
     []
-  keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed
+  keep_list:  # shared Tessera platform identifiers, deliberately NOT prefixed
     - "kv_defines_pkg"
     - "kv_read_t"
     - "kv_write_t"
@@ -240,7 +240,7 @@ artifacts:
     - src/mldsa_mlkem_all_levels/abr_top/uvmf
     - src/mldsa_mlkem_all_levels/ntt_top/utb
     - src/mldsa_mlkem_all_levels/coverage/config
-  filelist: src/mldsa_mlkem_all_levels/config/arca_abr_top.vf
+  filelist: src/mldsa_mlkem_all_levels/config/tessera_abr_top.vf
   rename_map: src/mldsa_mlkem_all_levels/revinfo.map
 
 source_manifest:  # sha256 of the upstream files as imported
@@ -836,27 +836,27 @@ source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "b8c9f240ce2b60c9f7538617a96c062bc097083ac72f7b7f9e2615985b3435a3", path: "src/abr/coverage/config/abr_cm_hier.cfg" }
 
 renamed_manifest:  # sha256 of the committed, renamed files
-  - { sha256: "48463d64f031248e7a67f921330295ed1602381d6e0fe882109b5c9c81d3f973", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_1r1w_512x4_ram.sv" }
-  - { sha256: "e3290c0a848ff334e5785884b23b789f4ce794a7571f85e350f01791cdfc7692", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_1r1w_be_ram.sv" }
-  - { sha256: "ce8d36a871bb6937e6963fff71d6271ebd8482d099a00c9a8bd4eed2a1622986", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_1r1w_ram.sv" }
-  - { sha256: "effe7af0f78477ce7417f363a332930c94276d46eb0fff14c5bcf35a06aa822e", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_2ff_sync.sv" }
-  - { sha256: "c75abb8b3b2695872d90fc5f75af527e7a98d80bf3f7259e9a4421f7300f6da3", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_add_sub_mod.sv" }
-  - { sha256: "c93773d9503c25fbe3d7c05d367818de8f7e41325377852c2e2790fefb27f578", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_adder.sv" }
-  - { sha256: "57f7a363baf31f30dd17bd692f361f99365de0342b08140ebc9b37011df07ade", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_ahb_defines_pkg.sv" }
-  - { sha256: "222b2d30463dd71718c32e80eb5eeff5e94c411d38243a19f39584ba78d34362", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_ahb_slv_sif.sv" }
-  - { sha256: "d054d0982fd12ab6a53b816fb87ce8deaa251b35659bf837e49ac8d30cf52ed3", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_icg.sv" }
-  - { sha256: "c8a1044a0d672ed9abf9b4085f93fde747c5c7e8af23c7ae538decb89e8b3850", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_macros.svh" }
-  - { sha256: "1a7c72b1eebe5cf71eda145ab8eb728d228d9f9fff5334b867a8fd05f8587cf2", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_msg_buffer.sv" }
-  - { sha256: "afe60fdb8ea8380ef9a9e2bb00a69c5bf8277013007de2f7f36ebb871d4ccad2", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_ntt_add_sub_mod.sv" }
-  - { sha256: "88356e313db24626bcebb37520b3a1de01613f0afd9db18204bf2860678b6f7c", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_piso.sv" }
-  - { sha256: "51322ab3ce31f7d47088b6c81979aedcd5cbab2e4e9d02a7c075d3108d0f6942", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_piso_multi.sv" }
-  - { sha256: "fb65a6309315004e1d2379316d27a395e64967f63c2d6aeb956a042af26bd8ca", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_ram_regout.sv" }
-  - { sha256: "f552c6cc803cb11d7fa7bea7b3037da39e0037e5dc918503907cd0fb590ceba4", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_rd_lat_buffer.sv" }
-  - { sha256: "a250fc23941c425326f79192c168605634ede7e4bd45d71361b4f1dc506b1dc1", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_recombiner.sv" }
-  - { sha256: "8abdfdc0284ffb9df7b387a22d6b386d6c2616096fe5c1c4d3c96d9407421ecf", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_sample_buffer.sv" }
-  - { sha256: "de94af992743568b00cd4d78d1b60fdc679757d1f9ff554ae235aa01e26db0c4", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/arca_abr_splitter.sv" }
+  - { sha256: "2b50fbf64288ca164ea9f032478c90e52a8e7cde3543be722063262e04145aee", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_1r1w_512x4_ram.sv" }
+  - { sha256: "f2ec3f13630a97d0506350ae82242523da220b69583d314ecb235a50ccf550eb", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_1r1w_be_ram.sv" }
+  - { sha256: "7495918e4b6128be909294e797b9c05c7ab44b3f81f1012459a5c45ba149dd94", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_1r1w_ram.sv" }
+  - { sha256: "69021fcbcfc1021a5d8eba3984df9420d6659250564174a57f6888d965cfa4eb", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_2ff_sync.sv" }
+  - { sha256: "d0f47eb29e46ce17424a325a57d5dfde1cfbbf84155605c4caaa844544779c4d", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_add_sub_mod.sv" }
+  - { sha256: "3065b9646b93b5c5bdfcb2cdbb7e8b111bd4a28dfee0f3bb616f1e53e644df2f", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_adder.sv" }
+  - { sha256: "8ee641c85b7a6d95e70b5be9f60c7af6fa0e7bcc951a491b7e51ff0bcd2aee2b", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_ahb_defines_pkg.sv" }
+  - { sha256: "5133f00ad63118f8ac70a27a5c1391c5ca3b970e7a3597e5898a6cb4d4467c48", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_ahb_slv_sif.sv" }
+  - { sha256: "46b96261abc5566c016819a06c8729ff7f8a9b336342c6ed3bf2108b54483384", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_icg.sv" }
+  - { sha256: "5fc88208e133402f722671e368bd6e048bdad5ea8203963f658318e17866703f", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_macros.svh" }
+  - { sha256: "d4df18003f1a230f59dbd1491db1193e859374571f0e338ce69987fe983ba434", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_msg_buffer.sv" }
+  - { sha256: "3386e46fd389f2a18acc2fe979765d1995adaeb8cb6f495247528dc33f5940f6", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_ntt_add_sub_mod.sv" }
+  - { sha256: "f03a9dddcf34fd97f8c9e0ef9dbad199b9325d7bfd06528602800b694122e67a", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_piso.sv" }
+  - { sha256: "080a5139fd42d77bb5c52d8307fb240387ad556fef29db01971c57a9293c7cf2", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_piso_multi.sv" }
+  - { sha256: "23948db1facf300575e7968ecf638b3ac877fe9b2aa1a50b396a4e8c3639c3ad", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_ram_regout.sv" }
+  - { sha256: "bbbc30b3629cad9641484442688e2764f2c647a39b0fb32e44461bd2dc863c6e", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_rd_lat_buffer.sv" }
+  - { sha256: "748146f4ccb60e194af97d7e35d182e1d7e1552a07550750a17a894c406a14fa", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_recombiner.sv" }
+  - { sha256: "7279c6c43f94bb13a2b3fa9f22501f20eb58cdc4f4f8e1cb6e750545fc86160c", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_sample_buffer.sv" }
+  - { sha256: "52ff95c15596bc60c26dbf3c7dcb7a66aff31409c83128903773a8abe603a9ac", path: "src/mldsa_mlkem_all_levels/abr_libs/rtl/tessera_abr_splitter.sv" }
   - { sha256: "06e9fdf9005915a738ef614ce5004b0e10274c9e71e73901aa60582b7e306893", path: "src/mldsa_mlkem_all_levels/abr_libs/stimulus/tests/directed/masking_test.yml" }
-  - { sha256: "c1f6803610a8a317c1f20648d8626a15d34c57f4f0a750f6e5074df528cdb9b2", path: "src/mldsa_mlkem_all_levels/abr_libs/tb/abr_ntt_add_sub_mod_tb.sv" }
+  - { sha256: "d6f627207de9421ad5070d6bedfe36457e4c4683f18095529e0b979d3051d1b8", path: "src/mldsa_mlkem_all_levels/abr_libs/tb/abr_ntt_add_sub_mod_tb.sv" }
   - { sha256: "92214019d3d61d327f5d3647038a4df8730e6b501470cb168fd07b71a2dd4aa9", path: "src/mldsa_mlkem_all_levels/abr_libs/uvmf/qvip_ahb_lite_slave_dir/config_policies/ahb_lite_slave_0_config_policy.svh" }
   - { sha256: "3a3645e943512cb3f62b9dc81dbd61ea38745db1a449dc36f68f2daac3c891d6", path: "src/mldsa_mlkem_all_levels/abr_libs/uvmf/qvip_ahb_lite_slave_dir/config_policies/qvip_ahb_lite_slave_params_pkg.sv" }
   - { sha256: "88a316000f355a3549973e29b944cebc1e912bbcd7976b7ebacd4337ccf78849", path: "src/mldsa_mlkem_all_levels/abr_libs/uvmf/qvip_ahb_lite_slave_dir/qvip_ahb_lite_slave_dir.cmd" }
@@ -902,82 +902,82 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "79c10fc902531110e32edfb1a08751a63a738d1d697b344cd8aa1bce6ff9cc1a", path: "src/mldsa_mlkem_all_levels/abr_libs/uvmf/qvip_ahb_lite_slave_dir/uvmf_tb/qvip_ahb_lite_slave_test_pkg.sv" }
   - { sha256: "9f8c87ea9d7dff31883965a196cd569a0001bd39c285c4b8e07055448fa6c254", path: "src/mldsa_mlkem_all_levels/abr_libs/uvmf/qvip_ahb_lite_slave_dir/uvmf_tb/qvip_ahb_lite_slave_vseq_base.svh" }
   - { sha256: "5b5b55826faf53bfb35cccb30a0973274b586d9542d06d30491957ad0c7dec3a", path: "src/mldsa_mlkem_all_levels/abr_libs/uvmf/qvip_ahb_lite_slave_dir/uvmf_tb/test_packages.svh" }
-  - { sha256: "9e67c30e425bea9f0c6c9d97bb7a7f080f38bbaeb4033d6af2429917ee9abff5", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_alert_pkg.sv" }
-  - { sha256: "2c0715630a4f20a209c055276a8fcebdae7022119f2793667f812d2a75bc90e7", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_alert_receiver.sv" }
-  - { sha256: "7b2e2480460e89bb3253187c3c157d4e54d94c3a39c34ed2d82147fbfd64481d", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_alert_sender.sv" }
-  - { sha256: "e62612c7c1a77ef90ae5d09a32969917aca1d5ef0ba2b577512486ad3026f8b1", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_arbiter_ppc.sv" }
-  - { sha256: "7573a9610a3f3b431515a1d860bc832f6075c0c46569cb5a99c7eb0a4353aaf7", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_assert.sv" }
-  - { sha256: "391df192dbef5eeae642dcf3ffab959cbbc3f731020814861e9aabdc19dcf3c3", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_assert_dummy_macros.svh" }
-  - { sha256: "b319d06ced86a51170e3d6a61691195fb45c24ca01ccf84296df680e2fdc9a0a", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_assert_sec_cm.svh" }
-  - { sha256: "00fce128c218b69f99e7a5c3ca47a70959ad48d2d415e38b3705679c46073d0b", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_assert_standard_macros.svh" }
-  - { sha256: "4b500532ed65ec44b56388a4d4733bd2db8ce8b1201a46d5b36813dc138bcf70", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_assert_yosys_macros.svh" }
-  - { sha256: "c176b2594b1e0e584d08de909f92e76df3caf66c0da32be64f6703cd13f19106", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_buf.sv" }
-  - { sha256: "4bbb248e5e7eb5a4ae3e4a9bb6dd1fb51e27938e88b7d0bbb1c99d654518366e", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_cdc_rand_delay.sv" }
-  - { sha256: "07a9a15c020183d6aa4115e76c166762c384ce846a5a1e08cd3fdf41721c89ad", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_cipher_pkg.sv" }
-  - { sha256: "58b5cc1623fe62ff6e4e1ac10bc990db866f0f01932b1bf0dfabd602190e01a0", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_count.sv" }
-  - { sha256: "d9921a09e90fd045dd03d12663b28166e32632e3ef0333d66e620c47f18a5e58", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_diff_decode.sv" }
-  - { sha256: "1688f8ed1147243ceb82abb85da363ca4a81f91c99fa4d5e08a77cf5058ce722", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_dom_and_2share.sv" }
-  - { sha256: "27f0e92e3dde105b09ab63d7fdf8f8f72b2924eb620755f6b09f04390b00c87a", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_edge_detector.sv" }
-  - { sha256: "c886c11470b912595c8ddff2d736f57212faae21f387f62e9548fe4a284a84bb", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_fifo_sync.sv" }
-  - { sha256: "7ca8a2f20f7c8da9ce7ca3c9f5e070f3f69ff44e48e5765f10924b27ef94e7b2", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_fifo_sync_cnt.sv" }
-  - { sha256: "8feb6e9c05904d18373c1557189da23dcbe39d829d4aa14d5c2be57bbe989279", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_flop.sv" }
-  - { sha256: "c79834fa4cabc85371b430a61c92c1e7c1a0d8716c5e8f549bbcb6e346531f10", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_flop_2sync.sv" }
-  - { sha256: "99b62b08369cdb722eb3a5fb7aaceeaf1570c7edc10ce3c5c8211479e61b4ea4", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_flop_en.sv" }
-  - { sha256: "bc965ac19d68631e2715e39df04bfd14f860916332b8cfcf477f67f77550526d", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_flop_macros.sv" }
-  - { sha256: "12486113877925b381697532073b23fbe5f8314658d62ab10de1fc86086361ac", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_intr_hw.sv" }
-  - { sha256: "d74575ab5080612ca374283cf2d5a9507acef7496540f5b06022709971ffee53", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_lc_sync.sv" }
-  - { sha256: "ebebe7a2b6e5697622e1224745a6306517b4dd7547fe5f1a41536d601390d07e", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_lfsr.sv" }
-  - { sha256: "2864fce47a65bfb5c272df93e775a2eaec99a05cbb450f4eaa02cda80ade3953", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_max_tree.sv" }
-  - { sha256: "8cb2b1864604e964847e3dc413c1735de1334b0ee13aa4b5169896595b135b73", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_mubi4_sync.sv" }
-  - { sha256: "7061a63ec9429eb06735b0e5f53088dd3b01fea6d8b23411e5676cae32ac9e58", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_mubi8_sync.sv" }
-  - { sha256: "956e35662cf780c110c7a1a674df3ccbd9070aab77b2a0e81fbc726cb6f4ee69", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_mubi_pkg.sv" }
-  - { sha256: "0ea5f85a07be12d15dda45f68a9a71305cab67c271c24f8a8b2eb60a0e360983", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_onehot_check.sv" }
-  - { sha256: "75e563c3b08b2d50fe43de6f13f9fbf7af911b29980ee39dada93dc0205ae4d6", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_packer_fifo.sv" }
-  - { sha256: "50806d0e188df8db84400ec1141a4565876ade7e0e481063bc63035618dc8c80", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_pkg.sv" }
-  - { sha256: "a8558566bd2465c34aa95d4728f5b4bd841cd67cf0e83f725b975731c57e307f", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_reg_we_check.sv" }
-  - { sha256: "04ebfe629db5067c423145271319792aa9c631ec4a7b271f889d84f2be659a39", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_sec_anchor_buf.sv" }
-  - { sha256: "37f35f457f3a180f774f407f8836842c1cc6093f6249471b38f164907b1b8701", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_sec_anchor_flop.sv" }
-  - { sha256: "047d32120f0ef985e3ae35afc1edb780b452c3d6baaac7c071ba56b08b1ec1ae", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_slicer.sv" }
-  - { sha256: "75fc093484e26d5579ec2f689685ae4717ad2b980cc7c5f3505d7a280034c922", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_sparse_fsm_flop.sv" }
-  - { sha256: "857bf375e5bf8433fbfeac47c5941693027a167c8e1593e3545ddab3fddad790", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_sparse_fsm_pkg.sv" }
-  - { sha256: "0df015af88a65bae96e24f8e87e12d85cd2fd312e989427efdf46440a9f58d1d", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_subreg.sv" }
-  - { sha256: "4baf4807346f26b6e2b9257c943703d7a2e81ea7bed38cbc8af6c15bb1e23613", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_subreg_arb.sv" }
-  - { sha256: "110c75cdd8f456e79f682322e36c3c68c09cb993b246705bdb806a1635e25776", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_subreg_ext.sv" }
-  - { sha256: "296780384ad919fa4b0c85280d3f9925ce5869bf63ba20312b0456b436ffdbce", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_subreg_pkg.sv" }
-  - { sha256: "9483e26bfd0108ca42a8b1c88db270b78ab80917b500fa1e88ae9e61bc57e44a", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_sum_tree.sv" }
-  - { sha256: "dccc2aad98a6beaa062066624ce9562fb2908edd16e325b2e59a5f54d275c880", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/arca_abr_prim_util_pkg.sv" }
-  - { sha256: "e093e53d9d85a412b924c87e64cbfb943e95e84d864935ca8e4fa8da355d2345", path: "src/mldsa_mlkem_all_levels/abr_prim_generic/rtl/arca_abr_prim_generic_buf.sv" }
-  - { sha256: "2bb7c125321135a2321e90a8f888038871fe6c7b5bf1503e0f06ae9d4cea4950", path: "src/mldsa_mlkem_all_levels/abr_prim_generic/rtl/arca_abr_prim_generic_flop.sv" }
-  - { sha256: "785f8b421ff9d0724d43e1b5c121ce2c573ca8948099ef4f5b9ac7e43aa35118", path: "src/mldsa_mlkem_all_levels/abr_prim_generic/rtl/arca_abr_prim_generic_flop_en.sv" }
-  - { sha256: "63c3674d657e48c82cd50984beeaca63e27050eba0e8262b8cb30df6ac29d873", path: "src/mldsa_mlkem_all_levels/abr_prim_generic/rtl/arca_abr_prim_generic_xor2.sv" }
-  - { sha256: "58349741d361811c96557795891254de31b7ee8c12f5b4843226c0e30d32852b", path: "src/mldsa_mlkem_all_levels/abr_sampler_top/rtl/arca_abr_sampler_pkg.sv" }
-  - { sha256: "17d83b425d34c5fa838e4cc14ef32c410994544e2d528c5410a0b63aefdc4309", path: "src/mldsa_mlkem_all_levels/abr_sampler_top/rtl/arca_abr_sampler_top.sv" }
-  - { sha256: "9231df42d346a404d6b22f6a8fd44ebbb6d6cf065894bb192a8eddae3eddb1d3", path: "src/mldsa_mlkem_all_levels/abr_sha3/rtl/arca_abr_keccak_2share.sv" }
-  - { sha256: "fe6cee05947882dd1812f0b58c5341c0816453436000393002ffcfd50b6c4acc", path: "src/mldsa_mlkem_all_levels/abr_sha3/rtl/arca_abr_keccak_round.sv" }
-  - { sha256: "f417700fe8ed35ed1b5c73aedcbe6f1d4668c2270cbd8efe1f6b21fe8f688b6c", path: "src/mldsa_mlkem_all_levels/abr_sha3/rtl/arca_abr_sha3.sv" }
-  - { sha256: "d7e70e80b6bbb9de55c69d7d583bfb1963ff4738f7a2840c0c7611108ce6100c", path: "src/mldsa_mlkem_all_levels/abr_sha3/rtl/arca_abr_sha3_pkg.sv" }
-  - { sha256: "53869b6a5d9d1f7223b049b93f7719d05e9150dcf04631d0c9460df482b87e31", path: "src/mldsa_mlkem_all_levels/abr_sha3/rtl/arca_abr_sha3pad.sv" }
+  - { sha256: "0c8bfc53d073a41730b6c5955ca4b14a4ef10502914cb0b72173151334783356", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_alert_pkg.sv" }
+  - { sha256: "5898ea478e51853a3d5dc950121d0f8db437b9ffc080c159c04f4843d6eac22d", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_alert_receiver.sv" }
+  - { sha256: "0b0dc68f9e6982cae95cb510cc42d464ed7f15dc7333d3c38007865a0c477649", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_alert_sender.sv" }
+  - { sha256: "b7c21554a13bd501ec23613bfbd59aee5f6fec9d589e7f21b54ab8693cf36263", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_arbiter_ppc.sv" }
+  - { sha256: "59d6a25a8424f6f1ed130451c003d23b8db322537697f0cfb7c36dc58e0bd34b", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_assert.sv" }
+  - { sha256: "c89dc0e2fe147ed43a1ed1d44e8bb3d74dac2bd514d540c97ee6872887d54d9e", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_assert_dummy_macros.svh" }
+  - { sha256: "702871a6c5392378bb6c853616b40d5e98cb8e0e4477e4491e77dbdface66127", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_assert_sec_cm.svh" }
+  - { sha256: "3dce3b2f1aa717573054555646c7afe52a888171806508a5a71833d8e57ca5a7", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_assert_standard_macros.svh" }
+  - { sha256: "e145d61e0f77fd6f9896336ba01bdc391273804935f785541c6a04ab02576b85", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_assert_yosys_macros.svh" }
+  - { sha256: "cca096e48c7303ae0895a511e81cf80d1688d8ba7180999b19f4ed27f7eff484", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_buf.sv" }
+  - { sha256: "02a4434420bd584d0e0ba02dae09fa35952b8608bb3d28852bfa2e7dfdd4a5c4", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_cdc_rand_delay.sv" }
+  - { sha256: "5030cc1f46d51d778603075ea93cd7aa66a9ab29439763fdb90824d8d909f977", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_cipher_pkg.sv" }
+  - { sha256: "4105ab03391a8082898b0da8484d4ea48ea0aed8ad6562dd6a1d2b414cb44239", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_count.sv" }
+  - { sha256: "a54eb69303ec00025453fd08ac61ffab67dd1c1ccde6c395a2da75de381e5d18", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_diff_decode.sv" }
+  - { sha256: "d3cee323171a1b68af399f8b3d950dbc4c25f7b1ca3a28c74863bdf926cd621c", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_dom_and_2share.sv" }
+  - { sha256: "c5874ceef1d7274a030efd4e29a42f580f43ca19833b7739d342aacaeab96719", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_edge_detector.sv" }
+  - { sha256: "092b0d424bc67983664f6ed611bef9597242e57a3d31ca4cf54e4ad4eeb3ca4e", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_fifo_sync.sv" }
+  - { sha256: "3b7d72b3693b9c83073dead95827f6f83761dc41e6d6e66e0f4bcab452fc4bd5", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_fifo_sync_cnt.sv" }
+  - { sha256: "470295997055e0d75e6e33219340a82a7f85095f4765b0c6c5f05799a28fdddd", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_flop.sv" }
+  - { sha256: "d5bd8823f08ccebf7e5571320a8b50881e615051fa2cc1120f2491d3731f8fa8", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_flop_2sync.sv" }
+  - { sha256: "e0b8ee2feeaf3fc86db9258f8167cd2795af5f4c7376c534a9572c7f472c613e", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_flop_en.sv" }
+  - { sha256: "26976c01b6ce546f81c851b89f203dc01505f5acfdefe7a701f744e05e9cfa50", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_flop_macros.sv" }
+  - { sha256: "69cbd6e6dbbf2c2ff14c36e2b7d7572ea1c40baefab8d694a698bcd77c9dfac4", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_intr_hw.sv" }
+  - { sha256: "fdb5cefd4651f3ea016050befa3585434e34eb6d85833691e9d04bc207d638c0", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_lc_sync.sv" }
+  - { sha256: "6a82cef4b047fd6d2c4ef35d0e666af798bf63f1a871d0b7e20174b81b9979d5", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_lfsr.sv" }
+  - { sha256: "adfc26a66f062d7eddf4d177f9ed0676d79e6e5868970c2c557c441405e73c86", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_max_tree.sv" }
+  - { sha256: "335cf15deb774993229a3fd1954ee92b2a6cc8271866a1a3f941dc4492be8ebe", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_mubi4_sync.sv" }
+  - { sha256: "69760303332ab2287ab0555a8892f908eb77a3177ad62f769e2a0c94866b7d46", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_mubi8_sync.sv" }
+  - { sha256: "f275743d3660f8252ab972f7decd3c5d3e592da3baa505fb8b43610c4c7e1d48", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_mubi_pkg.sv" }
+  - { sha256: "9b061657b6162d4b0b170e607d7decf9247d69d8107aee66737ba876200bcb8c", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_onehot_check.sv" }
+  - { sha256: "327770c43fffa6cfb160a9079fa2a4a74eaf48fc0731c5fd6b4d39b1b8ded236", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_packer_fifo.sv" }
+  - { sha256: "05d90995ecaf343986f6be947185fb768a2b5fb699e01ee66133270cbe3f730d", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_pkg.sv" }
+  - { sha256: "73ca118ab3631e0d049a43521ddeb69ae70a8597b0f2359ceb55e5d31f3714c1", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_reg_we_check.sv" }
+  - { sha256: "b0b8b74eef0d0e455c6b2ca0df8887e849410a8fd9c6e08f05706ac2027f5434", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_sec_anchor_buf.sv" }
+  - { sha256: "7f057eace6e6d42ea29d0c35062f59a35f02133e2a5c7a7823d2c57ee3831a0b", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_sec_anchor_flop.sv" }
+  - { sha256: "1d0e37a7a7e35ae71349346e63b684671b62e0ec08d71375aa146bcc7f48606f", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_slicer.sv" }
+  - { sha256: "ea8b870f47fc7bf79da3514b3c2ab5bfd46512af044a0c91aa9b4b2ba1d64b6f", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_sparse_fsm_flop.sv" }
+  - { sha256: "7870cb27744510dc051f68f5d59fd3b3df0719c1a3691951d1705c41a06f4d7a", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_sparse_fsm_pkg.sv" }
+  - { sha256: "de93a216ce90904c205b2d46c9bd6b7a0bfb5a1d9f7da3e111184a472189d142", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_subreg.sv" }
+  - { sha256: "e3e03479c730152b9f5f16fa68f81beb3473d1be095ba9c0c0fa156a67cfaa71", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_subreg_arb.sv" }
+  - { sha256: "16904cb0d1fcff411736df4c8c571fb7889c1dd7fa3c293aacae5134376ba3f3", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_subreg_ext.sv" }
+  - { sha256: "3b9b1a32e406056d03f18912009e586322de616308c17e907f3bb57bbd173b46", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_subreg_pkg.sv" }
+  - { sha256: "eaedbe03d551a0f52ed50a1acf60e7fe5349cbdf64a18d849c9d5b8947e1e67f", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_sum_tree.sv" }
+  - { sha256: "bf5edc6aa580615b0f82bea68c29bbc33ee9fb0997e3531c7434a3b13ebdf107", path: "src/mldsa_mlkem_all_levels/abr_prim/rtl/tessera_abr_prim_util_pkg.sv" }
+  - { sha256: "689736eaabf3948c1801e64a08f9f593f2fa36c50f12eb199ace8132a98ccd90", path: "src/mldsa_mlkem_all_levels/abr_prim_generic/rtl/tessera_abr_prim_generic_buf.sv" }
+  - { sha256: "b5cb107a501d2dcc65c4182ae1420e09219f9e6fb4bdf66341102082037fb569", path: "src/mldsa_mlkem_all_levels/abr_prim_generic/rtl/tessera_abr_prim_generic_flop.sv" }
+  - { sha256: "d5de96984b3c107be40c5e9e16d13242b5799f0ad1869336d9dca2d1c1566b4b", path: "src/mldsa_mlkem_all_levels/abr_prim_generic/rtl/tessera_abr_prim_generic_flop_en.sv" }
+  - { sha256: "d9a61e8ac2cd2c153f1531db8145527f12755aef76b02407560123b8b920323c", path: "src/mldsa_mlkem_all_levels/abr_prim_generic/rtl/tessera_abr_prim_generic_xor2.sv" }
+  - { sha256: "9b348505b2cf923c3a0f8955e19df089ea5d043bb689d0fd7321d2c77aa9d203", path: "src/mldsa_mlkem_all_levels/abr_sampler_top/rtl/tessera_abr_sampler_pkg.sv" }
+  - { sha256: "5da0301709f4d9909f94022f39db9da70036e3de9842aca882e5eee216bdc2cb", path: "src/mldsa_mlkem_all_levels/abr_sampler_top/rtl/tessera_abr_sampler_top.sv" }
+  - { sha256: "11717ea138b2b6b4fe363d4d72d81341f3170e4525c5ea2f564c81532fe19036", path: "src/mldsa_mlkem_all_levels/abr_sha3/rtl/tessera_abr_keccak_2share.sv" }
+  - { sha256: "ea34703ac701764560be13ba2c6bce1b62199fd627e3b449329f782496551e47", path: "src/mldsa_mlkem_all_levels/abr_sha3/rtl/tessera_abr_keccak_round.sv" }
+  - { sha256: "78d2bd14fcf17783b18514b309fb78657066faef42d5f4426b4b44ce9f72625e", path: "src/mldsa_mlkem_all_levels/abr_sha3/rtl/tessera_abr_sha3.sv" }
+  - { sha256: "b73af0ae5640572b8d47e66455e066ea47dfd21fa13c040e2ab2d2102528c2de", path: "src/mldsa_mlkem_all_levels/abr_sha3/rtl/tessera_abr_sha3_pkg.sv" }
+  - { sha256: "02f1892c176866cfcf306b340fc61ddf694be6f457228fcb7c7370faf6c77cbe", path: "src/mldsa_mlkem_all_levels/abr_sha3/rtl/tessera_abr_sha3pad.sv" }
   - { sha256: "1cd13ffb1dbcfac3149fa7217646a944519b56cb64193859b965dd753b272fa8", path: "src/mldsa_mlkem_all_levels/abr_sha3/stimulus/tests/directed/abr_sha3_rand_test.yml" }
   - { sha256: "a94911a9015aa709110453b460b295462808aea695842076525e1b67d8dc9e9c", path: "src/mldsa_mlkem_all_levels/abr_sha3/stimulus/tests/directed/five_squeeze_test.yml" }
   - { sha256: "f09353417b72f898b84cb966e086aceb3d2190fa455757398ea83501f2645c78", path: "src/mldsa_mlkem_all_levels/abr_sha3/tb/abr_sha3.py" }
-  - { sha256: "7c5fab0f227b12922a36e63288965db4d96ba1fcbb28cce38c6c0351ac6d1973", path: "src/mldsa_mlkem_all_levels/abr_sha3/tb/abr_sha3_tb.sv" }
-  - { sha256: "029bafd11f76308e58dd96a4ef444cb1ef813ece3a7c4b2ce2342ce0a14764c6", path: "src/mldsa_mlkem_all_levels/abr_sha3/tb/abr_sha3_tb_pkg.sv" }
-  - { sha256: "0a5e2bfdbc88b07fb0f3262eb32c6e4ff2ae4858ce5b06e2d0147b333896d113", path: "src/mldsa_mlkem_all_levels/abr_sha3/tb/five_squeeze_test.svh" }
-  - { sha256: "ee14496ccbc8a585aae67ec2baab08760c4a2be3a40b44054e642dbd5671f181", path: "src/mldsa_mlkem_all_levels/abr_top/coverage/abr_top_cov_bind.sv" }
-  - { sha256: "908813905c5fe8a03474918aeea20c7e2328cd72ec997a81c1b3e16de57c9b3d", path: "src/mldsa_mlkem_all_levels/abr_top/coverage/abr_top_cov_if.sv" }
-  - { sha256: "44134aaea6eca0e2c0fdda83a4159042c006ecd810b39b41b86b41af412fe797", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/arca_abr_config_defines.svh" }
-  - { sha256: "adfff1ef9c754791fce7ecd5f17e4329b8dbfdeaf53a99f41a30092827d8daf9", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/arca_abr_ctrl.sv" }
-  - { sha256: "8585d9f245062eeea961a98d02f3a3ae27fc8209287ce3fe0bded6b78e0786ce", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/arca_abr_ctrl_pkg.sv" }
-  - { sha256: "240e555c7dea381bf3703b1dfee6a89f643cfcdfa0d1d7a7c2824ae30b478dc2", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/arca_abr_mem_if.sv" }
-  - { sha256: "54abdea3ea62e4fa5a9d5f9c1638b98507445bac72fbace4c03c8ab8abbcc22f", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/arca_abr_mem_top.sv" }
-  - { sha256: "21f207a2079275e5a5eabfd62c4557aa66764641423146f21a3ada39404a4a95", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/arca_abr_params_pkg.sv" }
-  - { sha256: "77f87c90f935638a2f8ab6901f380ba9b0075179d2b65878b46168c3542bf8e1", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/arca_abr_reg.sv" }
-  - { sha256: "8ac1c5de69c1dfbd15e6a71f9732b1c9e58e0d68040bfc086853da460e18bd28", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/arca_abr_reg_pkg.sv" }
-  - { sha256: "689c20bd25317e676c116ebc989d979b2ac63e50edaa8893ec6812f526a9e9b9", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/arca_abr_seq.sv" }
-  - { sha256: "447fd57fdc25ff1822e08f695ddf74d177ce71226d854dab16f33dfc6443c2ff", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/arca_abr_top.sv" }
+  - { sha256: "343e6c4b17ac1d762fb4a3f8002564487ffe09721cb9d3e089d1d108b8f453c2", path: "src/mldsa_mlkem_all_levels/abr_sha3/tb/abr_sha3_tb.sv" }
+  - { sha256: "5fd778c4fbdc03af89b077f65669812d9ca122f33f3fcddff723d1f395c9fdf1", path: "src/mldsa_mlkem_all_levels/abr_sha3/tb/abr_sha3_tb_pkg.sv" }
+  - { sha256: "ae0fb8512b47dbb5fa128e1adef6eab3d2ffed33079eff2ee24367e21d0d9c53", path: "src/mldsa_mlkem_all_levels/abr_sha3/tb/five_squeeze_test.svh" }
+  - { sha256: "14899bd7ca5ba0947a1a5a2873386b3f06da57aa861ad747be00ccac240ec7ad", path: "src/mldsa_mlkem_all_levels/abr_top/coverage/abr_top_cov_bind.sv" }
+  - { sha256: "a48682b899b9eeb19ed8c4370285a819df5421685aa3414906cdeca274ee82a5", path: "src/mldsa_mlkem_all_levels/abr_top/coverage/abr_top_cov_if.sv" }
+  - { sha256: "91d49aeb22e91648bcf4aaa2b09caaea925d98145fedcebe2caed6f8ac70bb05", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/tessera_abr_config_defines.svh" }
+  - { sha256: "1a2820e1f6f6f077d55dee47e138c8bb2ecc280083165c35e31a279652b2c07a", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/tessera_abr_ctrl.sv" }
+  - { sha256: "79b27a2ddcde984f5382cea07a83034ddfb4536344e97d63ee56e5d166194d58", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/tessera_abr_ctrl_pkg.sv" }
+  - { sha256: "1a4929fe9fa9378a57f3f7fa4bedb6de9f8186c7e97fc28af32f3efbf7e79785", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/tessera_abr_mem_if.sv" }
+  - { sha256: "918213df7f1edf61eb5a65d50834cf3e4f550ecc309adcf895e029e6d9f6dc0b", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/tessera_abr_mem_top.sv" }
+  - { sha256: "47a228298b1b49cc529126dd217a26b306f0aa080240f1c5fc24fd47bb1cdebe", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/tessera_abr_params_pkg.sv" }
+  - { sha256: "04f9e4571ba06716d0b57899a0b8024a233ae5e474fd757c2ef1d6875e1fc84a", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/tessera_abr_reg.sv" }
+  - { sha256: "7d73cf49d4e06b735d33899b8ba409457a216dac8d7c26c177188351e487685c", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/tessera_abr_reg_pkg.sv" }
+  - { sha256: "50e46cb674eacdf99f240332e527f29dc9203f78b23e5e81c64eb9cc76c6e140", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/tessera_abr_seq.sv" }
+  - { sha256: "97fd4f1fa28bdb7f995ff327531459b565d4ab2eb5d10a1778298b04fe5d8bb4", path: "src/mldsa_mlkem_all_levels/abr_top/rtl/tessera_abr_top.sv" }
   - { sha256: "f8e607d61a90290b3e38d3cb3e1523d485e3058f11f2693a34c112b43f84b09a", path: "src/mldsa_mlkem_all_levels/abr_top/stimulus/testsuites/abr_top_nightly_random_regression.yml" }
   - { sha256: "9d70521d87c36b4da509fb27c6abb4dbbbf2bc95829511dda084ddb385e08e46", path: "src/mldsa_mlkem_all_levels/abr_top/stimulus/uvmf_mldsa_top_promote_regression.yml" }
-  - { sha256: "daf0d1552d80e0f328074dd648c55b4129af108a6fde8777d2916eb6858e2b1d", path: "src/mldsa_mlkem_all_levels/abr_top/tb/abr_top_tb.sv" }
+  - { sha256: "5c0b6ea6f633708fbe36c6483c552858000172984cf4ec4b6cb3c5aac4490948", path: "src/mldsa_mlkem_all_levels/abr_top/tb/abr_top_tb.sv" }
   - { sha256: "a6f99a4ed0dbecd1e5e2a058e00084e58b4ae5e7914d8d28d201a8eb227d3005", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/CMakeLists.txt" }
   - { sha256: "f1f8dde08a87dcdec57982d4da0345f7149b606269ba5e471a17587e34d07f7f", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/Makefile" }
   - { sha256: "e72cbef8247a11fce5f598a8c570f768913fd43366fff68da42ed6e7104bcb5b", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/PQCgenKAT_sign.c" }
@@ -992,7 +992,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "414a4df321d368ff3277c67762750efeaff09472fbb8481e6b9901f97e1988a6", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/packing.c" }
   - { sha256: "db5503d33faaebfd6dff1baed549b23ffc459851b4578d38152c5daced91f608", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/packing.h" }
   - { sha256: "ca1808775bef4e3b8c498e1ce68b9fa8ba91d98cf98aacf5f9eaa60992010608", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/params.h" }
-  - { sha256: "b95b012260f617f1eb16457f54e03dae98d8efb488d8c0445f67fb2b440ba31e", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/poly.c" }
+  - { sha256: "034d9fd2e477ae15aa5e51cd8db2e388eba92038ef9f25e43ecc5c307d51228f", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/poly.c" }
   - { sha256: "ac5e770dc4a847011c8b528875a949df52acfd923a4afa66415624cbd68b9c9b", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/poly.h" }
   - { sha256: "ca30ca2000ea23b7c933bdb46bbcecdd262432a31e61d7c5b2fbe74d2562e699", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/polyvec.c" }
   - { sha256: "6523a95d74add7e36129831fd5a72370c6275703fafd1529b6af59ef9645368e", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/polyvec.h" }
@@ -1004,10 +1004,10 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "9abe0b725e0608948eaa74fabd01c4701de5480ce9494a5f6bfa35140eee0399", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/reduce.h" }
   - { sha256: "69d8a5ffc4deb4d26378e7afd56157635fdd7135ee7d07b14e0086dfd4026769", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/rng.c" }
   - { sha256: "b06ab6558a66b84e1e66d2e6273ed183ddd1f47589606b7095aa635cbd86b4ca", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/rng.h" }
-  - { sha256: "a81b1bcc668e1b87a94950a55be46a565f4c980246e7d3eaee471349892359c5", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/rounding.c" }
-  - { sha256: "584fb72216dce8d959e5b16879d0202d3443993c255265299b82be8d3aa88e56", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/rounding.h" }
+  - { sha256: "bc886a8c658efd1fb590fc121657002ff107d9f1f5eb9552fb9b47311f0db41d", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/rounding.c" }
+  - { sha256: "cdd57828b7579109a707732667a511ca0bc3686a48b39ea1d7139fe28b7a2a09", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/rounding.h" }
   - { sha256: "420b86cb844a3114555dc34d2bf45f2fec78c9c2ab02b2b1e00ad55908ac14c2", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/secret_key.hex" }
-  - { sha256: "f6ce9f8b0d3bc934bf0cbc718123c2e8fc21df23d7c5af46703957523a3e4a5e", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/sign.c" }
+  - { sha256: "4705a3c2079ac1984933ea6240a55d8730dbece05c0434fe7cdbe0716a33c0d5", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/sign.c" }
   - { sha256: "c88f7ab8f4a178a9305898291488c95254a39751d71a7fd7bff7c64c70aafe78", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/sign.h" }
   - { sha256: "34fbf04a5ed574ca50fbc10a7bf82b0ed9c7232d3718ba1461ccaba86ea277a0", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/signature.hex" }
   - { sha256: "84c3a489baa97daac32835160f90804e87931a3b15d7ed45aa245741744257a6", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/Dilithium_ref/dilithium/ref/symmetric-aes.c" }
@@ -1047,7 +1047,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "d1ccb4d1e70005b3b827c89a0b28b980e089df17168bfdd7446fb47f157f5337", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/LICENSE" }
   - { sha256: "0e5fdb110043c3d8c41190dc89f475d1310b74bf9cbbc9a5bc00126e30c47304", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/README.md" }
   - { sha256: "7ad319ce688bb90b144b72e73c6d84439adc5ea9da2bf7cf84f75a7580378273", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/KAT_test_ml_kem.py" }
-  - { sha256: "d0cdb6387d155862749ff2ee799098781798f3b146dbca271b725fb2633e0928", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/Module.py" }
+  - { sha256: "7d1f84612f6e00a4b4e24abd56d7c9238333470bd61f856b9f155b67a804429d", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/Module.py" }
   - { sha256: "e1b498e941ba877c27d2a452c275b1832d461e5426a73f103da27e03b97e0542", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/assets/ML-KEM-encapDecap-FIPS203/expectedResults.json" }
   - { sha256: "4b5afd6c7075b1ffebc099a70dcf907b189daadd42921223127732e3ec83c333", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/assets/ML-KEM-encapDecap-FIPS203/internalProjection.json" }
   - { sha256: "d4a2b990f08c3459f258f4d089e6de9eeaa0b6b7d2f6d9035afdff81dfc43b36", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/assets/ML-KEM-encapDecap-FIPS203/prompt.json" }
@@ -1061,15 +1061,15 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "bb58dff1cc4d95075ab20daa8617289dfed79e610f0a6484ded9775bace1da64", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/assets/PQCkemKAT_1632.rsp" }
   - { sha256: "f49707eb62b5f65a5777f3d2ddbe2ad0a969fc626d716f00e23fa2ca7a384915", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/assets/PQCkemKAT_2400.rsp" }
   - { sha256: "a5f6aadd9e5d082937888be40cbdff3355533754b8f3d09532bc17c783b1caab", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/assets/PQCkemKAT_3168.rsp" }
-  - { sha256: "7e135221c01b3941101cee98e7fe884720731339845e75720c023492008e1a26", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/ml_kem.py" }
+  - { sha256: "383887bf512b1eddaab0e730baa7f72547cb37886202465a6507933486890ab2", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/ml_kem.py" }
   - { sha256: "9f87989f9738c6ee8ed231aa611f414f065e67819bdff05cea8853eac4c3e8b4", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/random_test_ml_kem.py" }
   - { sha256: "b3f80a8950b99d5783e8bdb41bd806e26eb0a496cd5ff3fb1ece0a34c5188c1a", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/test_ml_kem.py" }
   - { sha256: "e7be953ba1df75ecfdcc28a50d5ca61938d8f7d4ba889e3a46224e0c55118e40", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/ML_KEM_ref/ml-kem/utils.py" }
-  - { sha256: "609f9ca43d965cf938dcd48a6d6fe83ae80d59845e6990a89cc9c555c785fa81", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/config/compile.yml" }
-  - { sha256: "d4e455ab23223f814ad8bbfef9775f02eef54f37b0c07e40f913b37f7f6f19c4", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/config/uvmf_mldsa.vf" }
-  - { sha256: "d4e455ab23223f814ad8bbfef9775f02eef54f37b0c07e40f913b37f7f6f19c4", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/config/uvmf_mldsa_sram1clk_nomasking.vf" }
-  - { sha256: "d4e455ab23223f814ad8bbfef9775f02eef54f37b0c07e40f913b37f7f6f19c4", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/config/uvmf_mldsa_sram2clk.vf" }
-  - { sha256: "d4e455ab23223f814ad8bbfef9775f02eef54f37b0c07e40f913b37f7f6f19c4", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/config/uvmf_mldsa_sram2clk_nomasking.vf" }
+  - { sha256: "0e1e38cc83a65fe10122a4d69e8c6bd094db17b8413456b31423a467bfc6e2a0", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/config/compile.yml" }
+  - { sha256: "d60f1405dc851597b0b755f2023622773d85aba33d9fb653e6a36b36e53a5add", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/config/uvmf_mldsa.vf" }
+  - { sha256: "d60f1405dc851597b0b755f2023622773d85aba33d9fb653e6a36b36e53a5add", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/config/uvmf_mldsa_sram1clk_nomasking.vf" }
+  - { sha256: "d60f1405dc851597b0b755f2023622773d85aba33d9fb653e6a36b36e53a5add", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/config/uvmf_mldsa_sram2clk.vf" }
+  - { sha256: "d60f1405dc851597b0b755f2023622773d85aba33d9fb653e6a36b36e53a5add", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/config/uvmf_mldsa_sram2clk_nomasking.vf" }
   - { sha256: "b3de8ccf495493570ff2745b2c806e41d9c28d1c590de77ee0cd68df4ab6731d", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/coverage/config/uvmf_mldsa_cm_hier.cfg" }
   - { sha256: "5d97ece803ce0a457e9cbf0d84e9bb82e371b4e3eb723049e996f6b6d0de6e26", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/mldsa_bench.yaml" }
   - { sha256: "b4086efa16c2510840874a0a82c9d609e008cc2e3509e20cd447941c3ddae0db", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/mldsa_environment.yaml" }
@@ -1148,7 +1148,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "5d04bfe410a2de1030154e6ee3b27413961298d73948eb00b87cb7cf8c4b4682", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/project_benches/mldsa/tb/sequences/src/mldsa_bench_sequence_base.svh" }
   - { sha256: "4505bf966cf3965eb96cd093b4071ea8d45306593d95f7de67d3f8817870c589", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/project_benches/mldsa/tb/sequences/src/register_test_sequence.svh" }
   - { sha256: "039d555b39ed20d44615926621d28d2821b756b19eb6353cdce334083b1e5916", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/project_benches/mldsa/tb/testbench/hdl_top.compile" }
-  - { sha256: "c00931374a5ce5a34eba4efda43f10205e9cceb0a159676e32c28f1880d9de61", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/project_benches/mldsa/tb/testbench/hdl_top.sv" }
+  - { sha256: "87301e140f53552d9d6ad29c75ecb2b5a62fe60213d61120c28aeb32a05ac311", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/project_benches/mldsa/tb/testbench/hdl_top.sv" }
   - { sha256: "f67fe5e366e2c668c74ac3edcffb3a003d6301d577b5c1c7d547c2169c759f27", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/project_benches/mldsa/tb/testbench/hdl_top.vinfo" }
   - { sha256: "7c9f59c4a0c7d24639bc48024521bb74b7f5125f9c4b42721aab313204fa9d8b", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/project_benches/mldsa/tb/testbench/hvl_top.compile" }
   - { sha256: "a28265c5733a8550a13643438d3af10d40c708384a7506d73532e61357bd92cf", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/project_benches/mldsa/tb/testbench/hvl_top.sv" }
@@ -1237,7 +1237,7 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "f59337342bf3abbabd7c80e4e929a6cf51368563293851d20fc690c9d3a5b323", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/verification_ip/environment_packages/mldsa_env_pkg/mldsa_env_pkg.sv" }
   - { sha256: "b73ea507a1b4cd6d39760e66307e6216a26dc857c714e7c5a5c98d304cb232f9", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/verification_ip/environment_packages/mldsa_env_pkg/mldsa_env_pkg.vinfo" }
   - { sha256: "0bdb69efb790aba5d5d57320aac7ccf89d67fc8d609bb68c827aed380a2e1aaf", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/verification_ip/environment_packages/mldsa_env_pkg/mldsa_env_pkg_sve.F" }
-  - { sha256: "e775a3410a02045adc17e02792d8f56e00a915c71e7b7ae5e9f2103f318eaa3b", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/verification_ip/environment_packages/mldsa_env_pkg/registers/mldsa_reg_model_top_pkg.sv" }
+  - { sha256: "5af7461d37e670855533f2b269aa77737cb72322bfb01ea0182d7c4b089785d6", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/verification_ip/environment_packages/mldsa_env_pkg/registers/mldsa_reg_model_top_pkg.sv" }
   - { sha256: "ebc6c0088ebfdebf48605235ca57a032ebac06acb0a1a97de19349a513e01973", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/verification_ip/environment_packages/mldsa_env_pkg/src/mldsa_env_configuration.svh" }
   - { sha256: "75fb012585e4513c39860967047128315df7030025cf3697ed9df1e79faf0d27", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/verification_ip/environment_packages/mldsa_env_pkg/src/mldsa_env_sequence_base.svh" }
   - { sha256: "78dbae64e2dc13896e4134eb8541c841ad0829e3fead6ae1f414c1177ed8ae2e", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/verification_ip/environment_packages/mldsa_env_pkg/src/mldsa_env_typedefs.svh" }
@@ -1247,81 +1247,81 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "a36566e4d8e9728c19a5bc5e451e3348a8c6c407faaf5026eb4765427efae7ab", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/verification_ip/environment_packages/mldsa_env_pkg/yaml/mldsa_environment.yaml" }
   - { sha256: "b5f8c8fad3fa14e8b3632bc3353e940943bea63668839d6e162eaca896a3f66e", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/verification_ip/environment_packages/mldsa_env_pkg/yaml/mldsa_util_comp_mldsa_predictor.yaml" }
   - { sha256: "678eeb23bc9071e95f3787fb810e595e23627bd02184d1e55fd07a2361ab55ac", path: "src/mldsa_mlkem_all_levels/abr_top/uvmf/uvmf_template_output/verification_ip/environment_packages/mldsa_env_pkg/yaml/mldsa_util_comp_mldsa_scoreboard.yaml" }
-  - { sha256: "d1d2fd952bf953cbecd5163e0e658ad7d1f83642b42e6c1c6276d4364aaa0f40", path: "src/mldsa_mlkem_all_levels/barrett_reduction/rtl/arca_barrett_reduction.sv" }
-  - { sha256: "e86f3dfb12f82e8a0705363fa63d4167cb04eae6f8e1ef90cc85b64d391f14f9", path: "src/mldsa_mlkem_all_levels/barrett_reduction/tb/barrett_reduction.py" }
-  - { sha256: "8df8867a4d4df59aa590a9b91b5c4456073ec1fc7632e9160922ab1d4a897d99", path: "src/mldsa_mlkem_all_levels/barrett_reduction/tb/mldsa_barrett_reduction_tb.sv" }
-  - { sha256: "ba3e630c1b9fffe2f40c46f385e1230bb8b3eb6a229774ad22e2bf61cb41bd14", path: "src/mldsa_mlkem_all_levels/barrett_reduction/tb/mlkem_barrett_reduction_tb.sv" }
-  - { sha256: "c59814f3dabc6546fef8cc4474a165917910b9a069ec7fc91efb7c3575bccce3", path: "src/mldsa_mlkem_all_levels/cbd_sampler/rtl/arca_cbd_sampler.sv" }
-  - { sha256: "107a844daa8db611b8b4510170df1aae283e9b3544ec3266e0a649c7d0bd2ff1", path: "src/mldsa_mlkem_all_levels/cbd_sampler/rtl/arca_cbd_sampler_ctrl.sv" }
+  - { sha256: "61dbe9c4e7defd4465eca728ea196ad52852feb62ac13e268c895ad7ef1abe64", path: "src/mldsa_mlkem_all_levels/barrett_reduction/rtl/tessera_barrett_reduction.sv" }
+  - { sha256: "f95a2b4457495510e124e364829dda4e7bf86a829e923c212dfe8871f5e05ebe", path: "src/mldsa_mlkem_all_levels/barrett_reduction/tb/barrett_reduction.py" }
+  - { sha256: "96f31e280bc758acf384b0226e62f9bf33e69b29f757f7a6d6b9e212108532df", path: "src/mldsa_mlkem_all_levels/barrett_reduction/tb/mldsa_barrett_reduction_tb.sv" }
+  - { sha256: "4c392621c4fa225a3d207163976c0c25553dfd0e541a5afe45a2519413612727", path: "src/mldsa_mlkem_all_levels/barrett_reduction/tb/mlkem_barrett_reduction_tb.sv" }
+  - { sha256: "4a20cafce1e1f538997d21170276bf2c9c9b03f6b1c1e06ef6953cc9b7c3641c", path: "src/mldsa_mlkem_all_levels/cbd_sampler/rtl/tessera_cbd_sampler.sv" }
+  - { sha256: "4b2a0466bf487baeaad39a60d8783cd265204b04575652710b74b904538a8988", path: "src/mldsa_mlkem_all_levels/cbd_sampler/rtl/tessera_cbd_sampler_ctrl.sv" }
   - { sha256: "fcb003ea56cd955daf732d2cae71c56e3e9a8997ea0bf41414ff3f79a76ce4e9", path: "src/mldsa_mlkem_all_levels/cbd_sampler/stimulus/tests/directed/cbd_rand_test.yml" }
-  - { sha256: "0a42f7f78a7d67c699efc90d1025445a697fac7b109c348533a22374280265f6", path: "src/mldsa_mlkem_all_levels/cbd_sampler/tb/cbd_sampler.py" }
-  - { sha256: "0904435078e7c2eae3d56f13a1fed3a4046cc4497c18671bb14c0cc87203605b", path: "src/mldsa_mlkem_all_levels/cbd_sampler/tb/cbd_sampler_tb.sv" }
-  - { sha256: "228ce69014a82f7f55ccc3693eb8d383c0692bfaf4bafb5002393186da664c2b", path: "src/mldsa_mlkem_all_levels/compress/rtl/arca_compress.sv" }
-  - { sha256: "419cff2c4f339ff6926794adb00c9d24af106d2241590ffffb6ab46e40c8b424", path: "src/mldsa_mlkem_all_levels/compress/rtl/arca_compress_ctrl.sv" }
-  - { sha256: "986c63b4ecba22ad58a64676c856fe6cfe0e7fc5400c5ed3da45ca8471610b81", path: "src/mldsa_mlkem_all_levels/compress/rtl/arca_compress_defines_pkg.sv" }
-  - { sha256: "fe1fd4e895961b59f07dc8f45352babea44bbc578c3292d04710b9aafdbc771f", path: "src/mldsa_mlkem_all_levels/compress/rtl/arca_compress_top.sv" }
+  - { sha256: "1e964909fd48ac73188e3aa0f2d5c97469a0420cec52e931a3e17f0957f7f707", path: "src/mldsa_mlkem_all_levels/cbd_sampler/tb/cbd_sampler.py" }
+  - { sha256: "af335b7855683792f7513c7fa5a21462b2ee7602ea8a123b79c1b4617965fcbb", path: "src/mldsa_mlkem_all_levels/cbd_sampler/tb/cbd_sampler_tb.sv" }
+  - { sha256: "b0342b3b002d56e399d70f61abdfe238ee58bd0ee39bce0c4392532757ee7ab5", path: "src/mldsa_mlkem_all_levels/compress/rtl/tessera_compress.sv" }
+  - { sha256: "cb54cfe814a5acb34085d446700f6d6b119d66d140286c4844838d8a57216023", path: "src/mldsa_mlkem_all_levels/compress/rtl/tessera_compress_ctrl.sv" }
+  - { sha256: "514c055ecb334cfc1603a5f501805fb1cd45c32a13bcf50634a2050e7f21161b", path: "src/mldsa_mlkem_all_levels/compress/rtl/tessera_compress_defines_pkg.sv" }
+  - { sha256: "f43db943c67cbc5ec48507dee26f775f9aa889204e5083107d0f044878352d0f", path: "src/mldsa_mlkem_all_levels/compress/rtl/tessera_compress_top.sv" }
   - { sha256: "10069454ef643cc5ac0d512daea96d8f72af8f9b76d62267be48b8adf9abd7c7", path: "src/mldsa_mlkem_all_levels/compress/stimulus/tests/directed/compress_normal_test.yml" }
-  - { sha256: "d4bb040526a532f41b83e5d24c7bd74f21892af1319d9f3192f20ed5066c649c", path: "src/mldsa_mlkem_all_levels/compress/tb/compress_tb.sv" }
-  - { sha256: "9730c0975895b1f6e74359667ec103de8b4d15265ad05317716a532d2c219715", path: "src/mldsa_mlkem_all_levels/config/arca_abr_top.vf" }
-  - { sha256: "27f2827eda4a15f4387a10efcb1f33fbd091480b765c373f11210780e0c2f02c", path: "src/mldsa_mlkem_all_levels/coverage/clp_abr_top_cov_bind.sv" }
-  - { sha256: "099a8444411524d3896151fd9770611db03a9c02eaaab72e004bc0adcde493c4", path: "src/mldsa_mlkem_all_levels/coverage/clp_abr_top_cov_if.sv" }
+  - { sha256: "c218a2053789b4f12147ddb69e59bc3cbc79db4866ed6aec0346784eccbc0f9f", path: "src/mldsa_mlkem_all_levels/compress/tb/compress_tb.sv" }
+  - { sha256: "c2b0e938341f43d59b93bb00dbcf8dd6589930fa39a0154913b51abdeb815d8c", path: "src/mldsa_mlkem_all_levels/config/tessera_abr_top.vf" }
+  - { sha256: "b7eceec7ea67188550fd6855db6932a8249b27616137d094da6f40da602ba3fb", path: "src/mldsa_mlkem_all_levels/coverage/clp_abr_top_cov_bind.sv" }
+  - { sha256: "a91ca08df0af7cbabba55f479ce13c613a9273ddabda378f27366a8b593f040d", path: "src/mldsa_mlkem_all_levels/coverage/clp_abr_top_cov_if.sv" }
   - { sha256: "b8c9f240ce2b60c9f7538617a96c062bc097083ac72f7b7f9e2615985b3435a3", path: "src/mldsa_mlkem_all_levels/coverage/config/abr_cm_hier.cfg" }
-  - { sha256: "a3e5e744e64e0446e119780459f960c7dd3ffa327ee408966c753de749668571", path: "src/mldsa_mlkem_all_levels/decompose/rtl/arca_decompose.sv" }
-  - { sha256: "cd801aab72098036cbbf92a3e8fcb2c34bfaf5cae6eb8536fc03d089d4e06ecc", path: "src/mldsa_mlkem_all_levels/decompose/rtl/arca_decompose_ctrl.sv" }
-  - { sha256: "9eeb1b76eece1557d610c70770146da96109483228757fab26cc04b2b439928e", path: "src/mldsa_mlkem_all_levels/decompose/rtl/arca_decompose_defines_pkg.sv" }
-  - { sha256: "8e377a0a5a1e56aca42de0b430646bd2d129099d2958e3f64c4a3f6c7a6ab79b", path: "src/mldsa_mlkem_all_levels/decompose/rtl/arca_decompose_mod_2gamma2.sv" }
-  - { sha256: "f5154e4fd05a36608f84ab2bf3cad2579d3ac45ed781425d083a6e692ff9b940", path: "src/mldsa_mlkem_all_levels/decompose/rtl/arca_decompose_r1_lut.sv" }
-  - { sha256: "7de4514aa3dee62b405f9af8aa628c590112bcaa3e609e8f48fe2188816c70bc", path: "src/mldsa_mlkem_all_levels/decompose/rtl/arca_decompose_usehint.sv" }
-  - { sha256: "ce9065153d983542ee34e2234ac41694ee8becd5aa950ab5495980a03182efc4", path: "src/mldsa_mlkem_all_levels/decompose/rtl/arca_decompose_w1_encode.sv" }
-  - { sha256: "edfcbc9e59b8a26778b5eaef9ee9fe7f52e733bf8d16885c47a35b27e9fcb2c4", path: "src/mldsa_mlkem_all_levels/decompose/rtl/arca_decompose_w1_mem.sv" }
+  - { sha256: "624c48c2fbad384bbcd04b43a6bbf60fdb94202c31d428761bf06feab5353265", path: "src/mldsa_mlkem_all_levels/decompose/rtl/tessera_decompose.sv" }
+  - { sha256: "52e797127a74642959f7f73076ca02194ae08fe8d4da4f53e10795805360c405", path: "src/mldsa_mlkem_all_levels/decompose/rtl/tessera_decompose_ctrl.sv" }
+  - { sha256: "0fc3c51820bc28d4e1e1bb6c8e7fd5392325dfb6d004af472ac448de1fec9b52", path: "src/mldsa_mlkem_all_levels/decompose/rtl/tessera_decompose_defines_pkg.sv" }
+  - { sha256: "b33188cdfb1c53c8882fcf3fe74820df71e67c3ee6345e87600790a78afb24de", path: "src/mldsa_mlkem_all_levels/decompose/rtl/tessera_decompose_mod_2gamma2.sv" }
+  - { sha256: "3f999e6e017bb6b16f83cab0d5e65215131b4302d198fedb62a9b5855ab0aab7", path: "src/mldsa_mlkem_all_levels/decompose/rtl/tessera_decompose_r1_lut.sv" }
+  - { sha256: "86ea95b662a4b207048bcfe763639241affd1959170ab3401b5d1e16badb8914", path: "src/mldsa_mlkem_all_levels/decompose/rtl/tessera_decompose_usehint.sv" }
+  - { sha256: "eca05d80816c6b850db1930d21e9ce9e1a98c348139c814da321360575dac593", path: "src/mldsa_mlkem_all_levels/decompose/rtl/tessera_decompose_w1_encode.sv" }
+  - { sha256: "5fefc03e4e85eb8a9f1abafb926c6d5d6bd902cbe181fe08b0b2813c72dd0694", path: "src/mldsa_mlkem_all_levels/decompose/rtl/tessera_decompose_w1_mem.sv" }
   - { sha256: "c082d9498a1cef45c727b213f3cc31feee0348749e94df9ad3ed491f29ef0f14", path: "src/mldsa_mlkem_all_levels/decompose/stimulus/tests/directed/decompose_normal_test.yml" }
   - { sha256: "69fae4082f423836f466d6edf50a98125f514ee46f0d6bd24b754a789c5b7e55", path: "src/mldsa_mlkem_all_levels/decompose/tb/dcmp_usehint_test_vector.hex" }
-  - { sha256: "b4ca1c2f4ae0e80ab3a4cab5d57690cc3eed4ce9690a96ce69e5c9fc58c50cff", path: "src/mldsa_mlkem_all_levels/decompose/tb/decompose_tb.sv" }
+  - { sha256: "ad761d23254557eacf08b88e7f51ff796514af98631cacfbb147942bcd65077c", path: "src/mldsa_mlkem_all_levels/decompose/tb/decompose_tb.sv" }
   - { sha256: "db22960d717bc654dca3d7871673ae10ded0175ec3bb337d149294b25ea6c1bb", path: "src/mldsa_mlkem_all_levels/decompose/tb/test_vector.hex" }
-  - { sha256: "7192e9cf3a5b4a33989db5aaabb55c3141c2c1b0be6df2e2aa6988678aa03cfc", path: "src/mldsa_mlkem_all_levels/decompress/rtl/arca_decompress.sv" }
-  - { sha256: "dffccfc375e0f2f3c04d8b2defeb374888dff8dafcb7f9e546ecff13bf6f1d17", path: "src/mldsa_mlkem_all_levels/decompress/rtl/arca_decompress_ctrl.sv" }
-  - { sha256: "989c934c5fab7eaa7ebf96a2cb6cbb8429f4094c0fa8ead32597d41692fcac6f", path: "src/mldsa_mlkem_all_levels/decompress/rtl/arca_decompress_defines_pkg.sv" }
-  - { sha256: "d0535049e3797f21970a8c59ebf882bac78cfdcf6291bcbdf21f42634c3d4296", path: "src/mldsa_mlkem_all_levels/decompress/rtl/arca_decompress_top.sv" }
-  - { sha256: "63df41df87a328aafa8b0b76ef6297ff76bfb9840ea309f82cbdbce0c184ac23", path: "src/mldsa_mlkem_all_levels/exp_mask/rtl/arca_exp_mask.sv" }
-  - { sha256: "eed322ebd19ee67cf9585788b8e308aa5af0957c792ae2b237e6c624c5976ceb", path: "src/mldsa_mlkem_all_levels/exp_mask/rtl/arca_exp_mask_ctrl.sv" }
+  - { sha256: "ebe935a7cb9310660aacdcd969204ac99a882f55de4a2499ccbaf0413c0619f7", path: "src/mldsa_mlkem_all_levels/decompress/rtl/tessera_decompress.sv" }
+  - { sha256: "750fd16574a63e6624413433b938035559cbbc1619f2e6462b8c08f329097a2d", path: "src/mldsa_mlkem_all_levels/decompress/rtl/tessera_decompress_ctrl.sv" }
+  - { sha256: "203f306eb12c3156cbe38d6257192491a75c242f944da849fdf19c8e8b1acb7b", path: "src/mldsa_mlkem_all_levels/decompress/rtl/tessera_decompress_defines_pkg.sv" }
+  - { sha256: "ebba770be77770085d2df5bcdf37678021e490a9bf6e2957aa88a0a1f1ef7fdb", path: "src/mldsa_mlkem_all_levels/decompress/rtl/tessera_decompress_top.sv" }
+  - { sha256: "3090163f31ec6c5a3e33efad9cac99288bf7e6db90a33b80e9a46a67dd0f2eb0", path: "src/mldsa_mlkem_all_levels/exp_mask/rtl/tessera_exp_mask.sv" }
+  - { sha256: "e300278e8bbe40205209b6bf30266c4feaa1bffa96d8cb86ee5b650d4694a10a", path: "src/mldsa_mlkem_all_levels/exp_mask/rtl/tessera_exp_mask_ctrl.sv" }
   - { sha256: "ebac1eb7d772691e4b867656820519d46ab457625729c329c6cc1b8b7aa76118", path: "src/mldsa_mlkem_all_levels/exp_mask/stimulus/tests/directed/exp_rand_test.yml" }
-  - { sha256: "7231126a7b32584c178dd9b05cb8bbc7685c6167333ad75ffed411b1bff943e6", path: "src/mldsa_mlkem_all_levels/exp_mask/tb/exp_mask.py" }
-  - { sha256: "6773019f9d189b254dbe1a145af3c45face1f692ddf489c009c22200fab445c9", path: "src/mldsa_mlkem_all_levels/exp_mask/tb/exp_mask_tb.sv" }
-  - { sha256: "7d3ee913d102516d6f73003b04d343d9ce7c21ae9cb1e9f8446b0b95a2d23f12", path: "src/mldsa_mlkem_all_levels/makehint/rtl/arca_hintgen.sv" }
-  - { sha256: "fc8bbf5b013e9085a27ff96cdbc64b49e06745d46fa554b022ca2fbb57fe0cef", path: "src/mldsa_mlkem_all_levels/makehint/rtl/arca_makehint.sv" }
-  - { sha256: "2d387d4b73c18c00da416a83cfe3c8c601d58fd4f9d927a256539cac22e6d539", path: "src/mldsa_mlkem_all_levels/makehint/rtl/arca_makehint_defines_pkg.sv" }
+  - { sha256: "d44060b817a65851693055e680eda44358f6dcf9fe96d6a343677b1fabb3eb38", path: "src/mldsa_mlkem_all_levels/exp_mask/tb/exp_mask.py" }
+  - { sha256: "538f0e25b21368b1144dae44587764fc4d675abbb06957aef2bc866b959eb68e", path: "src/mldsa_mlkem_all_levels/exp_mask/tb/exp_mask_tb.sv" }
+  - { sha256: "cf1079203d0639d78915128ee6e1fc79bf2df464f8e714321618598a9d3ed033", path: "src/mldsa_mlkem_all_levels/makehint/rtl/tessera_hintgen.sv" }
+  - { sha256: "f5806f7eaac7f9f4eb870a8c87779f2d7da9760b5619fa51afd22be61341d2f8", path: "src/mldsa_mlkem_all_levels/makehint/rtl/tessera_makehint.sv" }
+  - { sha256: "9d77ba89b13c4ece0874802ac06c1e5d65f45f3f3a52da4ce31c13d073c45b53", path: "src/mldsa_mlkem_all_levels/makehint/rtl/tessera_makehint_defines_pkg.sv" }
   - { sha256: "cfd54824c805245c4791cf8d03a347fb8f96f4d5c195b184abc7999db38c6fca", path: "src/mldsa_mlkem_all_levels/makehint/stimulus/tests/directed/makehint_normal_test.yml" }
   - { sha256: "b623a0c2fed5de011c6d72e1b68f55fcf4319f3bc32b05564447bfca3d77c1b5", path: "src/mldsa_mlkem_all_levels/makehint/tb/makehint_ref.py" }
-  - { sha256: "2b1e14b0c0f31d57c064710b8d402fc90b4f51a72518fd5faad677c5688dc9c3", path: "src/mldsa_mlkem_all_levels/makehint/tb/makehint_tb.sv" }
+  - { sha256: "3396be4f23607fddd875ba9053bc2a690d23bb3e295ff11845d35e8802d3f4a6", path: "src/mldsa_mlkem_all_levels/makehint/tb/makehint_tb.sv" }
   - { sha256: "38f5424d4645660bfe606700074555b4fde614c2b7dade3c50ac5fac61a36817", path: "src/mldsa_mlkem_all_levels/makehint/tb/r.hex" }
   - { sha256: "270db6175d55f4ce1778a4cafffe72a2b7b7108aa5e5041065464c4dfaa0a94e", path: "src/mldsa_mlkem_all_levels/makehint/tb/z.hex" }
-  - { sha256: "1dea994abef230c458dc5de68af1e378cbe1040a5bc0aa332c1e550c114cf78b", path: "src/mldsa_mlkem_all_levels/norm_check/rtl/arca_norm_check.sv" }
-  - { sha256: "b5e6fddde54d98d972a526535d849fd055f1fb8bd8386b33bd4e5d407ebea91d", path: "src/mldsa_mlkem_all_levels/norm_check/rtl/arca_norm_check_ctrl.sv" }
-  - { sha256: "10c9de08a1e0cf0c3d393acaddc927afcabd6ed0b598896b60f4ab3827ae596e", path: "src/mldsa_mlkem_all_levels/norm_check/rtl/arca_norm_check_defines_pkg.sv" }
-  - { sha256: "00cc8192fe6bbb3d09433a0a974f2bda93c2a567ffd32a43ede1c64c636af44d", path: "src/mldsa_mlkem_all_levels/norm_check/rtl/arca_norm_check_top.sv" }
+  - { sha256: "b68816c9ab5cbe94a77c5b2098f7b2074a5a40c7d7a7c4204035c960107f7736", path: "src/mldsa_mlkem_all_levels/norm_check/rtl/tessera_norm_check.sv" }
+  - { sha256: "b25654eef69a87696a10397ace9290474c426f831f4badf1b5f6ba8c6b4e660f", path: "src/mldsa_mlkem_all_levels/norm_check/rtl/tessera_norm_check_ctrl.sv" }
+  - { sha256: "4dafb919288267cdcb9bfb1ed695ab94f15a02a39502f453c85ce43486431f5e", path: "src/mldsa_mlkem_all_levels/norm_check/rtl/tessera_norm_check_defines_pkg.sv" }
+  - { sha256: "8f41625702a2f9e8081bbc64b8f4a4ddde74fc0532bf2e0aad6065f01a7d5005", path: "src/mldsa_mlkem_all_levels/norm_check/rtl/tessera_norm_check_top.sv" }
   - { sha256: "cfe080032190fb7b53b62e9ea5d889c69a13ee7f759d4d4aa0e8eef1c7d38c1b", path: "src/mldsa_mlkem_all_levels/norm_check/stimulus/tests/directed/norm_check_normal_test.yml" }
-  - { sha256: "ab9e196d284627788f243af16d2444b23a0b7c0a2a3ee94f74ae9b7859344320", path: "src/mldsa_mlkem_all_levels/norm_check/tb/norm_check_tb.sv" }
-  - { sha256: "29f9a144d4f8eb79422e13e6fb751ddad4b562d91522bccfb1925cbc04bc6421", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/arca_ntt_buffer.sv" }
-  - { sha256: "b6d049bdb4866b4e0886ff37ac22fe8181d04b5b2d7d1f77ba91fd063695a9df", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/arca_ntt_butterfly.sv" }
-  - { sha256: "f10a8aa858e656c96696f928d0e15a0d481f8a1948655621d9c1840033259e46", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/arca_ntt_ctrl.sv" }
-  - { sha256: "c9d8acd8e337caf906868f1080a50a0d7f6c0cbca7432fec3c6ee33c4e08b6df", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/arca_ntt_defines_pkg.sv" }
-  - { sha256: "82ad23735788a36aa0dda13fce1a10456e89ec1f29fe0dedd6721709d397965d", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/arca_ntt_div2.sv" }
-  - { sha256: "6dfe46407ca2f894bf3a89cba8d1218a64e0c0e36801544db2bd020ed9bf60f6", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/arca_ntt_hybrid_butterfly_2x2.sv" }
-  - { sha256: "dff207a363c852a080820467fb44d299c2f53d62e01c5cc3cb8f409f7a84bc5b", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/arca_ntt_karatsuba_pairwm.sv" }
-  - { sha256: "be45a9a0056328c7a7fdbb3014c26e1c29227809048a0200ddb5382872d2f44d", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/arca_ntt_mult_dsp.sv" }
-  - { sha256: "62282559d6a2b1119641b5c62f3688e1b7e2c977b5c1211be55e908f30100ef0", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/arca_ntt_shuffle_buffer.sv" }
-  - { sha256: "d4b6652100266cc11fa7398cbb81cb0c69e53877befb2fe678883a356b334d4b", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/arca_ntt_top.sv" }
-  - { sha256: "05d6be50f2169289f6b4cb4a5bbe44d9f469c334ba8b7e85f2d6fcb33fbd9586", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/arca_ntt_twiddle_lookup.sv" }
+  - { sha256: "3d6aaa6cfd925fef5b6c63f6ef02a8dfb3007d0b7e7a36c9d2c2f2ae162dbe7b", path: "src/mldsa_mlkem_all_levels/norm_check/tb/norm_check_tb.sv" }
+  - { sha256: "37e175a3bf489aa8b5ef63a65d891d83b2c43a697b73a7fcb0700435f23c8ed1", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/tessera_ntt_buffer.sv" }
+  - { sha256: "057f89fdddc246008268dc65f63588ba64da2e58e70c38c64f580431a28a3675", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/tessera_ntt_butterfly.sv" }
+  - { sha256: "214104a1d5069886da138c6bf8241083ee93a9de3222337d56291c4a3564c565", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/tessera_ntt_ctrl.sv" }
+  - { sha256: "49c6100cc43a0dcb64680e084a43ac1f378c8daaea839c11e000112b2cb3b8ae", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/tessera_ntt_defines_pkg.sv" }
+  - { sha256: "ab22b3c04c2de93596783cf186e4ff08671a7479d6ef8df9bfbf4fd339baa4a7", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/tessera_ntt_div2.sv" }
+  - { sha256: "e49177b7c0cda08dcb1da627765928d1cee7ce4bbcd2d30b1dc3b6e894754481", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/tessera_ntt_hybrid_butterfly_2x2.sv" }
+  - { sha256: "02d61c9b44d46dc363824730acae60d454790810a0e84cd09faadc3812fdfd71", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/tessera_ntt_karatsuba_pairwm.sv" }
+  - { sha256: "96ada80371310827d4c4457cccfdfa9c14288d025f27218df4540030f69377a0", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/tessera_ntt_mult_dsp.sv" }
+  - { sha256: "7332a3f672762cd7259be1a71b0df30d5500822a70504bb9563ed40d2b2a95b4", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/tessera_ntt_shuffle_buffer.sv" }
+  - { sha256: "326504b5ebbf20d08dafa7ac9de680580e85279fbcf0ea63102fb0a36692561c", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/tessera_ntt_top.sv" }
+  - { sha256: "10ac13ffc55b82d7c1484711f28c3730478e6240a7c8bead5dfb642ea38a437e", path: "src/mldsa_mlkem_all_levels/ntt_top/rtl/tessera_ntt_twiddle_lookup.sv" }
   - { sha256: "672aa5cf11e0602f17cfe52982efcab5647bf024c4508705adb6c771f4bafd15", path: "src/mldsa_mlkem_all_levels/ntt_top/stimulus/tests/directed/butterfly_normal_test.yml" }
   - { sha256: "dd7461775dd89940ac00f5e3892ad7c8f1f6dea9c219b3b68f4a413cd386f76d", path: "src/mldsa_mlkem_all_levels/ntt_top/stimulus/tests/directed/ntt_normal_test.yml" }
   - { sha256: "a47b7dc97726bd831feb2c446db7842a372432d409f0492af22b8d73c95a0a05", path: "src/mldsa_mlkem_all_levels/ntt_top/stimulus/testsuites/ntt_nightly_directed_regression.yml" }
   - { sha256: "7bcd41faf5e6634f06bcbe8714afabdaeadb5a451cbf860f7df9731fcecc8bff", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/kyber_ntt_ref.py" }
-  - { sha256: "18969333a8854dbcb15d39f9d5fcb8ebb36275374f39c24819425d568e46a5db", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/mlkem_hybrid_bf_tb.sv" }
+  - { sha256: "2068559d1dc795735f35d3aab2026da3d87d3540a5f3962dc535153b75bbed94", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/mlkem_hybrid_bf_tb.sv" }
   - { sha256: "c64578476356d90c9db3944dd062569fd13bea6fb2d478919e6306be878d0da0", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/mlkem_pairwm_zeta.hex" }
-  - { sha256: "6b95640c3d244fa6aac0ecb111f72c51cc054a8381254dbd5c2e239229b416f6", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/ntt_ram_tdp_file.sv" }
+  - { sha256: "b00fe0d758f3aa33aff86bd8efff46205858e39fc378893c8ac58936225a7335", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/ntt_ram_tdp_file.sv" }
   - { sha256: "fbc0b7b77f322a79d87ef0569290088538498779421ea89d1c3893f9c50eb610", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/ntt_ref.py" }
-  - { sha256: "d09136a1a0e5d62c2774e9bb8866b76707052ee110f1f90825da0edb68b40f7b", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/ntt_top_tb.sv" }
-  - { sha256: "c42b70433303e9f3b57012225ebc70e489693cccadd597f7425877ccdf305fe8", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/ntt_wrapper.sv" }
+  - { sha256: "95376addaf22c7b6e381ced4efd3ddd9be9a5c5ca9fa225897dde2f42e611661", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/ntt_top_tb.sv" }
+  - { sha256: "cbcb85563dee64d5d61db05e8342629f4d5a467ea14a4cbb5104c620df26086b", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/ntt_wrapper.sv" }
   - { sha256: "b80697c40f8c4c4180a17d2828882952c081de346976310dcc0b851a826e0f5a", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/test_vectors/kyber_stage0.hex" }
   - { sha256: "06ca3b84f2823638c667bcad5b3588fbd85612b24701190b73ee6c29026c5ac1", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/test_vectors/kyber_stage0_out.hex" }
   - { sha256: "715fcd2c8e55ee066b47eab61911df8adedec94410cdf5203f6b4d7257247127", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/test_vectors/kyber_zeta.txt" }
@@ -1342,22 +1342,22 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "2169c62319baa90eb4147807cd5360474d39085c26f4f52660fdc82cc6066f94", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/test_vectors/zeta.txt" }
   - { sha256: "81be895eeeb2ed13e84255b01d7e4fcf90131b13ec4cba83d94718e77f15770e", path: "src/mldsa_mlkem_all_levels/ntt_top/tb/test_vectors/zeta_inv.hex" }
   - { sha256: "ce412dca75c7ef5808d446d046d90beaeb612806dc0899904aa0c7acd8e5ef8a", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/env/ntt_env.sv" }
-  - { sha256: "ab28059f8adbaff4650f3e97acdc04ad44a8653c84733adb5c2a2baa25335647", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/interfaces/mem_if.sv" }
-  - { sha256: "e4b5caa88dc9809b8980fbb74173341f682b4be6fc3b053c9d5461d51b639167", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/interfaces/ntt_if.sv" }
+  - { sha256: "5edd95e5178b0867b060817724aa740674aed11b1ffe519e947fa2173a499afc", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/interfaces/mem_if.sv" }
+  - { sha256: "e0f0f7cd44d0ff030a341dd522afeafa6a96087fdc3f3bcab8430c9e2aa08552", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/interfaces/ntt_if.sv" }
   - { sha256: "c2a003b9acca459bc343a8cf7efd50e0d7e49fd102e6bca2bd064be985a80aa6", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/mem_agent/mem_agent.sv" }
   - { sha256: "cf4cb7fd20a5b2d3d48870b4e58e4adec882540587323e72f8f97c0bf6350571", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/mem_agent/mem_agent_config.sv" }
   - { sha256: "06cf0c7c31b334284bf381570e83edb383cf04dbefbb057ca86f18a0742491fc", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/mem_agent/mem_driver.sv" }
   - { sha256: "4ce69bed07450f5ff1caf5d94c6692b143e0a16561bdc81060390122097c42f1", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/mem_agent/mem_mon.sv" }
   - { sha256: "15318e2897bc028101bfac55122db1b843a34f69f57c780af52ac1c58eb08b27", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/mem_agent/mem_sequencer.sv" }
-  - { sha256: "eb425d6b8952946900f62167c57798bfb29b027b2342977cb38415e28ba8c152", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/mem_agent/mem_txn.sv" }
+  - { sha256: "b44342cf64d51656b7a496c79d9d71dc33e1cc3d03bb9c0b52e0897f7c2f180d", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/mem_agent/mem_txn.sv" }
   - { sha256: "27c41786e01aab48abbbd74a036ba468991b7e9dc6b27066aebfaa1d855a55c4", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/ntt_agent/ntt_agent.sv" }
   - { sha256: "fadc7235a288da8699adcf6ba420a85dd5fe8bea41d8e9c067faaf67f7dfc033", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/ntt_agent/ntt_driver.sv" }
   - { sha256: "796e6e348c4d25d7fa2ed8706bc5b978e935adb7aa879ec85c05fe663e43dba0", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/ntt_agent/ntt_mon.sv" }
   - { sha256: "ac641b3b7d395328b92419621a674f0b01b1a68e66f9cd0b0744ad89a628865a", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/ntt_agent/ntt_sequencer.sv" }
-  - { sha256: "a317a9a863516f6257814a845bcce00cb0623afe4e423389c63451bfbab7f285", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/ntt_agent/ntt_txn.sv" }
+  - { sha256: "cd123ff7e16ae689af3157a0c572d9bc1eba4ea533d783be27f2c094b3dbf621", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/ntt_agent/ntt_txn.sv" }
   - { sha256: "c4de0b41f8f150b0f2fe8226b4267133c774727e7b249e524943f30bff933c96", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/ntt_utb_top/ntt_utb_defines.sv" }
-  - { sha256: "83719a1414d906afb8cff6a19d9b32f6dff44cd5c6feae9c2c5a18d246dfa56a", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/ntt_utb_top/ntt_utb_top.sv" }
-  - { sha256: "26df503b5723a1e326e5d68cea43da06a244a2de91f78d303ce0e65e6fa292bf", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/scoreboard/ntt_sb.sv" }
+  - { sha256: "8588e4c329062cfbb03fe6c5626cabe020c70a477c2fdcf8072871c55134ccaa", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/ntt_utb_top/ntt_utb_top.sv" }
+  - { sha256: "6694c1aa4dac8422b0e0fdaeddd83d9d6b7dc5213312fd0e02dd9712f127a46d", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/scoreboard/ntt_sb.sv" }
   - { sha256: "88b9a745d2c9cc458b0b984d87fa41b80a61e37dc3c7bb9df38210d2da05c40b", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/sequences/mem_seq_lib.sv" }
   - { sha256: "654d3843144d12a4bcfef06afee2375fc465a632ce7bacfea6bae61992166b94", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/sequences/ntt_seq/ntt_base_seq.sv" }
   - { sha256: "f86ddff7bda9d79614dfecd61be942213bb9e3ca8f3292f9d824982d3ccf26b4", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/sequences/ntt_seq/ntt_fwd_seq.sv" }
@@ -1367,63 +1367,63 @@ renamed_manifest:  # sha256 of the committed, renamed files
   - { sha256: "b289904a21e50a95ef549813d922289692485150e1ff989c20b9c4e86a88cb37", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/test.yml" }
   - { sha256: "0128e3c7d07e141b567c415ee4b6c130f4c79e36c7fae5a6e415b0b548fd27b3", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/tests/ntt_base_test.sv" }
   - { sha256: "c180e37259f9cc18589f4a9ea609eec8d03b287b055d58aebc274c127dffac6f", path: "src/mldsa_mlkem_all_levels/ntt_top/utb/tests/ntt_combined_test.sv" }
-  - { sha256: "70df122979e2c6f04b3e8f3482f673189b364f362762f2606050ed4c1cf11a5b", path: "src/mldsa_mlkem_all_levels/pk_decode/rtl/arca_pkdecode.sv" }
+  - { sha256: "25f9df2f0eb0f52577765ab3275d3483b5c4abcc80175a4248ca005e93641050", path: "src/mldsa_mlkem_all_levels/pk_decode/rtl/tessera_pkdecode.sv" }
   - { sha256: "47b02b2fc6939286d73068b0b0d2914cbb96afdaba804a103c9d9112f4e93e16", path: "src/mldsa_mlkem_all_levels/pk_decode/stimulus/tests/directed/pkdecode_normal_test.yml" }
-  - { sha256: "4c3d1e8b63f1ffaadee680433b905e2ae3b06feec9621228d83ef8db13ffd867", path: "src/mldsa_mlkem_all_levels/pk_decode/tb/pkdecode_tb.sv" }
+  - { sha256: "536de77f83ee09f88e94cdb87c25db4b5c0363f2f7235ba75c02f046d52e1ae4", path: "src/mldsa_mlkem_all_levels/pk_decode/tb/pkdecode_tb.sv" }
   - { sha256: "d6acbc3b83042e8f6b53e42d7d13b3853dc76b869b708a47563b0e136ce5e5cc", path: "src/mldsa_mlkem_all_levels/pk_decode/tb/unpack_pk.py" }
-  - { sha256: "16111b32053930ba2bb7277b36f5111325d07adb6701e0efcaa87076a75414fe", path: "src/mldsa_mlkem_all_levels/power2round/rtl/arca_power2round_core.sv" }
-  - { sha256: "60766a1c69abb8fd38db979b401d288b115c99717932fd27fb83257ec572d321", path: "src/mldsa_mlkem_all_levels/power2round/rtl/arca_power2round_ctrl.sv" }
-  - { sha256: "62aad7b9e7e1891ae9041676bc927a0641416a06b7ed7620ff468e8eeb0a66fa", path: "src/mldsa_mlkem_all_levels/power2round/rtl/arca_power2round_defines_pkg.sv" }
-  - { sha256: "6f84a4b4b9de4f0c55e7ea07988c8068495817847362511e032d0f598ee1c57e", path: "src/mldsa_mlkem_all_levels/power2round/rtl/arca_power2round_skencode.sv" }
-  - { sha256: "3bb9d3374e19b49dc6ce09bf478279a7991e6b412a281d97a685e80244d762aa", path: "src/mldsa_mlkem_all_levels/power2round/rtl/arca_power2round_top.sv" }
+  - { sha256: "fe63ebe2754276acd32ac9eaf099c02b55761c640f6b0f5d03e805f5b27b6dbe", path: "src/mldsa_mlkem_all_levels/power2round/rtl/tessera_power2round_core.sv" }
+  - { sha256: "d2ed2a01b3aea97898ddf62cf7efa1bbf28d415e0d04435001651a34cdcfb459", path: "src/mldsa_mlkem_all_levels/power2round/rtl/tessera_power2round_ctrl.sv" }
+  - { sha256: "ff4942dd2c73f5d193e57308cb0607b4fb58d0dfc182bbbdeecd44fbfee1d42a", path: "src/mldsa_mlkem_all_levels/power2round/rtl/tessera_power2round_defines_pkg.sv" }
+  - { sha256: "784bcbe8d34cf72a497a92119263b6676eb0f9938e7ee83b49ba8f6d98192d52", path: "src/mldsa_mlkem_all_levels/power2round/rtl/tessera_power2round_skencode.sv" }
+  - { sha256: "d840437c7efc690445541ad32e711052a447d3d76719a30c3633f8e2cf0f4982", path: "src/mldsa_mlkem_all_levels/power2round/rtl/tessera_power2round_top.sv" }
   - { sha256: "2857697ac5a896d67fecad523c944345c9f7c1bca0cb44774aa293fc07f8e749", path: "src/mldsa_mlkem_all_levels/power2round/stimulus/tests/directed/power2round_normal_test.yml" }
-  - { sha256: "497c527143998267f983756010768d5fc32d9ff5c98bf7e60f654845cb0e162d", path: "src/mldsa_mlkem_all_levels/power2round/tb/power2round.py" }
-  - { sha256: "8d4a4cb538a08f1f8484a92dc692d34227b59132bfb13d0069cff5c66d942eda", path: "src/mldsa_mlkem_all_levels/power2round/tb/power2round_tb.sv" }
-  - { sha256: "1cde294b4ce5e81b1432772df921e2d79e281029067fcd402bab30204d06f782", path: "src/mldsa_mlkem_all_levels/rej_bounded/rtl/arca_rej_bounded2.sv" }
-  - { sha256: "31ac1d5d8ab748ce5f28a5eda9b5446e831236b8cd9216ad486694eb601760b5", path: "src/mldsa_mlkem_all_levels/rej_bounded/rtl/arca_rej_bounded_ctrl.sv" }
+  - { sha256: "1b0cb7412fa964f34012d93efa5e30effa495182f08332312d8260aec799c040", path: "src/mldsa_mlkem_all_levels/power2round/tb/power2round.py" }
+  - { sha256: "cc0f435d05272ae9c1d052b90216bc3921a1b2c03807eab01513dfe5aceb1755", path: "src/mldsa_mlkem_all_levels/power2round/tb/power2round_tb.sv" }
+  - { sha256: "6a61dfd562b15e4c58cd1b96f458e4cf0f3004ccae30a23f2d0a7aaadb38f8ca", path: "src/mldsa_mlkem_all_levels/rej_bounded/rtl/tessera_rej_bounded2.sv" }
+  - { sha256: "2d5d18dce51aa202cefa1415681493b7cdf099f4e7261643008b891d3fc27161", path: "src/mldsa_mlkem_all_levels/rej_bounded/rtl/tessera_rej_bounded_ctrl.sv" }
   - { sha256: "e1205331faadfc159736ee347aee191ad360a937fd3ac20715194305bb97b3ba", path: "src/mldsa_mlkem_all_levels/rej_bounded/stimulus/tests/directed/rej_rand_test.yml" }
   - { sha256: "f64511a39e29e4d21db02d35e7a8ee9ed66a832d77f8cce88cc25c3dbc5a1c8a", path: "src/mldsa_mlkem_all_levels/rej_bounded/tb/rej_bounded.py" }
-  - { sha256: "52502211b40a3ed35ed72f5b5b51dc497ab12af5e536211abe623543f73ec75f", path: "src/mldsa_mlkem_all_levels/rej_bounded/tb/rej_bounded_tb.sv" }
-  - { sha256: "45a43f393e10739434aa12f174cdcb33a09a71e8579e0f1c712abe48dd257f58", path: "src/mldsa_mlkem_all_levels/rej_sampler/rtl/arca_rej_sampler.sv" }
-  - { sha256: "f3b6afc537de1894ea0a58f449097ac996d2924788104a61ffd3a61c9edd486c", path: "src/mldsa_mlkem_all_levels/rej_sampler/rtl/arca_rej_sampler_ctrl.sv" }
+  - { sha256: "5ccc4ddca59e38adb8d2ed2cd6ccb8da36de70695767fa9d3b6b80c3ff303c55", path: "src/mldsa_mlkem_all_levels/rej_bounded/tb/rej_bounded_tb.sv" }
+  - { sha256: "cef924da72bb04268ae9c25a8122c228724b1f9938aa94c8719b66e45a7b1697", path: "src/mldsa_mlkem_all_levels/rej_sampler/rtl/tessera_rej_sampler.sv" }
+  - { sha256: "755865b754dba4bca25324f3a2dbf07de862b92fcca037e8ee0fd20fd5c10151", path: "src/mldsa_mlkem_all_levels/rej_sampler/rtl/tessera_rej_sampler_ctrl.sv" }
   - { sha256: "ebba63e534c7af017bae172d78f0720fdf458d8f2eaf7f4ae190f24235f8fec3", path: "src/mldsa_mlkem_all_levels/rej_sampler/stimulus/tests/directed/rej_rand_test.yml" }
-  - { sha256: "10bad0a714017af6675e72cb3f690ae0e5db7659bfd33f2b46047f16d4807fa3", path: "src/mldsa_mlkem_all_levels/rej_sampler/tb/mldsa_rej_sampler.py" }
-  - { sha256: "e6780ad4da125d163b8b8c3ee06aeb68bd8efe1f4121879763040427c76cc6b7", path: "src/mldsa_mlkem_all_levels/rej_sampler/tb/mldsa_rej_sampler_tb.sv" }
-  - { sha256: "d6121f10185c7584044f9ff683c2b74a1de56bff227662b0ba1fa81d3b53bdcf", path: "src/mldsa_mlkem_all_levels/rej_sampler/tb/mlkem_rej_sampler.py" }
-  - { sha256: "70eecd51e92d648cb51be0d9f30f813b5327278de8042b5e957619a32eb9e5ee", path: "src/mldsa_mlkem_all_levels/rej_sampler/tb/mlkem_rej_sampler_tb.sv" }
-  - { sha256: "3b2a937e270d8ede48bb6370ceb56dc461979dd49092c773883dc4d4929b7ea9", path: "src/mldsa_mlkem_all_levels/sample_in_ball/rtl/arca_sample_in_ball.sv" }
-  - { sha256: "9c640a9b499cfbf7fa4a19365f9b2693f0be4bcf78158dbb9cda11631bfd2608", path: "src/mldsa_mlkem_all_levels/sample_in_ball/rtl/arca_sample_in_ball_ctrl.sv" }
-  - { sha256: "1e9737555595164e21b8cd57a5282b65339d3c571447cbe0b0abdb79cba95b79", path: "src/mldsa_mlkem_all_levels/sample_in_ball/rtl/arca_sample_in_ball_pkg.sv" }
-  - { sha256: "339ea70ab60344dd071b7b44ffe9a0d8d6aa9071511088bcf43af1e047b1f8b1", path: "src/mldsa_mlkem_all_levels/sample_in_ball/rtl/arca_sample_in_ball_shuffler.sv" }
-  - { sha256: "2974aea590a6c46ac08c44cae726c52cf56fd008bc73bdf70f1a8c03e70479a7", path: "src/mldsa_mlkem_all_levels/sample_in_ball/rtl/arca_sib_mem.sv" }
+  - { sha256: "37c5603955dbcc25ce1858e225f80bf382b837584425d68a856ac1a234df484d", path: "src/mldsa_mlkem_all_levels/rej_sampler/tb/mldsa_rej_sampler.py" }
+  - { sha256: "938234d109a5d84bff4b083e9bfb7117ff09f9622041396db76297cc97ba07e7", path: "src/mldsa_mlkem_all_levels/rej_sampler/tb/mldsa_rej_sampler_tb.sv" }
+  - { sha256: "bf6a644176e1c7b7bc0a59af0ee02e75d4db4c56a1fad285b75eb357da77809f", path: "src/mldsa_mlkem_all_levels/rej_sampler/tb/mlkem_rej_sampler.py" }
+  - { sha256: "dd3f19bbc5dc0f9e59ec1dd560c18edb6b0e8ebf978f4b5c6419c73b759ea32b", path: "src/mldsa_mlkem_all_levels/rej_sampler/tb/mlkem_rej_sampler_tb.sv" }
+  - { sha256: "149eee310cd77d058ba53040b4543a5d1e3fb0fb699093d74e4d09499eafbb63", path: "src/mldsa_mlkem_all_levels/sample_in_ball/rtl/tessera_sample_in_ball.sv" }
+  - { sha256: "b816c79c485f9200b4a9006a97dbff0168eb8513330b775884221adab9c2ee7f", path: "src/mldsa_mlkem_all_levels/sample_in_ball/rtl/tessera_sample_in_ball_ctrl.sv" }
+  - { sha256: "6d90500500d3cbf8e97106add1e07f5755d3f25ed41229603bc3c007e4201e49", path: "src/mldsa_mlkem_all_levels/sample_in_ball/rtl/tessera_sample_in_ball_pkg.sv" }
+  - { sha256: "3c21b114a78c52f8154199639e9100349e4ecb0c307515883186133fbf432ee2", path: "src/mldsa_mlkem_all_levels/sample_in_ball/rtl/tessera_sample_in_ball_shuffler.sv" }
+  - { sha256: "6ea81ab0d90d9144eeb1756af830fd21ac736bf384746fd62d2b6ef690c04226", path: "src/mldsa_mlkem_all_levels/sample_in_ball/rtl/tessera_sib_mem.sv" }
   - { sha256: "70d34e8ec02c6bbd07e16f09790509463dac839cce47aa3199cf767956fa35c3", path: "src/mldsa_mlkem_all_levels/sample_in_ball/stimulus/tests/directed/sib_rand_test.yml" }
-  - { sha256: "45be75ec3f964c69824b1dee9dd57cd4a06c9bce78692cffda71b007fee4e418", path: "src/mldsa_mlkem_all_levels/sample_in_ball/tb/sample_in_ball.py" }
-  - { sha256: "ce056053e33c535b40c24cd2d024affbe4e52bd6884d24c830acee329d7c48ad", path: "src/mldsa_mlkem_all_levels/sample_in_ball/tb/sample_in_ball_tb.sv" }
-  - { sha256: "fa3fa7fa286ded95d955ad28a74fc8bfc06bdf990f4e6a2e9e6f423a7aa90fe9", path: "src/mldsa_mlkem_all_levels/sig_decode_z/rtl/arca_sigdecode_z_defines_pkg.sv" }
-  - { sha256: "353f53c3348f75a4ab0d678c8b2e86297cdd9e5bbb625861144adc55913dd5e2", path: "src/mldsa_mlkem_all_levels/sig_decode_z/rtl/arca_sigdecode_z_top.sv" }
-  - { sha256: "c10d345ec1c081d0c1e5672a4892f3231befc12fda8c309494b50dfee5a015b1", path: "src/mldsa_mlkem_all_levels/sig_decode_z/rtl/arca_sigdecode_z_unit.sv" }
+  - { sha256: "40de4be3d980cd4de179feb24b421d2806df7012d9916317babe33c429fe11bc", path: "src/mldsa_mlkem_all_levels/sample_in_ball/tb/sample_in_ball.py" }
+  - { sha256: "f1f527ae7f7690a981189cf1f480c503772faa35bfd836f9458c75221192d16b", path: "src/mldsa_mlkem_all_levels/sample_in_ball/tb/sample_in_ball_tb.sv" }
+  - { sha256: "567bb0f90ed401d889fda5d3957c9e2d81fcff7308ddc894471788e451a02d2e", path: "src/mldsa_mlkem_all_levels/sig_decode_z/rtl/tessera_sigdecode_z_defines_pkg.sv" }
+  - { sha256: "f0ee5802fb191a5f0f087c13b8e382a2f23e71a14c2353667f5cb55ecbb11031", path: "src/mldsa_mlkem_all_levels/sig_decode_z/rtl/tessera_sigdecode_z_top.sv" }
+  - { sha256: "c2b989cc15b2c40097f5f41e485e384c4e3c13eb57754041263ed759bdc6d573", path: "src/mldsa_mlkem_all_levels/sig_decode_z/rtl/tessera_sigdecode_z_unit.sv" }
   - { sha256: "7d772c0dd889e85411ffb6d009801c5c1695eaad8d5a28e57e4fb962fb0b0c2f", path: "src/mldsa_mlkem_all_levels/sig_decode_z/stimulus/tests/directed/sigdecode_z_normal_test.yml" }
   - { sha256: "12f559d17ec8fb87292c407b8aa85aec9c9a0b34513769daf078bfae3c96bd7e", path: "src/mldsa_mlkem_all_levels/sig_decode_z/tb/polyz_unpack.py" }
-  - { sha256: "1e24d9702caa23576e9a24b90445adfcba469dfb8722dae572ee594fc9916396", path: "src/mldsa_mlkem_all_levels/sig_decode_z/tb/sigdecode_z_tb.sv" }
-  - { sha256: "93092a6e8e07ac49d6f6407e01b7dde9b2f9fbba7ca8f9645581fa31eea1a6c8", path: "src/mldsa_mlkem_all_levels/sig_encode_z/rtl/arca_sigencode_z_defines_pkg.sv" }
-  - { sha256: "32e077fa1cd62c8ae5426d8420d5107ff8412ef8e4eef62ed736d30218077a86", path: "src/mldsa_mlkem_all_levels/sig_encode_z/rtl/arca_sigencode_z_top.sv" }
-  - { sha256: "e7d1e6cc2b9dd052b50fdc390dca2a0fd71b37cb11e44243a8a44dcdea04edef", path: "src/mldsa_mlkem_all_levels/sig_encode_z/rtl/arca_sigencode_z_unit.sv" }
+  - { sha256: "7de033c98b3ced395070cc05d031d4b307c0908a7504cdd31b6884a0405a3357", path: "src/mldsa_mlkem_all_levels/sig_decode_z/tb/sigdecode_z_tb.sv" }
+  - { sha256: "e141cffae8b33b75fe6eb7eda19a56cd8f2f72ed2798871704513d6868a4f591", path: "src/mldsa_mlkem_all_levels/sig_encode_z/rtl/tessera_sigencode_z_defines_pkg.sv" }
+  - { sha256: "c8a146786d3704ef7447a543430922d8ccab8b74fe0f278c049e760e9701af69", path: "src/mldsa_mlkem_all_levels/sig_encode_z/rtl/tessera_sigencode_z_top.sv" }
+  - { sha256: "e10602b0c2749537cd3a9f385de09234e7347d5231c9000e934296e13c9d7512", path: "src/mldsa_mlkem_all_levels/sig_encode_z/rtl/tessera_sigencode_z_unit.sv" }
   - { sha256: "1d5d173f500d6e961a87a38e9de05ecc5d392d32456663298356a34c22d11980", path: "src/mldsa_mlkem_all_levels/sig_encode_z/stimulus/tests/directed/sigencode_z_normal_test.yml" }
   - { sha256: "697a93ef607f15e88f145ffeec2d9ad9b7788a64178ad9e6ca4c6841bb2b30a0", path: "src/mldsa_mlkem_all_levels/sig_encode_z/tb/polyz_pack.py" }
-  - { sha256: "29cb2866e44755290aa552f562fa0dd7a13817e2887e0f07f62ea0de835867e3", path: "src/mldsa_mlkem_all_levels/sig_encode_z/tb/sigencode_z_tb.sv" }
-  - { sha256: "14fbf97b4395666f3c0f91e1fb9ed1cf5bb3fdbd7d052df8ae0de73efe9d6a3d", path: "src/mldsa_mlkem_all_levels/sigdecode_h/rtl/arca_sigdecode_h.sv" }
-  - { sha256: "0806a3b82be31cb1a754b08b9f53cb994606882031d98f9f063dcb5a65723aa3", path: "src/mldsa_mlkem_all_levels/sigdecode_h/rtl/arca_sigdecode_h_ctrl.sv" }
-  - { sha256: "c2bc7d992f192e43b85abe644e942f6a7dd53ddcc7ca57d0fcb59eab4d8fc1c3", path: "src/mldsa_mlkem_all_levels/sigdecode_h/rtl/arca_sigdecode_h_defines_pkg.sv" }
+  - { sha256: "fcc6a86e16172b96a81980902f713936cbc437b539aac9e890320791a395480b", path: "src/mldsa_mlkem_all_levels/sig_encode_z/tb/sigencode_z_tb.sv" }
+  - { sha256: "372ab739174d91c985f86c756d61ac8db3ee0c835007d9dd7fe9b3d8f40f62c3", path: "src/mldsa_mlkem_all_levels/sigdecode_h/rtl/tessera_sigdecode_h.sv" }
+  - { sha256: "1d7bd3341692c47f539594cd1c4b14310de12c1af8139cd5476a707ad131931f", path: "src/mldsa_mlkem_all_levels/sigdecode_h/rtl/tessera_sigdecode_h_ctrl.sv" }
+  - { sha256: "b510595dc0395103400cc8deed55717f22a65b041bb88374c3ceeadcbec8d813", path: "src/mldsa_mlkem_all_levels/sigdecode_h/rtl/tessera_sigdecode_h_defines_pkg.sv" }
   - { sha256: "7501f831e3f67c78a7f90d656f5a2d6783113bd12b51ab48715621a16be0da17", path: "src/mldsa_mlkem_all_levels/sigdecode_h/stimulus/tests/directed/sigdecode_h_normal_test.yml" }
-  - { sha256: "5c579e46b7d287db323b8f4eb87980701ecda8776773773d8f6252052f06a16a", path: "src/mldsa_mlkem_all_levels/sigdecode_h/tb/sigdecode_h_tb.sv" }
-  - { sha256: "2066f24a0fa2a969b3181d4e2ab3089bf5d5f49b79dba059228b0c3c5273f2f2", path: "src/mldsa_mlkem_all_levels/sk_decode/rtl/arca_skdecode_ctrl.sv" }
-  - { sha256: "db970406d6983bdd0ec16625b274b4810b2866524fbc34a57fa99cd482220372", path: "src/mldsa_mlkem_all_levels/sk_decode/rtl/arca_skdecode_defines_pkg.sv" }
-  - { sha256: "d220cbe026120eb1a22baed10ee4c834988755eacf1c30218cbf35d29c161c02", path: "src/mldsa_mlkem_all_levels/sk_decode/rtl/arca_skdecode_s1s2_unpack.sv" }
-  - { sha256: "08e946869e01d696bd6015a7880d2b2ce228953c2249da0777c249f01032d335", path: "src/mldsa_mlkem_all_levels/sk_decode/rtl/arca_skdecode_t0_unpack.sv" }
-  - { sha256: "1e7af5447719d613d313018d80e55fb7c153e18ca4824f762b60aa33153e0a45", path: "src/mldsa_mlkem_all_levels/sk_decode/rtl/arca_skdecode_top.sv" }
+  - { sha256: "4357fdd3a2493f38f283dfe2def5f71ff9f7e7fbf2bf271c32170d5d034e1b7a", path: "src/mldsa_mlkem_all_levels/sigdecode_h/tb/sigdecode_h_tb.sv" }
+  - { sha256: "957dbd39a1e7f0a4bc99a32c97c0c8c109606232548600760e12e55c04e6a3bc", path: "src/mldsa_mlkem_all_levels/sk_decode/rtl/tessera_skdecode_ctrl.sv" }
+  - { sha256: "e2c6be27f4798beec64f57b483edacd47d81ebc31c91c5558bfc228dae756f21", path: "src/mldsa_mlkem_all_levels/sk_decode/rtl/tessera_skdecode_defines_pkg.sv" }
+  - { sha256: "176e99191c96c4cec33c939e8636e51d21adb2198b043a8437c60962b7fc7a96", path: "src/mldsa_mlkem_all_levels/sk_decode/rtl/tessera_skdecode_s1s2_unpack.sv" }
+  - { sha256: "d2400e81fcc0ed3afd4da4ddf05e9f8b4544b33b8ccc0d78f47fd49b1918b45d", path: "src/mldsa_mlkem_all_levels/sk_decode/rtl/tessera_skdecode_t0_unpack.sv" }
+  - { sha256: "ee289bc0a57660332afe994b7d17e722545a3d38a3d1d81b92a129011c168528", path: "src/mldsa_mlkem_all_levels/sk_decode/rtl/tessera_skdecode_top.sv" }
   - { sha256: "ba3b6b420290faa835707c3f7dac8d6cf06fd41d97b0e1212a0f2fe48bbc15ef", path: "src/mldsa_mlkem_all_levels/sk_decode/stimulus/tests/directed/skdecode_normal_test.yml" }
-  - { sha256: "2ecc49cb2c8aca493534d4245613a5dcb21c1228326d9f00d1e35c52e5a77d90", path: "src/mldsa_mlkem_all_levels/sk_decode/tb/skdecode_tb.sv" }
-  - { sha256: "7dc6b2f78c405b6aa70236cdbe9856ad837b4d2e1b8ae1457ad31db5d47e1d57", path: "src/mldsa_mlkem_all_levels/sk_encode/rtl/arca_skencode.sv" }
+  - { sha256: "64a249a044045d1a98000dec7060b9e1bce36677e1b5d3271c712bf6da5b15b3", path: "src/mldsa_mlkem_all_levels/sk_decode/tb/skdecode_tb.sv" }
+  - { sha256: "d32eac0ad1855a9ea485653cca62d65abde21c7f24e5d34510ac19c6f25a648d", path: "src/mldsa_mlkem_all_levels/sk_encode/rtl/tessera_skencode.sv" }
   - { sha256: "5fb67b344f72b355b928e18e75270a0b594485b65940f3590307a5415f7e8e4f", path: "src/mldsa_mlkem_all_levels/sk_encode/stimulus/tests/directed/skencode_normal_test.yml" }
   - { sha256: "e756f80fdcae81df3210ce7889581597f62c66c475800bd0ebe3eba07829e8dc", path: "src/mldsa_mlkem_all_levels/sk_encode/tb/pack_eta.py" }
-  - { sha256: "1f8c9be3ec7a9bb7135f0a6b3044cbbf24d6a43a22806590bddc484e6f498e3d", path: "src/mldsa_mlkem_all_levels/sk_encode/tb/skencode_tb.sv" }
+  - { sha256: "93a99ee3b7b6bacec16f25673d54d1e19ebdbeb7fdaff303102b4d5a0159280d", path: "src/mldsa_mlkem_all_levels/sk_encode/tb/skencode_tb.sv" }

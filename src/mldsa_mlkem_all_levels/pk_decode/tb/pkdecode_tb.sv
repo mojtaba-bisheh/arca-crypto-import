@@ -15,13 +15,13 @@
 //
 // pkdecode_tb.sv
 // ---------------
-// Testbench for arca_pkdecode module
+// Testbench for tessera_pkdecode module
 //======================================================================
 
 `default_nettype none
 
 module pkdecode_tb
-    import arca_abr_params_pkg::*;
+    import tessera_abr_params_pkg::*;
 #(
     parameter REG_SIZE = 24,
     parameter MLDSA_K = 'h8,
@@ -56,7 +56,7 @@ reg [23:0] actual_output_mem [0:NUM_OF_COEFF-1];
 
 
 // Instantiate the Device Under Test (DUT)
-arca_pkdecode #(
+tessera_pkdecode #(
     .MEM_ADDR_WIDTH(MEM_ADDR_WIDTH),
     .MLDSA_K(MLDSA_K),
     .MLDSA_N(256),
@@ -217,7 +217,7 @@ endtask
 
 task pkdecode_test(input reg [MEM_ADDR_WIDTH-1:0] dest_base_addr, input reg [API_ADDR_WIDTH-1:0] src_base_addr);
     int i, j;
-    $display("Starting arca_pkdecode test\n");
+    $display("Starting tessera_pkdecode test\n");
     read_test_vectors(src_base_addr);
     @(posedge clk_tb);
     pkdecode_enable_tb = 1;
@@ -228,7 +228,7 @@ task pkdecode_test(input reg [MEM_ADDR_WIDTH-1:0] dest_base_addr, input reg [API
     src_base_addr_tb = 0;
     dest_base_addr_tb = 0;
 
-    $display("Waiting for arca_pkdecode to complete\n");
+    $display("Waiting for tessera_pkdecode to complete\n");
     wait (pkdecode_done_tb);
     read_memory_content(dest_base_addr);
 

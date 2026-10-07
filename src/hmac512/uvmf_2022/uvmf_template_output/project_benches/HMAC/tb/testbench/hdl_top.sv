@@ -97,7 +97,7 @@ initial begin
     kv_wr_resp    = '{default:0};
 end
 
-arca_hmac512_ctrl #(
+tessera_hmac512_ctrl #(
      .AHB_DATA_WIDTH(64),
      .AHB_ADDR_WIDTH(12)
 ) dut (

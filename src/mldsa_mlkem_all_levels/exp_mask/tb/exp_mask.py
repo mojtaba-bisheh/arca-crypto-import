@@ -85,7 +85,7 @@ def expand_mask(seed):
 input_seeds = open("input_seeds.txt", "r")
 input_vectors = open("input_vectors.txt", "w")
 exp_results = open("exp_results.txt", "w")
-log_file = open("arca_rej_sampler.log", "w")
+log_file = open("tessera_rej_sampler.log", "w")
 Lines = input_seeds.readlines()
 
 for line in Lines:

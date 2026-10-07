@@ -22,7 +22,7 @@
 import "DPI-C" function string getenv(input string env_name);
 
 module mlkem_rej_sampler_tb
-  import arca_abr_sampler_pkg::*;
+  import tessera_abr_sampler_pkg::*;
   import mldsa_params_pkg::*;
 (
 `ifdef VERILATOR
@@ -118,7 +118,7 @@ module mlkem_rej_sampler_tb
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_abr_piso #(
+  tessera_abr_piso #(
     .PISO_BUFFER_W(PISO_BUFFER_W),
     .PISO_INPUT_RATE(PISO_INPUT_RATE),
     .PISO_OUTPUT_RATE(PISO_OUTPUT_RATE)
@@ -134,7 +134,7 @@ module mlkem_rej_sampler_tb
  .data_o(piso_data)
  );
 
-  arca_rej_sampler_ctrl#(
+  tessera_rej_sampler_ctrl#(
     .REJ_NUM_SAMPLERS(REJ_NUM_SAMPLERS),
     .REJ_SAMPLE_W(REJ_SAMPLE_W),
     .REJ_VLD_SAMPLES(REJ_VLD_SAMPLES),

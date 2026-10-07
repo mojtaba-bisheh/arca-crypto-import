@@ -15,6 +15,6 @@
 
 module hmac_drbg_cov_bind;
     `ifdef FCOV
-    bind arca_hmac_drbg hmac_drbg_cov_if i_hmac_drbg_cov_if(.*);
+    bind tessera_hmac_drbg hmac_drbg_cov_if i_hmac_drbg_cov_if(.*);
     `endif
 endmodule

@@ -24,7 +24,7 @@
 `default_nettype none
 
 module power2round_tb
-    import arca_abr_params_pkg::*;
+    import tessera_abr_params_pkg::*;
 #(
         parameter REG_SIZE = 24,
         parameter MLDSA_Q = 23'd8380417,
@@ -74,7 +74,7 @@ logic [7:0] pk_t1_wr_addr_tb;
 
 reg [831:0][31:0] skmem_data;
 
-arca_power2round_top #(
+tessera_power2round_top #(
     //.BUFFER_DATA_W(BUFFER_DATA_W)
 ) dut (
     .clk(clk_tb),

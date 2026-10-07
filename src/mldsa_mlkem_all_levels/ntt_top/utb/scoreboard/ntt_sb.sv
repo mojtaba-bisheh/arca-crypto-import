@@ -13,7 +13,7 @@
 // limitations under the License.
 //
 class ntt_sb extends uvm_scoreboard;
-    // import arca_abr_params_pkg::*;
+    // import tessera_abr_params_pkg::*;
     `uvm_component_utils(ntt_sb)
 
     uvm_analysis_imp_ntt_txn#(ntt_txn, ntt_sb) ntt_ap;

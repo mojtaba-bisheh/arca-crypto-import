@@ -24,8 +24,8 @@
 `default_nettype none
 
 module makehint_tb
-    import arca_makehint_defines_pkg::*;
-    import arca_abr_params_pkg::*;
+    import tessera_makehint_defines_pkg::*;
+    import tessera_abr_params_pkg::*;
 #(
     parameter NUM_WR = 4,
     parameter NUM_RD = 4,
@@ -54,7 +54,7 @@ reg [(64*8)-1:0][3:0] z_array;
 
 
 
-arca_makehint #(
+tessera_makehint #(
     .BUFFER_DATA_W(BUFFER_DATA_W)
 ) dut (
     .clk(clk_tb),
@@ -170,7 +170,7 @@ task sample_buffer_test;
 endtask
 
 task makehint_test;
-    $display("Starting arca_makehint test\n");
+    $display("Starting tessera_makehint test\n");
     en_tb = 1;
     @(posedge clk_tb);
     en_tb = 0;
@@ -187,7 +187,7 @@ task makehint_test;
         @(posedge clk_tb); 
     end
     @(posedge clk_tb);
-    $display("Wait for done signal from arca_makehint\n");
+    $display("Wait for done signal from tessera_makehint\n");
     while(!dut.makehint_done)
         @(posedge clk_tb);
     $display("Hint sum = %d, invalid_h = %0d", dut.hintsum, dut.invalid_h);

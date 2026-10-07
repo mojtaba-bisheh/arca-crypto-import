@@ -22,10 +22,10 @@
 import "DPI-C" function string getenv(input string env_name);
 
 module abr_sha3_tb
-  import arca_abr_sha3_pkg::*;
+  import tessera_abr_sha3_pkg::*;
   import abr_sha3_tb_pkg::*;
-  import arca_abr_prim_alert_pkg::*;
-  import arca_abr_sampler_pkg::*;
+  import tessera_abr_prim_alert_pkg::*;
+  import tessera_abr_sampler_pkg::*;
 (
 `ifdef VERILATOR
   input bit clk_tb
@@ -98,21 +98,21 @@ module abr_sha3_tb
   logic                    sha3_process;
   logic                    sha3_run;
 
-  arca_abr_prim_mubi_pkg::mubi4_t    sha3_done;
-  arca_abr_prim_mubi_pkg::mubi4_t    sha3_absorbed;
+  tessera_abr_prim_mubi_pkg::mubi4_t    sha3_done;
+  tessera_abr_prim_mubi_pkg::mubi4_t    sha3_absorbed;
 
   logic sha3_squeezing;
 
   logic sha3_block_processed;
 
-  arca_abr_sha3_pkg::sha3_st_e sha3_fsm;
-  arca_abr_sha3_pkg::err_t sha3_err;
+  tessera_abr_sha3_pkg::sha3_st_e sha3_fsm;
+  tessera_abr_sha3_pkg::err_t sha3_err;
 
-  arca_abr_sha3_pkg::sha3_mode_e mode;
-  arca_abr_sha3_pkg::keccak_strength_e strength;
+  tessera_abr_sha3_pkg::sha3_mode_e mode;
+  tessera_abr_sha3_pkg::keccak_strength_e strength;
 
   logic sha3_state_vld;
-  logic [arca_abr_sha3_pkg::StateW-1:0] sha3_state[Sha3Share];
+  logic [tessera_abr_sha3_pkg::StateW-1:0] sha3_state[Sha3Share];
 
   logic sha3_state_error;
   logic sha3_count_error;
@@ -134,7 +134,7 @@ module abr_sha3_tb
   //----------------------------------------------------------------
 
   // SHA3 hashing engine
-  arca_abr_sha3 #(
+  tessera_abr_sha3 #(
     .RoundsPerClock(RoundsPerClock),
     .EnMasking (Sha3EnMasking)
   ) dut (
@@ -250,8 +250,8 @@ module abr_sha3_tb
 `endif
       reset_n_tb   = 0;
 
-      mode = arca_abr_sha3_pkg::Shake;
-      strength = arca_abr_sha3_pkg::L256;
+      mode = tessera_abr_sha3_pkg::Shake;
+      strength = tessera_abr_sha3_pkg::L256;
 
       msg_start = 0;
       msg_valid = 0;
@@ -260,7 +260,7 @@ module abr_sha3_tb
 
       sha3_start = 0;
       sha3_process = 0;
-      sha3_done = arca_abr_prim_mubi_pkg::MuBi4False;
+      sha3_done = tessera_abr_prim_mubi_pkg::MuBi4False;
       sha3_run = 0;
     end
   endtask // init_dut
@@ -340,7 +340,7 @@ module abr_sha3_tb
     end
     $fclose(fd_w);
 
-    $system($sformatf("python arca_abr_sha3.py"));
+    $system($sformatf("python tessera_abr_sha3.py"));
 
   endtask
 
@@ -357,7 +357,7 @@ module abr_sha3_tb
     if (fd_w == 0) $error("Cannot open file %s for writing", vector_filename);
     
     for (int i = 0; i < VEC_CNT; i++) begin
-      assert(test0.randomize() with { vector.mode == arca_abr_sha3_pkg::Shake;
+      assert(test0.randomize() with { vector.mode == tessera_abr_sha3_pkg::Shake;
       });
 
       test0.vector.input_valid = '1 >> (MAX_MSG_WR*(MsgWidth/8)-test0.vector_length);
@@ -372,7 +372,7 @@ module abr_sha3_tb
     end
     $fclose(fd_w);
 
-    $system($sformatf("python arca_abr_sha3.py"));
+    $system($sformatf("python tessera_abr_sha3.py"));
 
   endtask
 
@@ -505,7 +505,7 @@ module abr_sha3_tb
       check_results(1'b0, 0);
 
       //Do a squeeze for Shake
-      if (test_vector_q[0].mode == arca_abr_sha3_pkg::Shake) begin
+      if (test_vector_q[0].mode == tessera_abr_sha3_pkg::Shake) begin
         sha3_run <= 1'b1;
         @(posedge clk_tb);
         sha3_run <= 1'b0;
@@ -519,9 +519,9 @@ module abr_sha3_tb
       end
 
       @(posedge clk_tb);
-      sha3_done = arca_abr_prim_mubi_pkg::MuBi4True;
+      sha3_done = tessera_abr_prim_mubi_pkg::MuBi4True;
       @(posedge clk_tb);
-      sha3_done = arca_abr_prim_mubi_pkg::MuBi4False;
+      sha3_done = tessera_abr_prim_mubi_pkg::MuBi4False;
 
       test_vector_q.pop_front();
       tc_ctr++;
@@ -570,21 +570,21 @@ module abr_sha3_tb
       $finish;
     end // main
 
-  arca_abr_prim_alert_pkg::alert_tx_t [NumAlerts-1:0] alert_tx_o;
+  tessera_abr_prim_alert_pkg::alert_tx_t [NumAlerts-1:0] alert_tx_o;
 
-  `ARCA_ABR_ASSERT_PRIM_FSM_ERROR_TRIGGER_ALERT(SHA3FsmCheck_A,
+  `TESSERA_ABR_ASSERT_PRIM_FSM_ERROR_TRIGGER_ALERT(SHA3FsmCheck_A,
     dut.u_state_regs, alert_tx_o[1])
 
-  `ARCA_ABR_ASSERT_PRIM_FSM_ERROR_TRIGGER_ALERT(KeccakRoundFsmCheck_A,
+  `TESSERA_ABR_ASSERT_PRIM_FSM_ERROR_TRIGGER_ALERT(KeccakRoundFsmCheck_A,
     dut.u_keccak.u_state_regs, alert_tx_o[1])
 
-  `ARCA_ABR_ASSERT_PRIM_FSM_ERROR_TRIGGER_ALERT(SHA3padFsmCheck_A,
+  `TESSERA_ABR_ASSERT_PRIM_FSM_ERROR_TRIGGER_ALERT(SHA3padFsmCheck_A,
     dut.u_pad.u_state_regs, alert_tx_o[1])
 
-  `ARCA_ABR_ASSERT_PRIM_COUNT_ERROR_TRIGGER_ALERT(WrMsgCountCheck_A,
+  `TESSERA_ABR_ASSERT_PRIM_COUNT_ERROR_TRIGGER_ALERT(WrMsgCountCheck_A,
     dut.u_pad.u_wrmsg_count, alert_tx_o[1])
 
-  `ARCA_ABR_ASSERT_PRIM_COUNT_ERROR_TRIGGER_ALERT(RoundCountCheck_A,
+  `TESSERA_ABR_ASSERT_PRIM_COUNT_ERROR_TRIGGER_ALERT(RoundCountCheck_A,
     dut.u_keccak.u_round_count, alert_tx_o[1])
 
 endmodule // sha3_tb

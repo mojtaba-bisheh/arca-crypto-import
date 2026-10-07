@@ -4,7 +4,7 @@
 #
 #   ./tools/scripts/rename/roundtrip_check.sh [--block ecc] --upstream <dir>
 #
-# For every imported file this strips the ARCA prefix back off and diffs the
+# For every imported file this strips the Tessera prefix back off and diffs the
 # result against the exact upstream blob recorded in revinfo/<block>.revinfo.yml.
 # A clean run means the vendored RTL differs from caliptra-rtl by nothing but
 # names -- no accidental logic edits, no dropped lines, no mangled strings.
@@ -103,15 +103,15 @@ for b in "${blocks[@]}"; do
 
     # The full inverse of the import, applied to file *content*: undo the stem,
     # then drop the prefix. The stem half has to be *anchored*, because unlike
-    # "arca_" -- which can only ever be something this toolchain put there --
+    # "tessera_" -- which can only ever be something this toolchain put there --
     # the string "hmac512" occurs in upstream of its own accord (hmac512_op in
     # the UVMF enums). Blindly inverting it would rewrite upstream's own names
     # and report a difference that is not there.
     #
     # The rename only ever produces the stem in two shapes, so only those two
     # are inverted:
-    #   1. directly behind the prefix   arca_hmac512_core -> hmac_core
-    #                                   ARCA_HMAC512_PARAM_PKG -> HMAC_PARAM_PKG
+    #   1. directly behind the prefix   tessera_hmac512_core -> hmac_core
+    #                                   TESSERA_HMAC512_PARAM_PKG -> HMAC_PARAM_PKG
     #   2. as a whole path component    src/hmac512/rtl -> src/hmac/rtl
     #      (rc_fix_path_components strips the prefix back off these)
     # Anything else -- hmac512_op, hmac512 in a comment upstream wrote -- is
@@ -170,19 +170,19 @@ for b in "${blocks[@]}"; do
 
     printf '\n== %s (upstream %s, prefix %s) ==\n' "$b" "${sha:0:12}" "$prefix"
 
-    # upstream subtree -> ARCA subtree, as recorded at import time
+    # upstream subtree -> Tessera subtree, as recorded at import time
     declare -A dirmap=()
     while IFS='|' read -r up ar; do
         [ -n "${ar:-}" ] || continue
         dirmap["$up"]="$ar"
-    done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*\{[[:space:]]*upstream:[[:space:]]*"([^"]+)",[[:space:]]*arca:[[:space:]]*"([^"]+)".*/\1|\2/p' "$revinfo")
+    done < <(sed -nE 's/^[[:space:]]*-[[:space:]]*\{[[:space:]]*upstream:[[:space:]]*"([^"]+)",[[:space:]]*tessera:[[:space:]]*"([^"]+)".*/\1|\2/p' "$revinfo")
 
     # dirmap keys whole directories, which is enough for the delivery tier
     # (staged one level deep) but not for collateral, which is recursive. Keep
     # the roots separately and resolve by longest matching prefix.
-    roots_up=(); roots_arca=()
+    roots_up=(); roots_tessera=()
     for up in "${!dirmap[@]}"; do
-        roots_up+=("$up"); roots_arca+=("${dirmap[$up]}")
+        roots_up+=("$up"); roots_tessera+=("${dirmap[$up]}")
     done
     remap_path() {
         local up="$1" i best=-1 blen=0
@@ -192,31 +192,31 @@ for b in "${blocks[@]}"; do
             esac
         done
         if [ "$best" -ge 0 ]; then
-            printf '%s%s\n' "${roots_arca[$best]}" "${up#"${roots_up[$best]}"}"
+            printf '%s%s\n' "${roots_tessera[$best]}" "${up#"${roots_up[$best]}"}"
         else
             printf '%s\n' "$up"
         fi
     }
 
-    # Resolving upstream path -> ARCA path: both file names *and* directory
+    # Resolving upstream path -> Tessera path: both file names *and* directory
     # names may carry the prefix (UVMF names a directory after the package it
     # holds). Rather than re-deriving the rule, strip the prefix out of every
     # committed path and index by the result -- that is the upstream path.
     #
     # The stem is the second half of the inverse, and it has to be undone
-    # *below* the ARCA subtree root, never on the root itself: the key is
-    # compared against remap_path's output, which already speaks ARCA
-    # directories. For src/hmac512/rtl/arca_hmac512_core.sv the key wanted is
-    # src/hmac512/rtl/hmac_core.sv -- ARCA directory, upstream file name.
-    arca_key() {
+    # *below* the Tessera subtree root, never on the root itself: the key is
+    # compared against remap_path's output, which already speaks Tessera
+    # directories. For src/hmac512/rtl/tessera_hmac512_core.sv the key wanted is
+    # src/hmac512/rtl/hmac_core.sv -- Tessera directory, upstream file name.
+    tessera_key() {
         local rp="${1//${prefix}/}" i best=-1 blen=0 root rest comp out
-        for i in "${!roots_arca[@]}"; do
-            case "$rp" in "${roots_arca[$i]}"/*)
-                [ "${#roots_arca[$i]}" -gt "$blen" ] && { blen="${#roots_arca[$i]}"; best="$i"; } ;;
+        for i in "${!roots_tessera[@]}"; do
+            case "$rp" in "${roots_tessera[$i]}"/*)
+                [ "${#roots_tessera[$i]}" -gt "$blen" ] && { blen="${#roots_tessera[$i]}"; best="$i"; } ;;
             esac
         done
         if [ "$best" -lt 0 ]; then printf '%s' "$rp"; return 0; fi
-        root="${roots_arca[$best]}"; rest="${rp#"$root"/}"; out="$root"
+        root="${roots_tessera[$best]}"; rest="${rp#"$root"/}"; out="$root"
         local -a comps=()
         IFS='/' read -r -a comps <<< "$rest"
         for comp in "${comps[@]}"; do out="$out/$(unstem "$comp")"; done
@@ -226,7 +226,7 @@ for b in "${blocks[@]}"; do
     declare -A pathmap=()
     while read -r _ rpath; do
         [ -n "${rpath:-}" ] || continue
-        pathmap["$(arca_key "$rpath")"]="$rpath"
+        pathmap["$(tessera_key "$rpath")"]="$rpath"
     done < <(sed -nE '/^renamed_manifest:/,$ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"(src\/[^"]+)".*/\1 \2/p' "$revinfo")
 
     checked=0
@@ -236,7 +236,7 @@ for b in "${blocks[@]}"; do
         base="$(basename "$upath")"
         updir="$(dirname "$upath")"
 
-        # Where upstream put it is not where ARCA puts it, for any block that
+        # Where upstream put it is not where Tessera puts it, for any block that
         # relocates a subtree. Translate first, then look the result up.
         mapped="$(remap_path "$upath")"
         renamed=""
@@ -247,8 +247,8 @@ for b in "${blocks[@]}"; do
         elif [ -f "$DEST/$mapped" ]; then
             renamed="$DEST/$mapped"
         else
-            arcadir="${dirmap[$updir]:-}"
-            [ -n "$arcadir" ] && renamed="$DEST/$arcadir/${prefix}$(restem "$base")"
+            tesseradir="${dirmap[$updir]:-}"
+            [ -n "$tesseradir" ] && renamed="$DEST/$tesseradir/${prefix}$(restem "$base")"
         fi
         [ -n "$renamed" ] && [ -f "$renamed" ] || { echo "  FAIL  missing renamed file for $upath"; rc=1; continue; }
 
@@ -291,13 +291,13 @@ for b in "${blocks[@]}"; do
     local_gi=0
     while IFS= read -r gi; do
         [ -n "$gi" ] || continue
-        # declared by upstream path; committed at the ARCA path for that subtree
-        gi_arca="$(remap_path "$gi")"
-        if [ ! -f "$DEST/$gi_arca" ]; then
-            printf '  FAIL  generator input %s declared but not imported (looked for %s)\n' "$gi" "$gi_arca"
+        # declared by upstream path; committed at the Tessera path for that subtree
+        gi_tessera="$(remap_path "$gi")"
+        if [ ! -f "$DEST/$gi_tessera" ]; then
+            printf '  FAIL  generator input %s declared but not imported (looked for %s)\n' "$gi" "$gi_tessera"
             rc=1; continue
         fi
-        if git -C "$UPSTREAM" show "$sha:$gi" 2>/dev/null | cmp -s - "$DEST/$gi_arca"; then
+        if git -C "$UPSTREAM" show "$sha:$gi" 2>/dev/null | cmp -s - "$DEST/$gi_tessera"; then
             local_gi=$((local_gi + 1))
         else
             printf '  FAIL  generator input %s is not byte-identical to upstream\n' "$gi"

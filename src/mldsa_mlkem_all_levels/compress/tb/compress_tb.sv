@@ -20,8 +20,8 @@
 `default_nettype none
 
 module compress_tb
-    import arca_abr_params_pkg::*;
-    import arca_compress_defines_pkg::*;
+    import tessera_abr_params_pkg::*;
+    import tessera_compress_defines_pkg::*;
     ();
 
 parameter CLK_HALF_PERIOD = 5;
@@ -40,7 +40,7 @@ logic [255:0][REG_SIZE-1:0] coeff_array, coeff_exp;
 compress_mode_t mode_tb_dut;
 int error_count;
 
-arca_compress_top dut (
+tessera_compress_top dut (
     .clk(clk_tb),
     .reset_n(reset_n_tb),
     .zeroize(zeroize_tb),
@@ -149,7 +149,7 @@ task compress_test(compress_mode_t mode_tb = 0);
 
     
 
-    $display("Starting arca_compress test with mode %0d\n", mode_tb);
+    $display("Starting tessera_compress test with mode %0d\n", mode_tb);
     @(posedge clk_tb);
     en_tb <= 1;
     @(posedge clk_tb);

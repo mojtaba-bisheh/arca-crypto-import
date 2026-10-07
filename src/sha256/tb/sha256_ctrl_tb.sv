@@ -16,7 +16,7 @@
 //
 // sha256_ctrl_tb.sv
 // --------
-// arca_sha256 testbench for the arca_sha256 AHb_lite interface controller.
+// tessera_sha256 testbench for the tessera_sha256 AHb_lite interface controller.
 //
 //
 //======================================================================
@@ -116,7 +116,7 @@ module sha256_ctrl_tb();
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_sha256_ctrl #(
+  tessera_sha256_ctrl #(
              .AHB_DATA_WIDTH(AHB_DATA_WIDTH),
              .AHB_ADDR_WIDTH(AHB_ADDR_WIDTH)
             )
@@ -766,7 +766,7 @@ module sha256_ctrl_tb();
   //----------------------------------------------------------------
   // sha256_tests()
   //
-  // Run test cases for arca_sha256.
+  // Run test cases for tessera_sha256.
   // Test cases taken from:
   // http://csrc.nist.gov/groups/ST/toolkit/documents/Examples/SHA256.pdf
   //----------------------------------------------------------------
@@ -780,7 +780,7 @@ module sha256_ctrl_tb();
       reg [511 : 0] tc1_1;
       reg [255 : 0] res1_1;
 
-      $display("*** Testcases for arca_sha256 functionality started.");
+      $display("*** Testcases for tessera_sha256 functionality started.");
 
       tc0 = 512'h61626380000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000018;
       res0 = 256'hBA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD;
@@ -796,7 +796,7 @@ module sha256_ctrl_tb();
 
       zeroize_test(SHA256_MODE, tc1_0, res1_0, tc1_1, res1_1);
 
-      $display("*** Testcases for arca_sha256 functionality completed.");
+      $display("*** Testcases for tessera_sha256 functionality completed.");
     end
   endtask // sha256_tests
 
@@ -964,7 +964,7 @@ module sha256_ctrl_tb();
   //----------------------------------------------------------------
   initial
     begin : main
-      $display("   -- Testbench for arca_sha256 started --");
+      $display("   -- Testbench for tessera_sha256 started --");
 
       init_sim();
       reset_dut();
@@ -978,7 +978,7 @@ module sha256_ctrl_tb();
 
       display_test_result();
 
-      $display("   -- Testbench for arca_sha256 done. --");
+      $display("   -- Testbench for tessera_sha256 done. --");
       $finish;
     end // main
 endmodule // sha256_ctrl_tb

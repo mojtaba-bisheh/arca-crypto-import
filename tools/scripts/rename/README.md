@@ -1,13 +1,13 @@
-# arca-crypto-import
+# Tessera crypto import
 
-Caliptra crypto engines vendored into ARCA, with a rename script per block.
+Caliptra crypto engines vendored into Tessera, with a rename script per block.
 Run every command below from the repository root.
 
 ## Pulling the latest update from caliptra-rtl / adams-bridge
 
 Everything is done by `tools/scripts/rename/import_block.sh`. It clones (or
 reuses) the upstream repo, checks out the branch recorded in the block's
-`revinfo.yml`, re-copies the block, re-applies the `arca_` prefix and rewrites
+`revinfo.yml`, re-copies the block, re-applies the `tessera_` prefix and rewrites
 `src/<block>/revinfo.yml` with the new upstream commit.
 
 ```sh
@@ -39,13 +39,13 @@ Blocks: `aes` `ecc` `hmac512` `hmac256` `mldsa_mlkem_all_levels` `sha256`
 comes from the `adams-bridge` submodule, and `hmac256` and `sha256_masked`
 from caliptra-rtl's `future` branch — both are handled automatically.
 
-Two blocks carry an ARCA name that differs from the upstream one.
+Two blocks carry an Tessera name that differs from the upstream one.
 
 `hmac512`: caliptra-rtl calls the SHA-512 HMAC engine simply `hmac`, which
 reads as a generic name next to `hmac256`. The repo-wide *stem policy* in
 `rename_common.sh` (`RC_DEFAULT_STEM_RENAMES`) renames `hmac*` to `hmac512*`
-on top of the `arca_` prefix, so upstream `src/hmac/rtl/hmac_core.sv` lands as
-`src/hmac512/rtl/arca_hmac512_core.sv`. `hmac_drbg` is exempt
+on top of the `tessera_` prefix, so upstream `src/hmac/rtl/hmac_core.sv` lands as
+`src/hmac512/rtl/tessera_hmac512_core.sv`. `hmac_drbg` is exempt
 (`RC_DEFAULT_STEM_KEEP`) — it is a shared DRBG, not a SHA-512 HMAC, and ECC
 imports it too. The policy lives in the shared engine rather than in
 `rename_hmac512.sh` because identifiers cross block boundaries: ECC also
@@ -56,7 +56,7 @@ under `policy.stem_renames` / `policy.stem_keep`.
 `mldsa_mlkem_all_levels` is renamed the other way round: its *directory* is
 renamed but its *identifiers* are not. Upstream calls the engine `abr`
 ("Adams Bridge"), a codename that says nothing about ML-DSA, ML-KEM, or the
-security levels covered, so the ARCA directory is named for what the block
+security levels covered, so the Tessera directory is named for what the block
 implements. The identifiers keep the short upstream `abr_` stem — a
 22-character stem on all 222 identifiers in the block would cost far more
 readability than it buys. Directory and stem are independent knobs:

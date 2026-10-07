@@ -1,12 +1,12 @@
-# ARCA vendored-block provenance record -- GENERATED, do not edit by hand.
+# Tessera vendored-block provenance record -- GENERATED, do not edit by hand.
 #
 # To review what changed upstream since this import:
 #   git -C <caliptra-rtl> log --oneline b9ac0e466758d6ba8eac562d8acc3bc5483a2f6a..origin/main -- src/sha256/rtl src/sha256/coverage 
 #
 block: sha256
-prefix: "arca_"
-macro_prefix: "ARCA_"
-imported_at: "2026-10-06T20:22:45Z"
+prefix: "tessera_"
+macro_prefix: "TESSERA_"
+imported_at: "2026-10-07T16:08:59Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -15,19 +15,19 @@ upstream:
   commit_date: "2026-10-06T08:53:38-07:00"
   commit_subject: "Feat/stash bank rfc 673 (#1395)"
   working_tree_dirty: false
-  subtrees:  # upstream path -> ARCA path
-    - { upstream: "src/sha256/rtl", arca: "src/sha256/rtl" }
-    - { upstream: "src/sha256/coverage", arca: "src/sha256/coverage" }
-  collateral_subtrees:  # upstream path -> ARCA path
-    - { upstream: "src/sha256/tb", arca: "src/sha256/tb" }
-    - { upstream: "src/sha256/coverage/config", arca: "src/sha256/coverage/config" }
-    - { upstream: "src/sha256/stimulus", arca: "src/sha256/stimulus" }
+  subtrees:  # upstream path -> Tessera path
+    - { upstream: "src/sha256/rtl", tessera: "src/sha256/rtl" }
+    - { upstream: "src/sha256/coverage", tessera: "src/sha256/coverage" }
+  collateral_subtrees:  # upstream path -> Tessera path
+    - { upstream: "src/sha256/tb", tessera: "src/sha256/tb" }
+    - { upstream: "src/sha256/coverage/config", tessera: "src/sha256/coverage/config" }
+    - { upstream: "src/sha256/stimulus", tessera: "src/sha256/stimulus" }
   compile_order_from: src/sha256/config/sha256_ctrl.vf
 
 importer:
   script: tools/scripts/rename/rename_sha256.sh
   library_version: "2.1.1"
-  toolchain_fingerprint: "386e670e7feccbe4d6b50421c3413761362f5e4645ba7ea1c09a2731bebf0202"
+  toolchain_fingerprint: "2311dc1ea8b72fc3fae442c3b6a6e5cefaffde94ee4a4901dffbbe4deb12cfc1"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -59,7 +59,7 @@ policy:
     []
   generator_inputs:  # fed to a code generator, must stay byte-identical to upstream
     []
-  keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed
+  keep_list:  # shared Tessera platform identifiers, deliberately NOT prefixed
     - "kv_defines_pkg"
     - "kv_read_t"
     - "kv_write_t"
@@ -75,7 +75,7 @@ artifacts:
     - src/sha256/tb
     - src/sha256/coverage/config
     - src/sha256/stimulus
-  filelist: src/sha256/config/arca_sha256_ctrl.vf
+  filelist: src/sha256/config/tessera_sha256_ctrl.vf
   rename_map: src/sha256/revinfo.map
 
 source_manifest:  # sha256 of the upstream files as imported
@@ -101,24 +101,24 @@ source_manifest:  # sha256 of the upstream files as imported
   - { sha256: "19a75ec9fbe52ef3d492f1e14ca557423ef18b0aad812a12957492def1832746", path: "src/sha256/stimulus/testsuites/sha256_nightly_random_regression.yml" }
 
 renamed_manifest:  # sha256 of the committed, renamed files
-  - { sha256: "8665c8f16be77f878473a8288a104b9d2a23f23bd9452140bd91a221bb947d41", path: "src/sha256/config/arca_sha256_ctrl.vf" }
+  - { sha256: "ac766efec4555bac6790c5c67b1aec609896be68ca7768ac8f9c28b94f019719", path: "src/sha256/config/tessera_sha256_ctrl.vf" }
   - { sha256: "a5a451d48d0be89fd57adf4acddfa6e38eb685116e4f240e2b37e4b094cc61be", path: "src/sha256/coverage/config/sha256_cm_hier.cfg" }
-  - { sha256: "c680787d6cc1350095b4aab87505d685dd84e3773725a93c0fe39a0a360f6220", path: "src/sha256/coverage/sha256_ctrl_cov_bind.sv" }
-  - { sha256: "3a2cceffeddd2760c8586442b6028c5c61f98f99baa61097e37f08e8dcb8c5ee", path: "src/sha256/coverage/sha256_ctrl_cov_if.sv" }
-  - { sha256: "f9e07aa67f09e1edc5c2a9abd65a3f9a365a5d04d55c10a259b3d4bf7d9504b0", path: "src/sha256/rtl/arca_sha256.sv" }
-  - { sha256: "0d61fee9a59e4e226e7fb8d9264408988ef9c35199c9df6792ba7dcc59e583f5", path: "src/sha256/rtl/arca_sha256_core.v" }
-  - { sha256: "fe8115f10fd714dd1a8e7d7edf50d67dfbd623370580884d4885299b0bf91d0f", path: "src/sha256/rtl/arca_sha256_ctrl.sv" }
-  - { sha256: "cc4e4da4b7162dd79b188df5b643f1c4caa1ee7a166ec69ff7e4090d7167938c", path: "src/sha256/rtl/arca_sha256_k_constants.v" }
-  - { sha256: "b88b07901364ea3e89d3e42f66570bbd9fbca1e11aafb0c6c5e86cde28e2733d", path: "src/sha256/rtl/arca_sha256_params_pkg.sv" }
-  - { sha256: "bd20f10d8555821f632fc543fc9f2eeaa9a3e729863ace26a026333fe228e09f", path: "src/sha256/rtl/arca_sha256_reg.sv" }
-  - { sha256: "ff4275e6d60bbd7fcbcaa35e739420af29fce456fbce7a44270f710a9f6a0735", path: "src/sha256/rtl/arca_sha256_reg_pkg.sv" }
-  - { sha256: "64fa51e78b7f58c9d8e867d11e5b713a0e6fc0c6c592f91d31af785607023c73", path: "src/sha256/rtl/arca_sha256_w_mem.v" }
+  - { sha256: "15efb3cf8b05d81327f8e27ea033d85eda3add4c4af3585d4df727ea7feec280", path: "src/sha256/coverage/sha256_ctrl_cov_bind.sv" }
+  - { sha256: "1a83e0a0051cdea1858b9087b3362275d3736ed34160f33b22fa864df12bd8b3", path: "src/sha256/coverage/sha256_ctrl_cov_if.sv" }
+  - { sha256: "f36b6ce1588d5032b6bcd01239eea7fc873558ee2baae47fbc8f662a6eb5312e", path: "src/sha256/rtl/tessera_sha256.sv" }
+  - { sha256: "2553ac91dfdb8b67af58a3307be604fd6e9a7892834339cfd16b2c5328b0601b", path: "src/sha256/rtl/tessera_sha256_core.v" }
+  - { sha256: "6e77579385c3bb4de68b15bb4c20432ace65f03f6fbe8ae23b027e81a4ca5fe5", path: "src/sha256/rtl/tessera_sha256_ctrl.sv" }
+  - { sha256: "5ddc5c5b6141bd5485281b7bd6bfd5fa398d7b25d87927388ac395684c03e3b7", path: "src/sha256/rtl/tessera_sha256_k_constants.v" }
+  - { sha256: "bfd3651becfa83aaba72c6206e165d20d6f5c36efd99227ed1e704fd7f0a7497", path: "src/sha256/rtl/tessera_sha256_params_pkg.sv" }
+  - { sha256: "1c04a7d7f7c309cf12204672597549b394a0fb44b613e7ab84836bce1b72a3f8", path: "src/sha256/rtl/tessera_sha256_reg.sv" }
+  - { sha256: "308dd4bfe724cd898ff62ef801b76db5ad7edd909127cbd4b5c9bd8dff536afa", path: "src/sha256/rtl/tessera_sha256_reg_pkg.sv" }
+  - { sha256: "f03f46b3f6c473bb49b4300d057915d7499d9e125f74322c287bf908bd64301f", path: "src/sha256/rtl/tessera_sha256_w_mem.v" }
   - { sha256: "8acf2b86f09c714153b27a96e37128576d537840cc2d1554071e547568c3de59", path: "src/sha256/stimulus/tests/directed/sha256_normal_test.yml" }
   - { sha256: "65589e8c7c9ee05636b59d052f5124c919ad15ab653f8cf8a6ccb80ba0a9b5f6", path: "src/sha256/stimulus/tests/random/sha256_random_test.yml" }
   - { sha256: "2ca876b39668aa824d316a03d30251e540f8ac03717ef9374ad00e62fb065719", path: "src/sha256/stimulus/testsuites/sha256_nightly_directed_regression.yml" }
   - { sha256: "19a75ec9fbe52ef3d492f1e14ca557423ef18b0aad812a12957492def1832746", path: "src/sha256/stimulus/testsuites/sha256_nightly_random_regression.yml" }
-  - { sha256: "5f4463e9d2f84dc7c7b68c219c7c63a0769208ae0ed051976dc67a14b16392fc", path: "src/sha256/tb/sha256_ctrl_tb.sv" }
-  - { sha256: "c90959a72d04dcba25d1504b719c31ddee099e5b907acb8a94b9a23f4007fad3", path: "src/sha256/tb/sha256_random_test.sv" }
-  - { sha256: "fb6ed23b60837ecfbb47e299426d1ebf9e23acd5afa3df985385f9f5717b5727", path: "src/sha256/tb/sha256_test_gen.py" }
+  - { sha256: "6461bdf044c7329c025ee7077851479b5dddbae4e03f704a13c70da7c501cac7", path: "src/sha256/tb/sha256_ctrl_tb.sv" }
+  - { sha256: "f4c0342441291671691773c65a5f3b63890ffe0ac1d655f9032c33a5c8061880", path: "src/sha256/tb/sha256_random_test.sv" }
+  - { sha256: "dfa8a083943595cfe0473d2827e0f53a4bb54bb5f6aaf20a03317858e2c60223", path: "src/sha256/tb/sha256_test_gen.py" }
   - { sha256: "4791512d21f58a14f0867aead1bf083e2fec718f4176ca94e89240a7bd4d8dab", path: "src/sha256/tb/sha256_test_vector.txt" }
-  - { sha256: "892ab180ddaf472d30b6ec71f3385db379c9fa16b1e52d95ecbd47e0a7308d91", path: "src/sha256/tb/sha256_wntz_test_gen.py" }
+  - { sha256: "79e896f384e6a63a444df80ef4ef3441eb1a632836fd27ce253bbbf0dc767cab", path: "src/sha256/tb/sha256_wntz_test_gen.py" }

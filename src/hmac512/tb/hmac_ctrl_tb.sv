@@ -16,7 +16,7 @@
 //
 // hmac_ctrl_tb.sv
 // --------
-// HMAC testbench for the arca_hmac512 AHb_lite interface controller.
+// HMAC testbench for the tessera_hmac512 AHb_lite interface controller.
 //
 //
 // 
@@ -27,7 +27,7 @@
 `include "kv_macros.svh"
 
 module hmac_ctrl_tb
-  import arca_hmac512_param_pkg::*;
+  import tessera_hmac512_param_pkg::*;
   ();
 
   //----------------------------------------------------------------
@@ -67,7 +67,7 @@ module hmac_ctrl_tb
   reg           reset_n_tb;
   reg           cptra_pwrgood_tb;
 
-  reg [`ARCA_CLP_CSR_HMAC_KEY_DWORDS-1:0][31:0] cptra_csr_hmac_key_tb;
+  reg [`TESSERA_CLP_CSR_HMAC_KEY_DWORDS-1:0][31:0] cptra_csr_hmac_key_tb;
 
   reg [AHB_ADDR_WIDTH-1:0]  haddr_i_tb;
   reg [AHB_DATA_WIDTH-1:0]  hwdata_i_tb;
@@ -90,7 +90,7 @@ module hmac_ctrl_tb
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_hmac512_ctrl #(
+  tessera_hmac512_ctrl #(
              .AHB_DATA_WIDTH(AHB_DATA_WIDTH),
              .AHB_ADDR_WIDTH(AHB_ADDR_WIDTH)
             )
@@ -968,7 +968,7 @@ module hmac_ctrl_tb
   // init_next_conflict_test()
   //
   // Writes CTRL = mode|INIT|NEXT simultaneously from IDLE. Per the
-  // FSM (arca_hmac512_core CTRL_IDLE branch), INIT wins and NEXT is silently
+  // FSM (tessera_hmac512_core CTRL_IDLE branch), INIT wins and NEXT is silently
   // dropped. Verifies the engine completes a single-block op (the
   // INIT path) and produces the expected digest -- proving the
   // NEXT bit didn't divert flow or corrupt inner_digest_reg.
@@ -1168,7 +1168,7 @@ module hmac_ctrl_tb
   //----------------------------------------------------------------
   // hmac384_tests()
   //
-  // Run test cases for arca_hmac512.
+  // Run test cases for tessera_hmac512.
   // Test cases taken from:
   // https://datatracker.ietf.org/doc/html/rfc4868#section-2.7 
   //----------------------------------------------------------------
@@ -1280,7 +1280,7 @@ module hmac_ctrl_tb
   //----------------------------------------------------------------
   // hmac512_tests()
   //
-  // Run test cases for arca_hmac512.
+  // Run test cases for tessera_hmac512.
   // Test cases taken from:
   // https://datatracker.ietf.org/doc/html/rfc4868#section-2.7 
   //----------------------------------------------------------------
@@ -1314,7 +1314,7 @@ module hmac_ctrl_tb
 
       // Three-block HMAC-SHA-512 vector. Same key/message as the
       // HMAC-SHA-384 COUNT=1 vector in hmac_vectors_multiblk.txt;
-      // expected tag computed via Python's arca_hmac512.new(...,sha512).
+      // expected tag computed via Python's tessera_hmac512.new(...,sha512).
       reg [KEY_SIZE-1   : 0] key5;
       reg [BLOCK_SIZE-1 : 0] data50;
       reg [BLOCK_SIZE-1 : 0] data51;

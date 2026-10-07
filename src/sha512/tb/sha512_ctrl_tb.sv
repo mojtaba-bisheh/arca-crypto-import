@@ -97,7 +97,7 @@ module sha512_ctrl_tb
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_sha512_ctrl #(
+  tessera_sha512_ctrl #(
              .AHB_DATA_WIDTH(AHB_DATA_WIDTH),
              .AHB_ADDR_WIDTH(AHB_ADDR_WIDTH)
             )
@@ -1027,7 +1027,7 @@ module sha512_ctrl_tb
       reg [511 : 0]  tc11_expected;
       reg [511 : 0]  tc12_expected;
 
-      $display("   -- Testbench for arca_sha512 started --");
+      $display("   -- Testbench for tessera_sha512 started --");
 
       init_sim();
       reset_dut();
@@ -1095,7 +1095,7 @@ module sha512_ctrl_tb
       
       display_test_result();
       
-      $display("   -- Testbench for arca_sha512 done. --");
+      $display("   -- Testbench for tessera_sha512 done. --");
       $finish;
   end //sha512_test
 

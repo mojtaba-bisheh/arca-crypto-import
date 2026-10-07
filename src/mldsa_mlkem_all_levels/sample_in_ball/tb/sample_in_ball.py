@@ -60,7 +60,7 @@ class Shake():
 Shake128 = Shake(shake_128, 168)
 Shake256 = Shake(shake_256, 136)
 
-def arca_sample_in_ball(seed):
+def tessera_sample_in_ball(seed):
     global DILITHIUM_Q
     global DILITHIUM_N
     global DILITHIUM_TAU
@@ -121,7 +121,7 @@ log_file = open("sib.log", "w")
 Lines = input_seeds.readlines()
 
 for line in Lines:
-    Coeffs = arca_sample_in_ball( bytes(line.strip(),'utf-8') )
+    Coeffs = tessera_sample_in_ball( bytes(line.strip(),'utf-8') )
     for coeff in Coeffs:
         exp_results.write(f"{coeff:06x}"+" ")
     exp_results.write("\n")

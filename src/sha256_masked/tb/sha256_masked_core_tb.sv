@@ -62,7 +62,7 @@ module sha256_masked_core_tb
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_sha256_masked_core DUT (
+  tessera_sha256_masked_core DUT (
                      .clk(clk_tb),
                      .reset_n(reset_n_tb),
                      .zeroize(zeroize_tb),

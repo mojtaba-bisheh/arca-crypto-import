@@ -15,6 +15,6 @@
 
 module sha512_ctrl_cov_bind;
     `ifdef FCOV
-    bind arca_sha512_ctrl sha512_ctrl_cov_if i_sha512_ctrl_cov_if(.*);
+    bind tessera_sha512_ctrl sha512_ctrl_cov_if i_sha512_ctrl_cov_if(.*);
     `endif
 endmodule

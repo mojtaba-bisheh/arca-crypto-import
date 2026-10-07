@@ -18,13 +18,13 @@ set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 RENAME_DIR="$REPO_ROOT/tools/scripts/rename"
-UPSTREAM_REPO="${ARCA_UPSTREAM_REPO:-https://github.com/chipsalliance/caliptra-rtl.git}"
+UPSTREAM_REPO="${TESSERA_UPSTREAM_REPO:-https://github.com/chipsalliance/caliptra-rtl.git}"
 CACHE_DIR="$REPO_ROOT/.upstream-cache/caliptra-rtl"
 
 BLOCKS=()
 UPSTREAM=""
 REF=""
-PREFIX="${ARCA_PREFIX:-arca_}"
+PREFIX="${TESSERA_PREFIX:-tessera_}"
 DO_COMMIT=0
 
 usage() {

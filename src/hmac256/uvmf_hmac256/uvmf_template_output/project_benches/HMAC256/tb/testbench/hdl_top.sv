@@ -6,7 +6,7 @@
 //----------------------------------------------------------------------
 //
 // Description: Synthesizable top of the HMAC256 UVMF bench. Instantiates
-//    the QVIP AHB master, the DUT (arca_hmac256_ctrl), and the coverage
+//    the QVIP AHB master, the DUT (tessera_hmac256_ctrl), and the coverage
 //    bind. HMAC-256 has no KeyVault or CSR_MODE interface, so the
 //    corresponding ports/signals present on hmac_ctrl are absent here.
 //
@@ -83,7 +83,7 @@ import uvm_pkg::*;
   assign uvm_test_top_environment_qvip_ahb_lite_slave_subenv_qvip_hdl.default_clk_gen_CLK     = clk;
   assign uvm_test_top_environment_qvip_ahb_lite_slave_subenv_qvip_hdl.default_reset_gen_RESET = rst;
 
-  arca_hmac256_ctrl #(
+  tessera_hmac256_ctrl #(
       .AHB_ADDR_WIDTH(32),
       .AHB_DATA_WIDTH(64)
   ) dut (
@@ -109,7 +109,7 @@ import uvm_pkg::*;
       .debugUnlock_or_scan_mode_switch('0)
   );
 
-  // QVIP AHB master defaults (not driven by arca_hmac256_ctrl).
+  // QVIP AHB master defaults (not driven by tessera_hmac256_ctrl).
   assign uvm_test_top_environment_qvip_ahb_lite_slave_subenv_qvip_hdl.ahb_lite_slave_0_HBURST    = 3'b0;
   assign uvm_test_top_environment_qvip_ahb_lite_slave_subenv_qvip_hdl.ahb_lite_slave_0_HPROT     = 7'b0;
   assign uvm_test_top_environment_qvip_ahb_lite_slave_subenv_qvip_hdl.ahb_lite_slave_0_HMASTLOCK = 1'b0;

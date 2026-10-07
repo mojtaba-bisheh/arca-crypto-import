@@ -37,7 +37,7 @@
 #include "mbedtls/ecdsa.h"
 #include "mbedtls/ecdh.h"
 #include "mbedtls/sha512.h"
-#include "mbedtls/arca_hmac_drbg.h"
+#include "mbedtls/tessera_hmac_drbg.h"
 
 #include <string.h>
 #endif

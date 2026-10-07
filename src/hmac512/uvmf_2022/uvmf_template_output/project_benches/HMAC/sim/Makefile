@@ -123,9 +123,9 @@ $(UVMF_PROJECT_DIR)/tb/tests/HMAC_tests_pkg.sv
 # pragma uvmf custom dut_files begin
 # UVMF_CHANGE_ME : Reference Verilog DUT source.
 HMAC_VERILOG_DUT ?=\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_hmac512_ctrl.sv\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_hmac512_core.v\
-$(UVMF_PROJECT_DIR)/../../../../rtl/arca_hmac512.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_hmac512_ctrl.sv\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_hmac512_core.v\
+$(UVMF_PROJECT_DIR)/../../../../rtl/tessera_hmac512.sv\
 $(UVMF_PROJECT_DIR)/../../../../rtl/hmac_param.sv\
 $(UVMF_PROJECT_DIR)/../../../../../sha512/rtl/sha512_ctrl.sv\
 $(UVMF_PROJECT_DIR)/../../../../../sha512/rtl/sha512_core.v\

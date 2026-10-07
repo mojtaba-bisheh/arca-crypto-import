@@ -7,8 +7,8 @@
 #define power2round DILITHIUM_NAMESPACE(power2round)
 int32_t power2round(int32_t *a0, int32_t a);
 
-#define arca_decompose DILITHIUM_NAMESPACE(arca_decompose)
-int32_t arca_decompose(int32_t *a0, int32_t a);
+#define tessera_decompose DILITHIUM_NAMESPACE(tessera_decompose)
+int32_t tessera_decompose(int32_t *a0, int32_t a);
 
 #define make_hint DILITHIUM_NAMESPACE(make_hint)
 unsigned int make_hint(int32_t a0, int32_t a1);

@@ -71,7 +71,7 @@ def main():
     with open("input_seeds.txt", "r") as seed_file, \
          open("input_vectors.txt", "w") as input_vectors, \
          open("exp_results.txt", "w") as exp_results, \
-         open("arca_rej_sampler.log", "w") as log_file:
+         open("tessera_rej_sampler.log", "w") as log_file:
 
         for line in seed_file:
             seed = bytes(line.strip(), 'utf-8')

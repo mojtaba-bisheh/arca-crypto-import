@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# rename_common.sh -- shared library for the ARCA crypto-block import/rename flow.
+# rename_common.sh -- shared library for the Tessera crypto-block import/rename flow.
 #
 # This file is NOT executable on its own. Each crypto block has its own driver
 # script (rename_ecc.sh, rename_hmac512.sh, ...) that declares the block-specific
@@ -20,16 +20,16 @@
 #   UPSTREAM_SUBTREES     array of upstream dirs to import (repo-relative)
 #
 # Optional variables:
-#   DEST_SUBTREES         array parallel to UPSTREAM_SUBTREES giving the ARCA
+#   DEST_SUBTREES         array parallel to UPSTREAM_SUBTREES giving the Tessera
 #                         path for each upstream subtree. Defaults to the
-#                         identity mapping, so the ARCA tree mirrors the
+#                         identity mapping, so the Tessera tree mirrors the
 #                         caliptra-rtl hierarchy exactly:
 #                           caliptra-rtl  src/ecc/rtl/ecc_top.sv
-#                           ARCA          src/ecc/rtl/arca_ecc_top.sv
-#                         Override only when ARCA deliberately shelves a block
+#                           Tessera          src/ecc/rtl/tessera_ecc_top.sv
+#                         Override only when Tessera deliberately shelves a block
 #                         under a different name, e.g.
 #                           DEST_SUBTREES=("src/hmac512/rtl")
-#   BLOCK_DIR             ARCA directory that owns the block's config/ dir.
+#   BLOCK_DIR             Tessera directory that owns the block's config/ dir.
 #                         Defaults to the parent of DEST_SUBTREES[0].
 #   VF_FILELIST           upstream .vf filelist used to derive compile order
 #                         (its basename is reused for the generated filelist)
@@ -51,7 +51,7 @@
 #                         components of foreign paths (doc URLs, upstream-repo
 #                         references) and must keep their unprefixed spelling
 #                         there even though the identifier itself is renamed
-#                         (shared platform libraries owned by ARCA, not by the block)
+#                         (shared platform libraries owned by Tessera, not by the block)
 #   COLLATERAL_SUBTREES   array of upstream dirs imported *recursively* as
 #                         verification collateral (tb/, formal/, stimulus/,
 #                         uvmf_*/ ...). Same identifier map, looser contract --
@@ -62,19 +62,19 @@
 # ---------------------------------------------------------------------------
 # Two tiers: delivery vs collateral
 # ---------------------------------------------------------------------------
-# UPSTREAM_SUBTREES is the *delivery*: the files ARCA ships in a netlist.
+# UPSTREAM_SUBTREES is the *delivery*: the files Tessera ships in a netlist.
 # Every name in it is prefixed, every file name is prefixed, the generated
 # filelist covers it, and CI elaborates it. The contract is strict.
 #
 # COLLATERAL_SUBTREES is everything else in the block folder -- testbenches,
 # formal properties, stimulus lists, UVMF generated output. It is imported so
-# the block folder arrives whole and ARCA can reuse upstream verification, but
+# the block folder arrives whole and Tessera can reuse upstream verification, but
 # the contract is looser on purpose:
 #
 #   * the same identifier map is applied, so collateral keeps referring to the
 #     renamed RTL correctly;
 #   * a collateral *file* is renamed only when its name is itself a renamed
-#     identifier (ecc_top_tb.sv -> arca_ecc_top_tb.sv), so Makefile,
+#     identifier (ecc_top_tb.sv -> tessera_ecc_top_tb.sv), so Makefile,
 #     compile.do and hmac_vectors_singleblk.txt keep their names;
 #   * it is not elaborated in CI -- that needs UVM and a simulator licence.
 #
@@ -102,11 +102,11 @@ RC_SCRIPT_VERSION="2.1.1"
 # ---------------------------------------------------------------------------
 # Stem policy -- a second, repo-wide knob layered on top of the prefix.
 #
-# The prefix answers "could this collide in an ARCA netlist". It does not
+# The prefix answers "could this collide in an Tessera netlist". It does not
 # answer "can a reader tell these two blocks apart". caliptra-rtl calls its
 # HMAC-SHA512 engine plain `hmac` and its HMAC-SHA256 engine `hmac256`, so a
-# faithful import gives ARCA arca_hmac_core next to arca_hmac256_core and the
-# shorter name is the *less* obvious one. ARCA shelves the SHA-512 engine as
+# faithful import gives Tessera tessera_hmac_core next to tessera_hmac256_core and the
+# shorter name is the *less* obvious one. Tessera shelves the SHA-512 engine as
 # hmac512 instead, both as a directory and as an identifier stem.
 #
 # Why this lives here and not in rename_hmac512.sh: identifiers cross block
@@ -135,9 +135,9 @@ rc_usage() {
 usage: $(basename "$0") --upstream <caliptra-rtl-checkout> [options]
 
   --upstream  <dir>   path to a caliptra-rtl git checkout (required)
-  --dest      <dir>   ARCA repo root (default: repo root of this script)
+  --dest      <dir>   Tessera repo root (default: repo root of this script)
   --prefix    <str>   identifier prefix, lowercase, trailing underscore
-                      (default: \$ARCA_PREFIX or "arca_")
+                      (default: \$TESSERA_PREFIX or "tessera_")
   --branch    <name>  upstream branch this block tracks, recorded in revinfo
                       so you know what to diff against later (default: main)
   --keep-work         do not delete the temporary staging directory
@@ -170,14 +170,14 @@ rc_check_relpath() {
 
 # Build / simulation outputs. Checked into caliptra-rtl in a few places, but
 # they are derived files: vendoring them would commit stale results and bloat
-# the ARCA history. Regenerate instead.
+# the Tessera history. Regenerate instead.
 RC_DEFAULT_ARTIFACT_GLOBS=(
     '*.ucdb' '*.exe' '*.o' '*.a' '*.so' '*.pyc' '*.wlf' '*.vstf' '*.vcd' '*.fsdb'
 )
 
 # Rename scope: synthesized design material only.
 #
-# The prefix exists to keep the ARCA *design* namespace from colliding with an
+# The prefix exists to keep the Tessera *design* namespace from colliding with an
 # upstream Caliptra instance in the same elaboration. That is a property of the
 # synthesized netlist, so only identifiers *declared* in synthesizable RTL are
 # renamed. SYNTH_SUBTREES names those directories; it defaults to every
@@ -187,7 +187,7 @@ RC_DEFAULT_ARTIFACT_GLOBS=(
 # that is easy to misread as a contradiction. Declaring and referencing are
 # different things: the benches under tb/, formal/ and the UVMF tree keep their
 # own upstream names, but they instantiate ecc_top, and ecc_top is now
-# arca_ecc_top -- so their references have to follow or the vendored bench no
+# tessera_ecc_top -- so their references have to follow or the vendored bench no
 # longer binds to the vendored RTL. One rule covers both tiers:
 #
 #     rename what is declared in synthesizable RTL;
@@ -213,7 +213,7 @@ rc_init() {
 
     UPSTREAM=""
     DEST=""
-    PREFIX="${ARCA_PREFIX:-arca_}"
+    PREFIX="${TESSERA_PREFIX:-tessera_}"
     KEEP_WORK=0
 
     while [ $# -gt 0 ]; do
@@ -254,8 +254,8 @@ rc_init() {
     # ------------------------------------------------------------------
     # Destination layout.
     #
-    # ARCA mirrors the caliptra-rtl hierarchy: an upstream src/<block>/rtl
-    # lands at src/<block>/rtl in ARCA, so the correspondence between the two
+    # Tessera mirrors the caliptra-rtl hierarchy: an upstream src/<block>/rtl
+    # lands at src/<block>/rtl in Tessera, so the correspondence between the two
     # trees is 1:1 and a re-import shows up as an ordinary RTL diff. A driver
     # may override individual paths via DEST_SUBTREES.
     # ------------------------------------------------------------------
@@ -295,7 +295,7 @@ rc_init() {
     # Provenance lives *inside* the block it describes, so copying src/ecc/
     # anywhere carries the record of where it came from with it.
     OUT_REVINFO="$DEST/$BLOCK_DIR"
-    WORK="$(mktemp -d "${TMPDIR:-/tmp}/arca-import-$BLOCK-XXXXXX")"
+    WORK="$(mktemp -d "${TMPDIR:-/tmp}/tessera-import-$BLOCK-XXXXXX")"
     STAGE="$WORK/stage"
     MAP="$WORK/map.tsv"
     mkdir -p "$STAGE" "$OUT_REVINFO"
@@ -338,7 +338,7 @@ rc_init() {
 
 # ---------------------------------------------------------------------------
 # rc_stage -- copy the upstream subtrees into a staging tree that already has
-#             the final ARCA layout (src/<block>/rtl/...), so nothing downstream
+#             the final Tessera layout (src/<block>/rtl/...), so nothing downstream
 #             has to reconstruct where a file belongs.
 #
 # STAGED_FILES holds repo-relative paths, e.g. "src/ecc/rtl/ecc_top.sv".
@@ -392,7 +392,7 @@ rc_stage() {
 #
 # Unlike the delivery subtrees this walks the whole tree and preserves every
 # intermediate directory, so src/ecc/uvmf_ecc/uvmf_template_output/... lands at
-# the same path in ARCA. Basenames are allowed to repeat here (there are four
+# the same path in Tessera. Basenames are allowed to repeat here (there are four
 # different Makefiles under src/ecc/uvmf_ecc alone) precisely because the full
 # path is preserved.
 # ---------------------------------------------------------------------------
@@ -416,7 +416,7 @@ rc_stage_collateral() {
         # Collateral normally lands at the same path it came from -- that is the
         # whole point of mirroring caliptra-rtl's hierarchy. ABR is the exception:
         # its sources come from a submodule, so the upstream path is not a legal
-        # ARCA path and the driver has to say where it goes.
+        # Tessera path and the driver has to say where it goes.
         dst="${COLLATERAL_DEST_SUBTREES[$i]:-$subtree}"
         [ -d "$UPSTREAM/$subtree" ] || rc_die "collateral subtree '$subtree' not found"
         rc_check_relpath "$dst"
@@ -561,7 +561,7 @@ rc_build_map() {
 
     : > "$MAP"
     {
-        printf '# ARCA identifier rename map\n'
+        printf '# Tessera identifier rename map\n'
         printf '# block=%s prefix=%s generator=rename_common.sh/%s\n' "$BLOCK" "$PREFIX" "$RC_SCRIPT_VERSION"
         printf '# kind\toriginal\trenamed\n'
     } >> "$MAP"
@@ -611,7 +611,7 @@ rc_build_map() {
 # GENERATOR_INPUTS are declared as *upstream* paths, because that is the only
 # name the file has that is stable across a re-import -- and the only one
 # roundtrip_check.sh can hand to `git show`. For every block but a relocating
-# one the ARCA path is the same string; ABR's is not, and nor is hmac512's.
+# one the Tessera path is the same string; ABR's is not, and nor is hmac512's.
 # Translate once, here, through the same collateral dirmap rc_stage_collateral
 # uses, instead of leaving three call sites to each get it right.
 rc_gi_dest() {
@@ -717,7 +717,7 @@ rc_env_macros() {
         printf '// GENERATED by tools/scripts/rename/rename_%s.sh -- do not edit by hand.\n' "$BLOCK"
         printf '//\n'
         printf '// Configuration macros that the caliptra-rtl *environment* used to apply to\n'
-        printf '// the %s block. They are captured here, under the ARCA prefix, so the imported\n' "$BLOCK"
+        printf '// the %s block. They are captured here, under the Tessera prefix, so the imported\n' "$BLOCK"
         printf '// block no longer depends on caliptra-rtl global headers.\n'
         printf '//\n'
         printf '`ifndef %s\n' "$guard"
@@ -871,7 +871,7 @@ rc_rename_collateral_files() {
 # "fv_add_sub_alter_coverpoints.sv" is a *file* name, not an identifier, and
 # the stem is not in the map. Matching the name together with its extension
 # keeps the substitution tight; the look-behind excludes identifier characters
-# so an already-prefixed "arca_fv_...sv" cannot match again (idempotent).
+# so an already-prefixed "tessera_fv_...sv" cannot match again (idempotent).
 #
 # Scope is every text file in both tiers: `include directives, formal .f lists,
 # compile.do / tcl scripts and Makefiles all name files.
@@ -910,13 +910,13 @@ rc_fix_file_references() {
 #
 # The identifier pass is a text pass: it cannot tell
 #
-#     hmac_drbg          <- the module, must become arca_hmac_drbg
+#     hmac_drbg          <- the module, must become tessera_hmac_drbg
 #     src/hmac_drbg/rtl  <- the directory, must stay put
 #
 # apart, because several blocks name their top module after their folder. Left
 # alone it emits dangling paths like
 #
-#     ${CALIPTRA_ROOT}/src/arca_hmac_drbg/rtl/arca_hmac_drbg.sv
+#     ${CALIPTRA_ROOT}/src/tessera_hmac_drbg/rtl/tessera_hmac_drbg.sv
 #                          ^^^^^ no such directory      ^^^^^ correct
 #
 # in .vf lists, compile.do scripts and stimulus YAML. Nothing else catches
@@ -980,7 +980,7 @@ rc_fix_path_components() {
 # rc_emit_filelist -- compile-ordered filelist.
 #
 # It lands in the block's config/ directory, mirroring where caliptra-rtl keeps
-# its own .vf filelists (src/ecc/config/ecc_top.vf -> src/ecc/config/arca_ecc_top.vf).
+# its own .vf filelists (src/ecc/config/ecc_top.vf -> src/ecc/config/tessera_ecc_top.vf).
 #
 # The order is derived from the upstream .vf filelist when the driver provides
 # one; the imported block keeps the upstream package/module compile order and
@@ -1039,13 +1039,13 @@ rc_emit_filelist() {
     {
         printf '// GENERATED by tools/scripts/rename/rename_%s.sh -- do not edit by hand.\n' "$BLOCK"
         printf '// Compile-ordered filelist for the imported %s block.\n' "$BLOCK"
-        printf '// Set ARCA_ROOT to the root of this repository.\n'
+        printf '// Set TESSERA_ROOT to the root of this repository.\n'
         for d in "${incdirs[@]}"; do
-            printf '+incdir+${ARCA_ROOT}/%s\n' "$d"
+            printf '+incdir+${TESSERA_ROOT}/%s\n' "$d"
         done
         for f in "${ordered[@]}"; do
             [ -n "$f" ] || continue
-            printf '${ARCA_ROOT}/%s\n' "$f"
+            printf '${TESSERA_ROOT}/%s\n' "$f"
         done
     } > "$STAGE/$FILELIST"
     rc_log "wrote $FILELIST"
@@ -1061,7 +1061,7 @@ rc_staged_path() {
 }
 
 # ---------------------------------------------------------------------------
-# rc_install -- publish the staged block and its map into the ARCA repo
+# rc_install -- publish the staged block and its map into the Tessera repo
 # ---------------------------------------------------------------------------
 rc_install() {
     local d
@@ -1079,7 +1079,7 @@ rc_install() {
     done < <(cd "$STAGE" && find . -type f | sed 's|^\./||' | sort)
 
     grep -vE '^\s*#' "$MAP" > "$OUT_REVINFO/revinfo.map" || true
-    sed -i "1i # ARCA identifier rename map for block '$BLOCK' (prefix: $PREFIX)" "$OUT_REVINFO/revinfo.map"
+    sed -i "1i # Tessera identifier rename map for block '$BLOCK' (prefix: $PREFIX)" "$OUT_REVINFO/revinfo.map"
     rc_log "installed -> $(printf '%s ' "${DEST_SUBTREES[@]}")and $BLOCK_DIR/revinfo.map"
 }
 
@@ -1101,7 +1101,7 @@ rc_emit_revinfo() {
                   | sha256sum | cut -d' ' -f1)"
 
     {
-        printf '# ARCA vendored-block provenance record -- GENERATED, do not edit by hand.\n'
+        printf '# Tessera vendored-block provenance record -- GENERATED, do not edit by hand.\n'
         printf '#\n'
         printf '# To review what changed upstream since this import:\n'
         printf '#   git -C <caliptra-rtl> log --oneline %s..origin/main -- %s\n' \
@@ -1136,17 +1136,17 @@ rc_emit_revinfo() {
                 printf '      working_tree_dirty: %s\n' "$sdirty"
             done
         fi
-        printf '  subtrees:  # upstream path -> ARCA path\n'
+        printf '  subtrees:  # upstream path -> Tessera path\n'
         local i
         for i in "${!UPSTREAM_SUBTREES[@]}"; do
-            printf '    - { upstream: "%s", arca: "%s" }\n' \
+            printf '    - { upstream: "%s", tessera: "%s" }\n' \
                    "${UPSTREAM_SUBTREES[$i]}" "${DEST_SUBTREES[$i]}"
         done
         if [ "${#COLLATERAL_SUBTREES[@]}" -gt 0 ]; then
-            printf '  collateral_subtrees:  # upstream path -> ARCA path\n'
+            printf '  collateral_subtrees:  # upstream path -> Tessera path\n'
             for i in "${!COLLATERAL_SUBTREES[@]}"; do
                 [ -n "${COLLATERAL_SUBTREES[$i]}" ] || continue
-                printf '    - { upstream: "%s", arca: "%s" }\n' \
+                printf '    - { upstream: "%s", tessera: "%s" }\n' \
                        "${COLLATERAL_SUBTREES[$i]}" "${COLLATERAL_DEST_SUBTREES[$i]:-${COLLATERAL_SUBTREES[$i]}}"
             done
         fi
@@ -1199,7 +1199,7 @@ rc_emit_revinfo() {
         else
             printf '    []\n'
         fi
-        printf '  keep_list:  # shared ARCA platform identifiers, deliberately NOT prefixed\n'
+        printf '  keep_list:  # shared Tessera platform identifiers, deliberately NOT prefixed\n'
         if [ "${#KEEP_IDENTS[@]}" -gt 0 ]; then
             for tok in "${KEEP_IDENTS[@]}"; do [ -n "$tok" ] && printf '    - "%s"\n' "$tok"; done
         else

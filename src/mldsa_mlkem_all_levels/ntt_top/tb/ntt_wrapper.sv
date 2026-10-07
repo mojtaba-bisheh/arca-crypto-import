@@ -20,8 +20,8 @@
 //======================================================================
 
 module ntt_wrapper
-    import arca_ntt_defines_pkg::*;
-    import arca_abr_params_pkg::*;
+    import tessera_ntt_defines_pkg::*;
+    import tessera_abr_params_pkg::*;
 #(
     parameter REG_SIZE = 24,
     parameter RADIX = 23,
@@ -227,7 +227,7 @@ module ntt_wrapper
         end
     end
 
-    arca_ntt_top #(
+    tessera_ntt_top #(
         .REG_SIZE(REG_SIZE),
         .MLDSA_Q(MLDSA_Q),
         .MLDSA_N(MLDSA_N),

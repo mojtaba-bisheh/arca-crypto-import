@@ -419,7 +419,7 @@ rej:
   polyveck_add(&w0, &w0, &h);
   n = polyveck_make_hint(&h, &w0, &w1);
 #if DEBUG == 1
-  print_polyveck("after arca_makehint h", &h);
+  print_polyveck("after tessera_makehint h", &h);
 #endif
   if(n > OMEGA)
     goto rej;

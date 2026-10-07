@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-import arca_ntt_defines_pkg::*;
-import arca_abr_params_pkg::*;
+import tessera_ntt_defines_pkg::*;
+import tessera_abr_params_pkg::*;
 
 interface ntt_if(input bit clk);
 

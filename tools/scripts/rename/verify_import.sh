@@ -35,7 +35,7 @@ if [ -z "$DEST" ]; then
     DEST="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
 fi
 
-# Headers that ARCA supplies as a shared, separately version-pinned platform
+# Headers that Tessera supplies as a shared, separately version-pinned platform
 # library. `include of these from a vendored block is expected and allowed.
 PLATFORM_HEADERS=(
     "kv_macros.svh"
@@ -124,23 +124,23 @@ verify_block() {
     done
     [ "$bad" -eq 0 ] && ok "all ${#synthfiles[@]} synthesizable file names carry '$prefix'"
 
-    # 1b. the ARCA layout mirrors the upstream layout
+    # 1b. the Tessera layout mirrors the upstream layout
     bad=0
     local up ar
     while IFS=' ' read -r up ar; do
         [ -n "${ar:-}" ] || continue
         if [ "$up" != "$ar" ]; then
-            printf '  note  layout override: upstream %s -> arca %s\n' "$up" "$ar"
+            printf '  note  layout override: upstream %s -> tessera %s\n' "$up" "$ar"
         fi
         case " ${dirs[*]} " in *" $ar "*) ;; *) fail "revinfo subtree '$ar' not in source_dirs"; bad=1 ;; esac
-    done < <(sed -nE '/^subtrees:/,/^[a-z_]+:/ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*upstream:[[:space:]]*"([^"]+)",[[:space:]]*arca:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
-    [ "$bad" -eq 0 ] && ok "ARCA layout mirrors the caliptra-rtl hierarchy"
+    done < <(sed -nE '/^subtrees:/,/^[a-z_]+:/ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*upstream:[[:space:]]*"([^"]+)",[[:space:]]*tessera:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
+    [ "$bad" -eq 0 ] && ok "Tessera layout mirrors the caliptra-rtl hierarchy"
 
     # 2. every global-namespace declaration in synthesizable RTL carries the
     #    prefix.
     #
     # module/package/interface/program are the compilation-unit-scope names --
-    # the ones that collide if ARCA and an unprefixed caliptra-rtl end up in one
+    # the ones that collide if Tessera and an unprefixed caliptra-rtl end up in one
     # netlist. That risk belongs to the synthesized design, so the rename is
     # scoped to it. SystemVerilog *classes* are never renamed anywhere: a class
     # is scoped by the package that declares it, so ECC_in_pkg::ECC_in_agent
@@ -220,7 +220,7 @@ verify_block() {
     #    or from one of the block's include directories
     bad=0
     local inc src incdirs=() platform_seen=()
-    mapfile -t incdirs < <(sed -nE 's#^\+incdir\+\$\{ARCA_ROOT\}/(.*)$#\1#p' "$DEST/$filelist" 2>/dev/null || true)
+    mapfile -t incdirs < <(sed -nE 's#^\+incdir\+\$\{TESSERA_ROOT\}/(.*)$#\1#p' "$DEST/$filelist" 2>/dev/null || true)
     while IFS='|' read -r src inc; do
         [ -n "${inc:-}" ] || continue
         local found=0 p
@@ -234,7 +234,7 @@ verify_block() {
             case " ${platform_seen[*]-} " in
                 *" $inc "*) ;;
                 *) platform_seen+=("$inc")
-                   printf '  note  `include "%s" resolved from the shared ARCA platform library\n' "$inc" ;;
+                   printf '  note  `include "%s" resolved from the shared Tessera platform library\n' "$inc" ;;
             esac
         else
             fail "unresolved \`include target: $inc (from $src)"
@@ -255,7 +255,7 @@ verify_block() {
         bad=0
         local n=0 line
         while IFS= read -r line; do
-            line="${line#\$\{ARCA_ROOT\}/}"
+            line="${line#\$\{TESSERA_ROOT\}/}"
             [ -f "$DEST/$line" ] || { fail "filelist entry not found: $line"; bad=1; }
             n=$((n + 1))
         done < <(grep -vE '^\s*(//|\+|$)' "$DEST/$filelist")
@@ -272,7 +272,7 @@ verify_block() {
         # `include target resolves.
         local incdirs=() hdrs=0 d
         while IFS= read -r line; do
-            incdirs+=("${line#+incdir+\$\{ARCA_ROOT\}/}")
+            incdirs+=("${line#+incdir+\$\{TESSERA_ROOT\}/}")
         done < <(grep -E '^\+incdir\+' "$DEST/$filelist")
         for f in "${files[@]}"; do
             case "$f" in
@@ -351,7 +351,7 @@ verify_block() {
     # The identifier pass is a text pass and cannot distinguish the module
     # "hmac_drbg" from the directory "src/hmac_drbg". Without a repair pass it
     # silently emits dangling paths like
-    #   ${CALIPTRA_ROOT}/src/arca_hmac_drbg/rtl/arca_hmac_drbg.sv
+    #   ${CALIPTRA_ROOT}/src/tessera_hmac_drbg/rtl/tessera_hmac_drbg.sv
     # in .vf lists, compile.do and stimulus YAML. Neither check_filelists.sh
     # (skips externally-rooted entries) nor the round-trip (strips the prefix
     # before diffing) can see them, so they need their own check.

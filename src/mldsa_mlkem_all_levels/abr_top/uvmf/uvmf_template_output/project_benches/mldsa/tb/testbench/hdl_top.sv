@@ -101,7 +101,7 @@ import kv_defines_pkg::*;
   assign uvm_test_top_environment_qvip_ahb_lite_slave_subenv_qvip_hdl.default_clk_gen_CLK     = clk;
   assign uvm_test_top_environment_qvip_ahb_lite_slave_subenv_qvip_hdl.default_reset_gen_RESET = rst;
 
-  arca_abr_mem_if abr_memory_export();
+  tessera_abr_mem_if abr_memory_export();
 
 `ifdef ABR_MASKING_DISABLED
   localparam MASKING_EN = 0;
@@ -117,7 +117,7 @@ import kv_defines_pkg::*;
 `endif  
 
   // SRAM module
-  arca_abr_mem_top #(
+  tessera_abr_mem_top #(
     .SRAM_LATENCY(SRAM_LATENCY),
     .MASKING_EN(MASKING_EN)
   )
@@ -128,7 +128,7 @@ import kv_defines_pkg::*;
   );
 
   // DUT
-  arca_abr_top #(
+  tessera_abr_top #(
     .MASKING_EN(MASKING_EN),
     .SRAM_LATENCY(SRAM_LATENCY),
     .AHB_ADDR_WIDTH(18),

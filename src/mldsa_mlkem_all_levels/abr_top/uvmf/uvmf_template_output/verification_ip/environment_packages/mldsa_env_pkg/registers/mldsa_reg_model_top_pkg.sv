@@ -149,7 +149,7 @@ package mldsa_reg_model_top_pkg;
    // 
    //--------------------------------------------------------------------
 
-   class mldsa_reg_model_top extends arca_abr_reg;
+   class mldsa_reg_model_top extends tessera_abr_reg;
       `uvm_object_utils(mldsa_reg_model_top)
     
       mldsa_AHB_map_coverage AHB_map_cg;

@@ -7,10 +7,10 @@
 #
 # Layout
 # ------
-#   caliptra-rtl                              ARCA
-#   src/sha256_masked/rtl/...             ->  src/sha256_masked/rtl/arca_...
+#   caliptra-rtl                              Tessera
+#   src/sha256_masked/rtl/...             ->  src/sha256_masked/rtl/tessera_...
 #   src/sha256_masked/tb/...              ->  src/sha256_masked/tb/...
-#   src/sha256_masked/config/..._core.vf  ->  src/sha256_masked/config/arca_... (generated)
+#   src/sha256_masked/config/..._core.vf  ->  src/sha256_masked/config/tessera_... (generated)
 #
 # Block-specific notes
 # --------------------
@@ -42,7 +42,7 @@
 #   compile order.
 #
 # * Importing this block closes the gap called out in rename_hmac256.sh: with
-#   sha256_masked_core now declared as arca_sha256_masked_core, hmac256 carries
+#   sha256_masked_core now declared as tessera_sha256_masked_core, hmac256 carries
 #   EXTRA_RENAME_IDENTS=("module:sha256_masked_core") so its instantiation
 #   follows the declaration. Keep the two in step.
 

@@ -7,20 +7,20 @@
 #
 # Layout
 # ------
-# This is the one block whose ARCA layout deliberately does *not* mirror
+# This is the one block whose Tessera layout deliberately does *not* mirror
 # caliptra-rtl. Upstream calls the SHA-512 HMAC engine plain "hmac" and the
-# SHA-256 one "hmac256", so a faithful import would put arca_hmac_core next to
-# arca_hmac256_core and leave the shorter name as the ambiguous one. ARCA
+# SHA-256 one "hmac256", so a faithful import would put tessera_hmac_core next to
+# tessera_hmac256_core and leave the shorter name as the ambiguous one. Tessera
 # shelves it as hmac512 -- directory and identifier stem together, because a
-# directory named hmac512 full of arca_hmac_* modules is no clearer than what
+# directory named hmac512 full of tessera_hmac_* modules is no clearer than what
 # it replaced.
 #
-#   caliptra-rtl                       ARCA
-#   src/hmac/rtl/hmac_ctrl.sv      ->  src/hmac512/rtl/arca_hmac512_ctrl.sv
+#   caliptra-rtl                       Tessera
+#   src/hmac/rtl/hmac_ctrl.sv      ->  src/hmac512/rtl/tessera_hmac512_ctrl.sv
 #   src/hmac/coverage/...          ->  src/hmac512/coverage/...
 #   src/hmac/uvmf_2022/...         ->  src/hmac512/uvmf_2022/...
-#   src/hmac_drbg/rtl/hmac_drbg.sv ->  src/hmac_drbg/rtl/arca_hmac_drbg.sv
-#   src/hmac/config/hmac_ctrl.vf   ->  src/hmac512/config/arca_hmac512_ctrl.vf (generated)
+#   src/hmac_drbg/rtl/hmac_drbg.sv ->  src/hmac_drbg/rtl/tessera_hmac_drbg.sv
+#   src/hmac/config/hmac_ctrl.vf   ->  src/hmac512/config/tessera_hmac512_ctrl.vf (generated)
 #
 # The stem rewrite itself is declared repo-wide in rename_common.sh
 # (RC_DEFAULT_STEM_RENAMES), not here, because ECC imports hmac_param_pkg and
@@ -33,7 +33,7 @@
 # * Unlike ECC, HMAC spans TWO upstream directories: src/hmac/rtl and
 #   src/hmac_drbg/rtl. hmac_drbg is deliberately owned by this import because
 #   both HMAC and ECC instantiate it; importing it once avoids two divergent
-#   copies in the ARCA netlist.
+#   copies in the Tessera netlist.
 # * GENERATOR_INPUTS below are given by their *upstream* path. rename_common.sh
 #   translates them through COLLATERAL_DEST_SUBTREES; roundtrip_check.sh does
 #   the same through the dirmap it recorded. This is the first block to both
@@ -64,7 +64,7 @@ UPSTREAM_SUBTREES=(
 )
 
 # The rest of both block folders. src/hmac/config and src/hmac_drbg/config stay
-# out: ARCA generates its own filelist there and the upstream .vf/compile.yml
+# out: Tessera generates its own filelist there and the upstream .vf/compile.yml
 # resolve $COMPILE_ROOT against the caliptra-rtl build environment.
 COLLATERAL_SUBTREES=(
     "src/hmac/tb"

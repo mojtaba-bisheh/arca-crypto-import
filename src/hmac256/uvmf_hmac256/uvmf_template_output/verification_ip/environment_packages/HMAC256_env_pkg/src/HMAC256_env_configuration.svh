@@ -20,7 +20,7 @@
 //----------------------------------------------------------------------
 //----------------------------------------------------------------------
 //                                          
-// DESCRIPTION: THis is the configuration for the arca_hmac256 environment.
+// DESCRIPTION: THis is the configuration for the tessera_hmac256 environment.
 //  it contains configuration classes for each agent.  It also contains
 //  environment level configuration variables.
 //

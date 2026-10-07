@@ -15,7 +15,7 @@
 `ifndef VERILATOR
 
 interface clp_abr_top_cov_if
-    import arca_abr_params_pkg::*;
+    import tessera_abr_params_pkg::*;
     import kv_defines_pkg::*; 
     (
 
@@ -61,20 +61,20 @@ interface clp_abr_top_cov_if
     logic kv_mlkem_seed_data_present;
     logic kv_mlkem_msg_data_present;
 
-    assign pcr_sign_input_invalid = arca_abr_top.abr_ctrl_inst.pcr_sign_input_invalid;
-    assign pcr_sign_mode = arca_abr_top.abr_ctrl_inst.pcr_sign_mode;
+    assign pcr_sign_input_invalid = tessera_abr_top.abr_ctrl_inst.pcr_sign_input_invalid;
+    assign pcr_sign_mode = tessera_abr_top.abr_ctrl_inst.pcr_sign_mode;
     
-    assign kv_mldsa_seed_data_present = arca_abr_top.abr_ctrl_inst.kv_mldsa_seed_data_present;
-    assign kv_mlkem_seed_data_present = arca_abr_top.abr_ctrl_inst.kv_mlkem_seed_data_present;
-    assign kv_mlkem_msg_data_present  = arca_abr_top.abr_ctrl_inst.kv_mlkem_msg_data_present;
+    assign kv_mldsa_seed_data_present = tessera_abr_top.abr_ctrl_inst.kv_mldsa_seed_data_present;
+    assign kv_mlkem_seed_data_present = tessera_abr_top.abr_ctrl_inst.kv_mlkem_seed_data_present;
+    assign kv_mlkem_msg_data_present  = tessera_abr_top.abr_ctrl_inst.kv_mlkem_msg_data_present;
 
     logic mldsa_seed_zero_error;
     logic mlkem_seed_zero_error;
     logic mlkem_msg_zero_error;
 
-    assign mldsa_seed_zero_error = arca_abr_top.abr_ctrl_inst.mldsa_seed_zero_error;
-    assign mlkem_seed_zero_error = arca_abr_top.abr_ctrl_inst.mlkem_seed_zero_error;
-    assign mlkem_msg_zero_error  = arca_abr_top.abr_ctrl_inst.mlkem_msg_zero_error;
+    assign mldsa_seed_zero_error = tessera_abr_top.abr_ctrl_inst.mldsa_seed_zero_error;
+    assign mlkem_seed_zero_error = tessera_abr_top.abr_ctrl_inst.mlkem_seed_zero_error;
+    assign mlkem_msg_zero_error  = tessera_abr_top.abr_ctrl_inst.mlkem_msg_zero_error;
 
     always_ff @(posedge clk) begin
         if (!rst_b) begin
@@ -92,46 +92,46 @@ interface clp_abr_top_cov_if
     kv_write_ctrl_reg_t kv_write_ctrl_reg;
     kv_read_ctrl_reg_t kv_read_ctrl_reg;
 
-    assign kv_write_metrics = arca_abr_top.abr_ctrl_inst.kv_mlkem_sharedkey_write_metrics;
-    assign kv_write_ctrl_reg = arca_abr_top.abr_ctrl_inst.kv_mlkem_sharedkey_write_ctrl_reg;
-    assign kv_read_ctrl_reg = arca_abr_top.abr_ctrl_inst.kv_mldsa_seed_read_ctrl_reg;
+    assign kv_write_metrics = tessera_abr_top.abr_ctrl_inst.kv_mlkem_sharedkey_write_metrics;
+    assign kv_write_ctrl_reg = tessera_abr_top.abr_ctrl_inst.kv_mlkem_sharedkey_write_ctrl_reg;
+    assign kv_read_ctrl_reg = tessera_abr_top.abr_ctrl_inst.kv_mldsa_seed_read_ctrl_reg;
 
-    assign mldsa_cmd = arca_abr_top.abr_ctrl_inst.mldsa_cmd_reg;
-    assign mlkem_cmd = arca_abr_top.abr_ctrl_inst.mlkem_cmd_reg;
-    assign zeroize = arca_abr_top.abr_ctrl_inst.zeroize;
-    assign ready = arca_abr_top.abr_ctrl_inst.abr_ready;
-    assign mldsa_valid = arca_abr_top.abr_ctrl_inst.mldsa_valid_reg;
-    assign mlkem_valid = arca_abr_top.abr_ctrl_inst.mlkem_valid_reg;
+    assign mldsa_cmd = tessera_abr_top.abr_ctrl_inst.mldsa_cmd_reg;
+    assign mlkem_cmd = tessera_abr_top.abr_ctrl_inst.mlkem_cmd_reg;
+    assign zeroize = tessera_abr_top.abr_ctrl_inst.zeroize;
+    assign ready = tessera_abr_top.abr_ctrl_inst.abr_ready;
+    assign mldsa_valid = tessera_abr_top.abr_ctrl_inst.mldsa_valid_reg;
+    assign mlkem_valid = tessera_abr_top.abr_ctrl_inst.mlkem_valid_reg;
 
     always_ff @(posedge clk) begin
         if (!rst_b) begin
             mldsa_sw_cmd <= '0;
         end
-        else if (arca_abr_top.abr_reg_inst.decoded_reg_strb.MLDSA_CTRL && arca_abr_top.abr_reg_inst.decoded_req_is_wr) begin // SW write
-            mldsa_sw_cmd <= (arca_abr_top.abr_reg_inst.field_storage.MLDSA_CTRL.CTRL.value & ~arca_abr_top.abr_reg_inst.decoded_wr_biten[2:0]) | (arca_abr_top.abr_reg_inst.decoded_wr_data[2:0] & arca_abr_top.abr_reg_inst.decoded_wr_biten[2:0]);
+        else if (tessera_abr_top.abr_reg_inst.decoded_reg_strb.MLDSA_CTRL && tessera_abr_top.abr_reg_inst.decoded_req_is_wr) begin // SW write
+            mldsa_sw_cmd <= (tessera_abr_top.abr_reg_inst.field_storage.MLDSA_CTRL.CTRL.value & ~tessera_abr_top.abr_reg_inst.decoded_wr_biten[2:0]) | (tessera_abr_top.abr_reg_inst.decoded_wr_data[2:0] & tessera_abr_top.abr_reg_inst.decoded_wr_biten[2:0]);
         end
     end
 
 
-    assign error_flag = arca_abr_top.abr_ctrl_inst.error_flag | arca_abr_top.abr_ctrl_inst.error_flag_reg;
-    assign skdecode_error = arca_abr_top.abr_ctrl_inst.skdecode_error_i;
+    assign error_flag = tessera_abr_top.abr_ctrl_inst.error_flag | tessera_abr_top.abr_ctrl_inst.error_flag_reg;
+    assign skdecode_error = tessera_abr_top.abr_ctrl_inst.skdecode_error_i;
 
-    assign mldsa_keygen_process = arca_abr_top.abr_ctrl_inst.mldsa_keygen_process;
-    assign mldsa_signing_process = arca_abr_top.abr_ctrl_inst.mldsa_signing_process;
-    assign mldsa_verifying_process = arca_abr_top.abr_ctrl_inst.mldsa_verifying_process;
-    assign mldsa_keygen_signing_process = arca_abr_top.abr_ctrl_inst.mldsa_keygen_signing_process;
-    assign mlkem_keygen_process = arca_abr_top.abr_ctrl_inst.mldsa_keygen_process;
-    assign mlkem_encaps_process = arca_abr_top.abr_ctrl_inst.mlkem_encaps_process;
-    assign mlkem_decaps_process = arca_abr_top.abr_ctrl_inst.mlkem_decaps_process;
-    assign mlkem_keygen_decaps_process = arca_abr_top.abr_ctrl_inst.mlkem_keygen_decaps_process;
+    assign mldsa_keygen_process = tessera_abr_top.abr_ctrl_inst.mldsa_keygen_process;
+    assign mldsa_signing_process = tessera_abr_top.abr_ctrl_inst.mldsa_signing_process;
+    assign mldsa_verifying_process = tessera_abr_top.abr_ctrl_inst.mldsa_verifying_process;
+    assign mldsa_keygen_signing_process = tessera_abr_top.abr_ctrl_inst.mldsa_keygen_signing_process;
+    assign mlkem_keygen_process = tessera_abr_top.abr_ctrl_inst.mldsa_keygen_process;
+    assign mlkem_encaps_process = tessera_abr_top.abr_ctrl_inst.mlkem_encaps_process;
+    assign mlkem_decaps_process = tessera_abr_top.abr_ctrl_inst.mlkem_decaps_process;
+    assign mlkem_keygen_decaps_process = tessera_abr_top.abr_ctrl_inst.mlkem_keygen_decaps_process;
 
-    assign verify_failure = arca_abr_top.abr_ctrl_inst.clear_verify_valid;
-    assign normcheck_failure = arca_abr_top.abr_ctrl_inst.normcheck_done_i & arca_abr_top.abr_ctrl_inst.normcheck_invalid_i;
-    assign normcheck_mode[0] = (arca_abr_top.abr_ctrl_inst.normcheck_mode_o == 2'b00);
-    assign normcheck_mode[1] = (arca_abr_top.abr_ctrl_inst.normcheck_mode_o == 2'b01);
-    assign normcheck_mode[2] = (arca_abr_top.abr_ctrl_inst.normcheck_mode_o == 2'b10);
-    assign makehint_failure = arca_abr_top.abr_ctrl_inst.makehint_done_i & arca_abr_top.abr_ctrl_inst.makehint_invalid_i;
-    assign invalid_hint = arca_abr_top.abr_ctrl_inst.sigdecode_h_invalid_i;
+    assign verify_failure = tessera_abr_top.abr_ctrl_inst.clear_verify_valid;
+    assign normcheck_failure = tessera_abr_top.abr_ctrl_inst.normcheck_done_i & tessera_abr_top.abr_ctrl_inst.normcheck_invalid_i;
+    assign normcheck_mode[0] = (tessera_abr_top.abr_ctrl_inst.normcheck_mode_o == 2'b00);
+    assign normcheck_mode[1] = (tessera_abr_top.abr_ctrl_inst.normcheck_mode_o == 2'b01);
+    assign normcheck_mode[2] = (tessera_abr_top.abr_ctrl_inst.normcheck_mode_o == 2'b10);
+    assign makehint_failure = tessera_abr_top.abr_ctrl_inst.makehint_done_i & tessera_abr_top.abr_ctrl_inst.makehint_invalid_i;
+    assign invalid_hint = tessera_abr_top.abr_ctrl_inst.sigdecode_h_invalid_i;
 
     covergroup clp_abr_top_cov_grp @(posedge clk);
         reset_cp: coverpoint rst_b;
@@ -171,11 +171,11 @@ interface clp_abr_top_cov_if
         normcheck_failure_cp: coverpoint normcheck_failure;
         makehint_failure_cp: coverpoint makehint_failure;
         invalid_hint_cp: coverpoint invalid_hint;
-        clear_decaps_valid_cp: coverpoint arca_abr_top.abr_ctrl_inst.clear_decaps_valid;
-        encaps_input_check_failure_cp: coverpoint arca_abr_top.abr_ctrl_inst.encaps_input_check_failure;
-        decaps_input_check_failure_cp: coverpoint arca_abr_top.abr_ctrl_inst.decaps_input_check_failure;
+        clear_decaps_valid_cp: coverpoint tessera_abr_top.abr_ctrl_inst.clear_decaps_valid;
+        encaps_input_check_failure_cp: coverpoint tessera_abr_top.abr_ctrl_inst.encaps_input_check_failure;
+        decaps_input_check_failure_cp: coverpoint tessera_abr_top.abr_ctrl_inst.decaps_input_check_failure;
 
-        stream_msg_strobe_cp: coverpoint arca_abr_top.abr_ctrl_inst.stream_msg_strobe {
+        stream_msg_strobe_cp: coverpoint tessera_abr_top.abr_ctrl_inst.stream_msg_strobe {
             bins one_byte = {4'b0001};
             bins two_bytes = {4'b0011};
             bins three_bytes = {4'b0111};
@@ -260,21 +260,21 @@ interface clp_abr_top_cov_if
     generate
         for(sig_enc_i = 0; sig_enc_i < NUM_ENC; sig_enc_i++) begin : enc_loop
         // For the upper instance
-        assign eq_flags[sig_enc_i*2]   = (arca_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].upper_encode.data_i == MLDSA_GAMMA1_RANGE);
-        assign less_flags[sig_enc_i*2] = (arca_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].upper_encode.data_i <  MLDSA_GAMMA1_RANGE);
-        assign greater_flags[sig_enc_i*2] = (arca_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].upper_encode.data_i > MLDSA_GAMMA1_RANGE);
+        assign eq_flags[sig_enc_i*2]   = (tessera_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].upper_encode.data_i == MLDSA_GAMMA1_RANGE);
+        assign less_flags[sig_enc_i*2] = (tessera_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].upper_encode.data_i <  MLDSA_GAMMA1_RANGE);
+        assign greater_flags[sig_enc_i*2] = (tessera_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].upper_encode.data_i > MLDSA_GAMMA1_RANGE);
         
         // For the lower instance
-        assign eq_flags[sig_enc_i*2+1]   = (arca_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].lower_encode.data_i == MLDSA_GAMMA1_RANGE);
-        assign less_flags[sig_enc_i*2+1] = (arca_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].lower_encode.data_i <  MLDSA_GAMMA1_RANGE);
-        assign greater_flags[sig_enc_i*2+1] = (arca_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].lower_encode.data_i > MLDSA_GAMMA1_RANGE);
+        assign eq_flags[sig_enc_i*2+1]   = (tessera_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].lower_encode.data_i == MLDSA_GAMMA1_RANGE);
+        assign less_flags[sig_enc_i*2+1] = (tessera_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].lower_encode.data_i <  MLDSA_GAMMA1_RANGE);
+        assign greater_flags[sig_enc_i*2+1] = (tessera_abr_top.sigencode_z_inst.enc_unit[sig_enc_i].lower_encode.data_i > MLDSA_GAMMA1_RANGE);
         end
     endgenerate
 
     // OR-reduce the flags: if any instance meets the condition, the corresponding signal is 1.
-    assign enc_unit_equal   = (|eq_flags) & (arca_abr_top.sigencode_z_inst.state != arca_abr_top.sigencode_z_inst.SIGENCODE_IDLE);
-    assign enc_unit_less    = (|less_flags) & (arca_abr_top.sigencode_z_inst.state != arca_abr_top.sigencode_z_inst.SIGENCODE_IDLE);
-    assign enc_unit_greater = (|greater_flags) & (arca_abr_top.sigencode_z_inst.state != arca_abr_top.sigencode_z_inst.SIGENCODE_IDLE);
+    assign enc_unit_equal   = (|eq_flags) & (tessera_abr_top.sigencode_z_inst.state != tessera_abr_top.sigencode_z_inst.SIGENCODE_IDLE);
+    assign enc_unit_less    = (|less_flags) & (tessera_abr_top.sigencode_z_inst.state != tessera_abr_top.sigencode_z_inst.SIGENCODE_IDLE);
+    assign enc_unit_greater = (|greater_flags) & (tessera_abr_top.sigencode_z_inst.state != tessera_abr_top.sigencode_z_inst.SIGENCODE_IDLE);
     // Sign_z to cover the aggregated conditions
     covergroup clp_mldsa_sign_z_enc_agg_cg @(posedge clk);
         coverpoint enc_unit_equal {
@@ -300,27 +300,27 @@ interface clp_abr_top_cov_if
     generate
     for (sk_enc_i = 0; sk_enc_i < NUM_ENC; sk_enc_i++) begin : sk_enc_loop
         // For mem_a_rd_data element
-        assign skenc_state0_flags[sk_enc_i*2]    = (arca_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == 'h0);
-        assign skenc_state1_flags[sk_enc_i*2]    = (arca_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == 'h1);
-        assign skenc_state2_flags[sk_enc_i*2]    = (arca_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == 'h2);
-        assign skenc_state_mq1_flags[sk_enc_i*2] = (arca_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == MLDSA_Q - 1);
-        assign skenc_state_mq2_flags[sk_enc_i*2] = (arca_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == MLDSA_Q - 2);
+        assign skenc_state0_flags[sk_enc_i*2]    = (tessera_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == 'h0);
+        assign skenc_state1_flags[sk_enc_i*2]    = (tessera_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == 'h1);
+        assign skenc_state2_flags[sk_enc_i*2]    = (tessera_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == 'h2);
+        assign skenc_state_mq1_flags[sk_enc_i*2] = (tessera_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == MLDSA_Q - 1);
+        assign skenc_state_mq2_flags[sk_enc_i*2] = (tessera_abr_top.skencode_inst.mem_a_rd_data[sk_enc_i] == MLDSA_Q - 2);
         // For mem_b_rd_data element
-        assign skenc_state0_flags[sk_enc_i*2+1]    = (arca_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == 'h0);
-        assign skenc_state1_flags[sk_enc_i*2+1]    = (arca_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == 'h1);
-        assign skenc_state2_flags[sk_enc_i*2+1]    = (arca_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == 'h2);
-        assign skenc_state_mq1_flags[sk_enc_i*2+1] = (arca_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == MLDSA_Q - 1);
-        assign skenc_state_mq2_flags[sk_enc_i*2+1] = (arca_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == MLDSA_Q - 2);
+        assign skenc_state0_flags[sk_enc_i*2+1]    = (tessera_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == 'h0);
+        assign skenc_state1_flags[sk_enc_i*2+1]    = (tessera_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == 'h1);
+        assign skenc_state2_flags[sk_enc_i*2+1]    = (tessera_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == 'h2);
+        assign skenc_state_mq1_flags[sk_enc_i*2+1] = (tessera_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == MLDSA_Q - 1);
+        assign skenc_state_mq2_flags[sk_enc_i*2+1] = (tessera_abr_top.skencode_inst.mem_b_rd_data[sk_enc_i] == MLDSA_Q - 2);
     end
     endgenerate
 
     // OR-reduce each set of flags and ensure the FSM is not in IDLE.
-    // (Assuming arca_abr_top.skencode_inst.state and its IDLE constant are accessible.)
-    assign skenc_state0_agg    = (|skenc_state0_flags)    & (arca_abr_top.skencode_inst.main_state != arca_abr_top.skencode_inst.SKENC_IDLE);
-    assign skenc_state1_agg    = (|skenc_state1_flags)    & (arca_abr_top.skencode_inst.main_state != arca_abr_top.skencode_inst.SKENC_IDLE);
-    assign skenc_state2_agg    = (|skenc_state2_flags)    & (arca_abr_top.skencode_inst.main_state != arca_abr_top.skencode_inst.SKENC_IDLE);
-    assign skenc_state_mq1_agg = (|skenc_state_mq1_flags) & (arca_abr_top.skencode_inst.main_state != arca_abr_top.skencode_inst.SKENC_IDLE);
-    assign skenc_state_mq2_agg = (|skenc_state_mq2_flags) & (arca_abr_top.skencode_inst.main_state != arca_abr_top.skencode_inst.SKENC_IDLE);
+    // (Assuming tessera_abr_top.skencode_inst.state and its IDLE constant are accessible.)
+    assign skenc_state0_agg    = (|skenc_state0_flags)    & (tessera_abr_top.skencode_inst.main_state != tessera_abr_top.skencode_inst.SKENC_IDLE);
+    assign skenc_state1_agg    = (|skenc_state1_flags)    & (tessera_abr_top.skencode_inst.main_state != tessera_abr_top.skencode_inst.SKENC_IDLE);
+    assign skenc_state2_agg    = (|skenc_state2_flags)    & (tessera_abr_top.skencode_inst.main_state != tessera_abr_top.skencode_inst.SKENC_IDLE);
+    assign skenc_state_mq1_agg = (|skenc_state_mq1_flags) & (tessera_abr_top.skencode_inst.main_state != tessera_abr_top.skencode_inst.SKENC_IDLE);
+    assign skenc_state_mq2_agg = (|skenc_state_mq2_flags) & (tessera_abr_top.skencode_inst.main_state != tessera_abr_top.skencode_inst.SKENC_IDLE);
 
     // Now create a covergroup that samples these aggregated flags.
     covergroup clp_mldsa_skencode_agg_cg @(posedge clk);

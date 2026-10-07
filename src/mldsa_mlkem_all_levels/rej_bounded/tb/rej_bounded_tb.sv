@@ -118,7 +118,7 @@ module rej_bounded_tb
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_abr_piso #(
+  tessera_abr_piso #(
     .PISO_BUFFER_W(PISO_BUFFER_W),
     .PISO_INPUT_RATE(PISO_INPUT_RATE),
     .PISO_OUTPUT_RATE(PISO_OUTPUT_RATE)
@@ -134,7 +134,7 @@ module rej_bounded_tb
  .data_o(piso_data)
  );
 
-  arca_rej_bounded_ctrl #(
+  tessera_rej_bounded_ctrl #(
     .REJ_NUM_SAMPLERS(REJ_NUM_SAMPLERS),
     .REJ_SAMPLE_W(REJ_SAMPLE_W),
     .REJ_VLD_SAMPLES(REJ_VLD_SAMPLES),

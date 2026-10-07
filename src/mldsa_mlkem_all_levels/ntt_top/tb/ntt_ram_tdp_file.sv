@@ -22,7 +22,7 @@
 //======================================================================
 
 module ntt_ram_tdp_file 
-    import arca_abr_params_pkg::*;
+    import tessera_abr_params_pkg::*;
     #(
     parameter ADDR_WIDTH = 10,
     parameter DATA_WIDTH = ABR_MEM_DATA_WIDTH

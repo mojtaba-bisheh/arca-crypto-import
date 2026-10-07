@@ -84,7 +84,7 @@ module ecc_montgomerymultiplier_tb #(
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_ecc_montgomerymultiplier #(
+  tessera_ecc_montgomerymultiplier #(
       .REG_SIZE   (OPERAND_WIDTH),
       .RADIX      (WORD_WIDTH)
   )

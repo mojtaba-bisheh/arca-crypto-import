@@ -116,7 +116,7 @@ module cbd_sampler_tb
   //----------------------------------------------------------------
   // Device Under Test.
   //----------------------------------------------------------------
-  arca_abr_piso #(
+  tessera_abr_piso #(
     .PISO_BUFFER_W(PISO_BUFFER_W),
     .PISO_INPUT_RATE(PISO_INPUT_RATE),
     .PISO_OUTPUT_RATE(PISO_OUTPUT_RATE)
@@ -132,7 +132,7 @@ module cbd_sampler_tb
  .data_o(piso_data)
  );
 
-  arca_cbd_sampler_ctrl
+  tessera_cbd_sampler_ctrl
   dut (
   .clk(clk_i),
   .rst_b(rst_ni),
@@ -326,7 +326,7 @@ module cbd_sampler_tb
     end
     $fclose(fd_w);
     //generate input vectors and expected results
-    $system($sformatf("python3 arca_cbd_sampler.py"));
+    $system($sformatf("python3 tessera_cbd_sampler.py"));
 
 
     //open expected results files

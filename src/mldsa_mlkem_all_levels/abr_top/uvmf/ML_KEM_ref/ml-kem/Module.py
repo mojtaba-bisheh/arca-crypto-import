@@ -640,7 +640,7 @@ class PolynomialKyber(Polynomial):
         y = (3329 * x + t) >> d
         return y
 
-    def arca_compress(self, d):
+    def tessera_compress(self, d):
         """
         Compress the polynomial by compressing each coefficient
 
@@ -649,12 +649,12 @@ class PolynomialKyber(Polynomial):
         self.coeffs = [self._compress_ele(c, d) for c in self.coeffs]
         return self
 
-    def arca_decompress(self, d):
+    def tessera_decompress(self, d):
         """
         Decompress the polynomial by decompressing each coefficient
 
         NOTE: This as compression is lossy, we have
-        x' = arca_decompress(arca_compress(x)), which x' != x, but is
+        x' = tessera_decompress(tessera_compress(x)), which x' != x, but is
         close in magnitude.
         """
         self.coeffs = [self._decompress_ele(c, d) for c in self.coeffs]
@@ -843,23 +843,23 @@ class MatrixKyber(Matrix):
                 output += ele.encode(d)
         return output
 
-    def arca_compress(self, d):
+    def tessera_compress(self, d):
         """
         Compress every element of the matrix to have at most ``d`` bits
         """
         for row in self._data:
             for ele in row:
-                ele.arca_compress(d)
+                ele.tessera_compress(d)
         return self
 
-    def arca_decompress(self, d):
+    def tessera_decompress(self, d):
         """
         Perform (lossy) decompression of the polynomial assuming it has been
         compressed to have at most ``d`` bits.
         """
         for row in self._data:
             for ele in row:
-                ele.arca_decompress(d)
+                ele.tessera_decompress(d)
         return self
 
     def to_ntt(self):
