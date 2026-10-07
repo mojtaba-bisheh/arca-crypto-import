@@ -50,6 +50,12 @@ while [ $# -gt 0 ]; do
     esac
 done
 
+# the work-tree guard below compares DEST against `git rev-parse --show-toplevel`,
+# which is always absolute; canonicalise so that --dest . matches rather than
+# tripping the guard.
+DEST="$(cd "$DEST" 2>/dev/null && pwd)" \
+    || { echo "--dest is not a directory" >&2; exit 2; }
+
 if [ -z "$UPSTREAM" ]; then
     UPSTREAM="$DEST/.upstream-cache/caliptra-rtl"
 fi
@@ -67,6 +73,15 @@ else
 fi
 
 rc=0
+# an empty block list must be loud: a wrong --dest, a relocated src/, or a
+# directory rename would otherwise iterate zero times and report success
+# without having proved anything. The per-block work-tree guard below cannot
+# cover this, because it only runs once a block has already been found.
+if [ "${#blocks[@]}" -eq 0 ]; then
+    echo "roundtrip_check: no blocks found under $DEST/src -- nothing to prove" >&2
+    exit 1
+fi
+
 for b in "${blocks[@]}"; do
     revinfo="$(ri_path "$DEST" "$b" || true)"
     [ -f "$revinfo" ] || { echo "missing $revinfo" >&2; rc=1; continue; }
