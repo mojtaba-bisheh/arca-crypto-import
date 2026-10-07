@@ -291,9 +291,27 @@ verify_block() {
         [ "$bad" -eq 0 ] && ok "filelist covers $n file(s) and $hdrs header(s) via +incdir+, all resolve"
     fi
 
-    # 9. committed files still match the revinfo manifest (drift detection)
+    # 9. committed files still match the manifest (drift detection)
+    #
+    # The manifest lives beside revinfo.yml rather than inside it, so the
+    # pinning digest is checked first: a manifest that has been edited to match
+    # tampered files would otherwise pass this check silently.
     bad=0
-    local sha path
+    local sha path manifest want_sha got_sha
+    manifest="$(dirname "$revinfo")/revinfo.manifest"
+    if [ ! -f "$manifest" ]; then
+        fail "revinfo.yml references a manifest that does not exist: $manifest"; bad=1
+    else
+        want_sha="$(sed -nE 's/^[[:space:]]*manifest_sha256:[[:space:]]*"([0-9a-f]+)".*/\1/p' "$revinfo" | head -1)"
+        got_sha="$(sha256sum "$manifest" | cut -d' ' -f1)"
+        if [ -z "$want_sha" ]; then
+            fail "revinfo.yml records no manifest_sha256"; bad=1
+        elif [ "$want_sha" != "$got_sha" ]; then
+            fail "revinfo.manifest does not match manifest_sha256 in revinfo.yml"; bad=1
+        else
+            ok "manifest matches the digest pinned in revinfo.yml"
+        fi
+    fi
     while read -r sha path; do
         [ -n "${path:-}" ] || continue
         if [ ! -f "$DEST/$path" ]; then
@@ -302,7 +320,7 @@ verify_block() {
         if [ "$(sha256sum "$DEST/$path" | cut -d' ' -f1)" != "$sha" ]; then
             fail "file modified since import: $path"; bad=1
         fi
-    done < <(sed -nE '/^renamed_manifest:/,$ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
+    done < <(sed -nE '/^renamed_manifest:/,$ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"([^"]+)".*/\1 \2/p' "$manifest" 2>/dev/null)
     [ "$bad" -eq 0 ] && ok "renamed manifest matches working tree"
 
     # 10. collateral tier -- imported whole, keeps its upstream names.

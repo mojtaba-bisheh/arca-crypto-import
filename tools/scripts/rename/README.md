@@ -53,6 +53,14 @@ references `hmac_param_pkg`, and both imports have to spell the renamed
 package the same way. Each `revinfo.yml` records the policy that was in force
 under `policy.stem_renames` / `policy.stem_keep`.
 
+`revinfo.yml` is deliberately engine-level: it answers "where did this block
+come from", which is one upstream commit. The per-file list lives beside it in
+`revinfo.manifest`, because it is machine input rather than something you read
+-- `roundtrip_check.sh` enumerates it to know what to prove, and it is what
+records the effect of `excluded_globs` / `artifact_globs`. `revinfo.yml` pins it
+under `content.manifest_sha256`, and `verify_import.sh` rejects the pair if they
+disagree, so moving the detail out does not make it easier to tamper with.
+
 `mldsa_mlkem_all_levels` is renamed the other way round: its *directory* is
 renamed but its *identifiers* are not. Upstream calls the engine `abr`
 ("Adams Bridge"), a codename that says nothing about ML-DSA, ML-KEM, or the

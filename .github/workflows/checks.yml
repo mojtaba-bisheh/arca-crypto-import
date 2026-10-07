@@ -61,7 +61,8 @@ jobs:
           # revinfo.yml records when the import ran and which interpreters ran
           # it. Those three keys describe the importing machine, not the import,
           # so they are expected to move; everything else -- upstream commit,
-          # policy, toolchain fingerprint, sha256 manifest -- must not.
+          # policy, toolchain fingerprint, manifest digest -- must not. The
+          # manifest itself is covered by the bit-identical check above.
           git diff -U0 -- src/*/revinfo.yml \
             | grep -E '^[+-][^+-]' \
             | grep -vE '^[+-][[:space:]]*(imported_at|bash|perl):' > /tmp/rev.diff || true

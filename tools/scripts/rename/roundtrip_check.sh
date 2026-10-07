@@ -58,6 +58,11 @@ rc=0
 for b in "${blocks[@]}"; do
     revinfo="$(ri_path "$DEST" "$b" || true)"
     [ -f "$revinfo" ] || { echo "missing $revinfo" >&2; rc=1; continue; }
+    # The file lists live beside revinfo.yml. They are what says which files the
+    # import actually took, i.e. the effect of excluded_globs/artifact_globs, so
+    # they are read rather than re-derived from the upstream tree.
+    manifest="$(dirname "$revinfo")/revinfo.manifest"
+    [ -f "$manifest" ] || { echo "missing $manifest" >&2; rc=1; continue; }
 
     sha="$(sed -nE 's/^[[:space:]]*commit:[[:space:]]*"([0-9a-f]+)".*/\1/p' "$revinfo" | head -1)"
     prefix="$(sed -nE 's/^prefix:[[:space:]]*"(.*)"$/\1/p' "$revinfo" | head -1)"
@@ -227,7 +232,7 @@ for b in "${blocks[@]}"; do
     while read -r _ rpath; do
         [ -n "${rpath:-}" ] || continue
         pathmap["$(tessera_key "$rpath")"]="$rpath"
-    done < <(sed -nE '/^renamed_manifest:/,$ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"(src\/[^"]+)".*/\1 \2/p' "$revinfo")
+    done < <(sed -nE '/^renamed_manifest:/,$ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"(src\/[^"]+)".*/\1 \2/p' "$manifest")
 
     checked=0
     binchecked=0
@@ -280,7 +285,7 @@ for b in "${blocks[@]}"; do
             printf '%s\n' "$diffout" | sed 's/^/        /'
             rc=1
         fi
-    done < <(sed -nE '/^source_manifest:/,/^renamed_manifest:/ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"([^"]+)".*/\1 \2/p' "$revinfo")
+    done < <(sed -nE '/^source_manifest:/,/^renamed_manifest:/ s/^[[:space:]]*-[[:space:]]*\{[[:space:]]*sha256:[[:space:]]*"([0-9a-f]+)",[[:space:]]*path:[[:space:]]*"([^"]+)".*/\1 \2/p' "$manifest")
 
     # Code-generator inputs are held to a *stronger* contract than everything
     # else: byte-identical, not merely naming-equivalent. The loop above strips

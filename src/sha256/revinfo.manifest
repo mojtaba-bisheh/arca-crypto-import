@@ -1,0 +1,49 @@
+# Tessera vendored-block file manifest for sha256 -- GENERATED, do not edit by hand.
+#
+# Pinned by content.manifest_sha256 in revinfo.yml; verify_import.sh
+# rejects this file if the two disagree.
+
+source_manifest:  # sha256 of the upstream files as imported
+  - { sha256: "556650ef04155dce2e2c3d81f58aed4f48c3ed6fac77234a6614ee9e21011011", path: "src/sha256/rtl/sha256.sv" }
+  - { sha256: "5baa7f845ddc080383d13f588500a6fa69461443e1f498b1737b728b58781b73", path: "src/sha256/rtl/sha256_core.v" }
+  - { sha256: "d646de1f97b260f336377700cc4efff8c44779691d9fb61fa58aaa365b91d0a0", path: "src/sha256/rtl/sha256_ctrl.sv" }
+  - { sha256: "6a7f72df8b2771419431274e0edbecf7c1fb946a613c71407c63f4ddfdc7e254", path: "src/sha256/rtl/sha256_k_constants.v" }
+  - { sha256: "2f32be755f3b1d321cf2e660f1cf88bb8a940cf5ffcaf13d60e0aa75bd52a37e", path: "src/sha256/rtl/sha256_params_pkg.sv" }
+  - { sha256: "213a945acefc3061fa35e2decfec7a7e96168b8233be45138c1998985fd3d1f8", path: "src/sha256/rtl/sha256_reg.sv" }
+  - { sha256: "85b5baf6e6ea30949a2739c1fc1732a442f7c9b6d05a9f4c7f39243b11b4e90b", path: "src/sha256/rtl/sha256_reg_pkg.sv" }
+  - { sha256: "19ce65fd0519a39d1ee0c96498806c540ee59d088a4fc62d78d77270ee2f0cdb", path: "src/sha256/rtl/sha256_w_mem.v" }
+  - { sha256: "3e7aadce96ccff412b0963f737d6b39cae2877dc2281ad9680ea9ba3118c97c6", path: "src/sha256/coverage/sha256_ctrl_cov_bind.sv" }
+  - { sha256: "18e769b83f2080c107c40f3c2eb9df352773a033eec4b025162ac6a69828f26e", path: "src/sha256/coverage/sha256_ctrl_cov_if.sv" }
+  - { sha256: "30ab1891579eb16aa73f4d094d445a289d67ade40bb08b4761af1ccd434a4b9b", path: "src/sha256/tb/sha256_ctrl_tb.sv" }
+  - { sha256: "21c115577dc5e75c3885c3d991c33372630a8c68c35a65cdd53e007c56ec0f48", path: "src/sha256/tb/sha256_random_test.sv" }
+  - { sha256: "8256ac26f763a64755e645cb69b423394860bd640621025f4f1ed77ff75908fa", path: "src/sha256/tb/sha256_test_gen.py" }
+  - { sha256: "4791512d21f58a14f0867aead1bf083e2fec718f4176ca94e89240a7bd4d8dab", path: "src/sha256/tb/sha256_test_vector.txt" }
+  - { sha256: "12eacab8c3b3a8733390a8207432bd23ef98a436434c5f834e91115644a82bdd", path: "src/sha256/tb/sha256_wntz_test_gen.py" }
+  - { sha256: "a5a451d48d0be89fd57adf4acddfa6e38eb685116e4f240e2b37e4b094cc61be", path: "src/sha256/coverage/config/sha256_cm_hier.cfg" }
+  - { sha256: "8acf2b86f09c714153b27a96e37128576d537840cc2d1554071e547568c3de59", path: "src/sha256/stimulus/tests/directed/sha256_normal_test.yml" }
+  - { sha256: "65589e8c7c9ee05636b59d052f5124c919ad15ab653f8cf8a6ccb80ba0a9b5f6", path: "src/sha256/stimulus/tests/random/sha256_random_test.yml" }
+  - { sha256: "2ca876b39668aa824d316a03d30251e540f8ac03717ef9374ad00e62fb065719", path: "src/sha256/stimulus/testsuites/sha256_nightly_directed_regression.yml" }
+  - { sha256: "19a75ec9fbe52ef3d492f1e14ca557423ef18b0aad812a12957492def1832746", path: "src/sha256/stimulus/testsuites/sha256_nightly_random_regression.yml" }
+
+renamed_manifest:  # sha256 of the committed, renamed files
+  - { sha256: "ac766efec4555bac6790c5c67b1aec609896be68ca7768ac8f9c28b94f019719", path: "src/sha256/config/tessera_sha256_ctrl.vf" }
+  - { sha256: "a5a451d48d0be89fd57adf4acddfa6e38eb685116e4f240e2b37e4b094cc61be", path: "src/sha256/coverage/config/sha256_cm_hier.cfg" }
+  - { sha256: "15efb3cf8b05d81327f8e27ea033d85eda3add4c4af3585d4df727ea7feec280", path: "src/sha256/coverage/sha256_ctrl_cov_bind.sv" }
+  - { sha256: "1a83e0a0051cdea1858b9087b3362275d3736ed34160f33b22fa864df12bd8b3", path: "src/sha256/coverage/sha256_ctrl_cov_if.sv" }
+  - { sha256: "f36b6ce1588d5032b6bcd01239eea7fc873558ee2baae47fbc8f662a6eb5312e", path: "src/sha256/rtl/tessera_sha256.sv" }
+  - { sha256: "2553ac91dfdb8b67af58a3307be604fd6e9a7892834339cfd16b2c5328b0601b", path: "src/sha256/rtl/tessera_sha256_core.v" }
+  - { sha256: "6e77579385c3bb4de68b15bb4c20432ace65f03f6fbe8ae23b027e81a4ca5fe5", path: "src/sha256/rtl/tessera_sha256_ctrl.sv" }
+  - { sha256: "5ddc5c5b6141bd5485281b7bd6bfd5fa398d7b25d87927388ac395684c03e3b7", path: "src/sha256/rtl/tessera_sha256_k_constants.v" }
+  - { sha256: "bfd3651becfa83aaba72c6206e165d20d6f5c36efd99227ed1e704fd7f0a7497", path: "src/sha256/rtl/tessera_sha256_params_pkg.sv" }
+  - { sha256: "1c04a7d7f7c309cf12204672597549b394a0fb44b613e7ab84836bce1b72a3f8", path: "src/sha256/rtl/tessera_sha256_reg.sv" }
+  - { sha256: "308dd4bfe724cd898ff62ef801b76db5ad7edd909127cbd4b5c9bd8dff536afa", path: "src/sha256/rtl/tessera_sha256_reg_pkg.sv" }
+  - { sha256: "f03f46b3f6c473bb49b4300d057915d7499d9e125f74322c287bf908bd64301f", path: "src/sha256/rtl/tessera_sha256_w_mem.v" }
+  - { sha256: "8acf2b86f09c714153b27a96e37128576d537840cc2d1554071e547568c3de59", path: "src/sha256/stimulus/tests/directed/sha256_normal_test.yml" }
+  - { sha256: "65589e8c7c9ee05636b59d052f5124c919ad15ab653f8cf8a6ccb80ba0a9b5f6", path: "src/sha256/stimulus/tests/random/sha256_random_test.yml" }
+  - { sha256: "2ca876b39668aa824d316a03d30251e540f8ac03717ef9374ad00e62fb065719", path: "src/sha256/stimulus/testsuites/sha256_nightly_directed_regression.yml" }
+  - { sha256: "19a75ec9fbe52ef3d492f1e14ca557423ef18b0aad812a12957492def1832746", path: "src/sha256/stimulus/testsuites/sha256_nightly_random_regression.yml" }
+  - { sha256: "6461bdf044c7329c025ee7077851479b5dddbae4e03f704a13c70da7c501cac7", path: "src/sha256/tb/sha256_ctrl_tb.sv" }
+  - { sha256: "f4c0342441291671691773c65a5f3b63890ffe0ac1d655f9032c33a5c8061880", path: "src/sha256/tb/sha256_random_test.sv" }
+  - { sha256: "dfa8a083943595cfe0473d2827e0f53a4bb54bb5f6aaf20a03317858e2c60223", path: "src/sha256/tb/sha256_test_gen.py" }
+  - { sha256: "4791512d21f58a14f0867aead1bf083e2fec718f4176ca94e89240a7bd4d8dab", path: "src/sha256/tb/sha256_test_vector.txt" }
+  - { sha256: "79e896f384e6a63a444df80ef4ef3441eb1a632836fd27ce253bbbf0dc767cab", path: "src/sha256/tb/sha256_wntz_test_gen.py" }

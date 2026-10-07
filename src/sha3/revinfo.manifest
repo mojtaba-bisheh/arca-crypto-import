@@ -1,0 +1,47 @@
+# Tessera vendored-block file manifest for sha3 -- GENERATED, do not edit by hand.
+#
+# Pinned by content.manifest_sha256 in revinfo.yml; verify_import.sh
+# rejects this file if the two disagree.
+
+source_manifest:  # sha256 of the upstream files as imported
+  - { sha256: "c525a75181efc0ff562286d5f75b1d47ce6dc81a7489e6ac530e2a4588309a53", path: "src/sha3/rtl/kmac.sv" }
+  - { sha256: "fc44148e435848ca97257a9c666e340778611ee168ac7737b1af08c6c636fee2", path: "src/sha3/rtl/kmac_app.sv" }
+  - { sha256: "b4eae3233ad94478a8586bbf0360e8f4be772bdd30936e8b22eeb55ea5438816", path: "src/sha3/rtl/kmac_core.sv" }
+  - { sha256: "cb64dd855d3963e23ca0922e95f3113b4f38bd809d647b00fd1f921920bb2da8", path: "src/sha3/rtl/kmac_entropy.sv" }
+  - { sha256: "a0f800d75ad089f67592975d7d18068dfbe05e9c4d9fa74988db69e8b1926a8e", path: "src/sha3/rtl/kmac_errchk.sv" }
+  - { sha256: "c42ee32595f816d41d41f08e68dbc111ae8c78f204cd685659c39ca5ef409621", path: "src/sha3/rtl/kmac_msgfifo.sv" }
+  - { sha256: "30bf95570255a2c5c47cef19e2e6c6c48bda729e0db70fdfaa0d93fb6bc15434", path: "src/sha3/rtl/kmac_pkg.sv" }
+  - { sha256: "d94264ae0acb2eeff2a160b67aeab204e03b6a7b40802870bcfb306775e13eae", path: "src/sha3/rtl/kmac_reg_pkg.sv" }
+  - { sha256: "fa46ee2e38ea9424452721370b878e3076682c3a98ef87d7c4e2c4013c2a05fd", path: "src/sha3/rtl/kmac_reg_top.sv" }
+  - { sha256: "f8a239ded7fbadbaa9cf226f6e199365765f25c3436c91137b7ade5bda14fbad", path: "src/sha3/rtl/kmac_staterd.sv" }
+  - { sha256: "3a8fbe46e9f34073041543627837c3b1a6ec69ba25bcc46cdbd8a623dff574a0", path: "src/sha3/rtl/ot_keccak_2share.sv" }
+  - { sha256: "88984c363be87be6dd329d098f4512ca06e3fd8616b71e58d687cec67bb81b2c", path: "src/sha3/rtl/ot_keccak_round.sv" }
+  - { sha256: "32b26d55c464877d2da749ade58267c5d237b4c66154c3af91451de993599013", path: "src/sha3/rtl/ot_sha3.sv" }
+  - { sha256: "03ca0a607f5d4a3667f57f30071163f948d0ab9c9b04cbca5c0f98e23c83a280", path: "src/sha3/rtl/ot_sha3_pkg.sv" }
+  - { sha256: "028e6f778c04c0a8aa39ff107ceb1bd90aadab787d5b0e6be866fb4e380968cf", path: "src/sha3/rtl/ot_sha3pad.sv" }
+  - { sha256: "850f19d792e37389b7da056af9ef0cb0748eae4374cbb28e9945395008760eed", path: "src/sha3/rtl/sha3_ctrl.sv" }
+  - { sha256: "0601d674df9a91e07896447df36d08cef47e72c2eaa17ba39aa598b6366d1fed", path: "src/sha3/rtl/sha3_param_pkg.sv" }
+  - { sha256: "f58fe94a1ee700fafcf2211d87bc11c968869501222a3bf5c054aa14c7a68380", path: "src/sha3/rtl/sha3_reg.sv" }
+  - { sha256: "1c81f99fa8e96439b604ed359cc7ecf769e8747cd4eda299d32cdbd25de2a710", path: "src/sha3/rtl/sha3_reg_pkg.sv" }
+
+renamed_manifest:  # sha256 of the committed, renamed files
+  - { sha256: "376b5a7965bdda5e2965e05dcb029daf3fac6ba77d294fb6cd22ca9b39a88a51", path: "src/sha3/config/tessera_sha3_ctrl.vf" }
+  - { sha256: "e3b71b90822e4123f541ec637e039d23bf82fbda09d6c7bd18cfd82cd7b88062", path: "src/sha3/rtl/tessera_kmac.sv" }
+  - { sha256: "48ed297e4cbbb98167237c860dccd1534dd8b06c34e70432005291388b0cc711", path: "src/sha3/rtl/tessera_kmac_app.sv" }
+  - { sha256: "bb35908ad2dd71e0b6e7722a365004b41c55b54e5c2376c0f16da7090fc115c2", path: "src/sha3/rtl/tessera_kmac_core.sv" }
+  - { sha256: "9b13163ffee039df5835ae916c7617b10f6711eea62de7723b62c276a6fea55f", path: "src/sha3/rtl/tessera_kmac_entropy.sv" }
+  - { sha256: "06548846fa0dafa97a2cc23f4f595ddce32fdbe651974ecdcc02f88ee3238bb1", path: "src/sha3/rtl/tessera_kmac_errchk.sv" }
+  - { sha256: "d580010333f20f3e8c649d143688af918d61532fc0aa7dedf29b01abfa809c46", path: "src/sha3/rtl/tessera_kmac_msgfifo.sv" }
+  - { sha256: "2c0498275578b5bb2dc94b72d0d453de85e522aa07674595c288245c26870f9c", path: "src/sha3/rtl/tessera_kmac_pkg.sv" }
+  - { sha256: "b027b165024e0b05477b56cff632cfb37955e64102e0d07c8780c4c08ffafe3a", path: "src/sha3/rtl/tessera_kmac_reg_pkg.sv" }
+  - { sha256: "4af2af82f8e7bcc7b5ec7de2c5cc76823d82477a57b12cbc3a9ee29daf6a3a91", path: "src/sha3/rtl/tessera_kmac_reg_top.sv" }
+  - { sha256: "b401f02f052be0ea2d25d235b46ed7e4f55af89bcbb9e105e9dc42c488f6716f", path: "src/sha3/rtl/tessera_kmac_staterd.sv" }
+  - { sha256: "729a8699f564b0b5cdcc6f342454e122b021b37472aacfdd90d94f087c619be2", path: "src/sha3/rtl/tessera_ot_keccak_2share.sv" }
+  - { sha256: "282df1335715ef965f777213a16a1e56324e8f80d8ea39c785c0a01c28c3b25c", path: "src/sha3/rtl/tessera_ot_keccak_round.sv" }
+  - { sha256: "cc3451b29ae6901e6be8a66854540e6cc8f9b8333155752975d6f2d8acffa053", path: "src/sha3/rtl/tessera_ot_sha3.sv" }
+  - { sha256: "aed7aa6edf0982a4ab3856f51ee9a725086e483bb8b8619af062d55624c71b61", path: "src/sha3/rtl/tessera_ot_sha3_pkg.sv" }
+  - { sha256: "9bf3fa28bc8cdd554c0b559cc9085c31f54212e7a79bba97bc8e4e48cdeeb814", path: "src/sha3/rtl/tessera_ot_sha3pad.sv" }
+  - { sha256: "8c02ca0ca821d8a45a584766690a864d8b08e720cab808d27344ecc677916de5", path: "src/sha3/rtl/tessera_sha3_ctrl.sv" }
+  - { sha256: "a9c4b5f3c6384febfec48ba8eb2d45fea6671773b9595761c17bc239a32bbfcf", path: "src/sha3/rtl/tessera_sha3_param_pkg.sv" }
+  - { sha256: "420f800c627ec2f31f987cb6bce74e10094b8e242d6c17e753003492cb5b770d", path: "src/sha3/rtl/tessera_sha3_reg.sv" }
+  - { sha256: "f8d05ae8abfd94880960c6b66c8b1536fa80d27770cd2341c74b465ef434a0f7", path: "src/sha3/rtl/tessera_sha3_reg_pkg.sv" }

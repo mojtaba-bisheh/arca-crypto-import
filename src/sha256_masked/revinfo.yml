@@ -6,7 +6,7 @@
 block: sha256_masked
 prefix: "tessera_"
 macro_prefix: "TESSERA_"
-imported_at: "2026-10-07T16:08:55Z"
+imported_at: "2026-10-07T17:04:26Z"
 
 upstream:
   repo: "https://github.com/chipsalliance/caliptra-rtl.git"
@@ -24,7 +24,7 @@ upstream:
 importer:
   script: tools/scripts/rename/rename_sha256_masked.sh
   library_version: "2.1.1"
-  toolchain_fingerprint: "9eb7b2acde9d2d6dec9cbae4c767cc56f41562b834fa794007bdd41343557250"
+  toolchain_fingerprint: "554440910323f157b3b6574967310b730277c3bcb458726dc0fd95771659f258"
   bash: "4.4.20(1)-release"
   perl: "v5.26.3"
 
@@ -71,16 +71,9 @@ artifacts:
     - src/sha256_masked/tb
   filelist: src/sha256_masked/config/tessera_sha256_masked_core.vf
   rename_map: src/sha256_masked/revinfo.map
+  manifest: src/sha256_masked/revinfo.manifest
 
-source_manifest:  # sha256 of the upstream files as imported
-  - { sha256: "d86e4efe53d2916a9c538f5b0b90432d928b8a1b0c0c3fdd38617b2a13f309c8", path: "src/sha256_masked/rtl/sha256_masked_core.sv" }
-  - { sha256: "4b3450fd5e3d9bd849b49df14c28bdfff1c33b4ca041346dcb57fdb7b6e603c5", path: "src/sha256_masked/rtl/sha256_masked_defines_pkg.sv" }
-  - { sha256: "3056a035145a97c11eaaf7c4b025ab27fd86de94a0b54684592c0dbf14c25027", path: "src/sha256_masked/rtl/sha256_masked_w_mem.sv" }
-  - { sha256: "9a38a2ef9a91c3a225db8ddf32423b39aa3ac0dfc0a2961b3b77b6130061ee9a", path: "src/sha256_masked/tb/sha256_masked_core_tb.sv" }
-
-renamed_manifest:  # sha256 of the committed, renamed files
-  - { sha256: "da65d6af4e609de3a7198f03860510482f9d4ec2ad64f501b6744db013f21fd3", path: "src/sha256_masked/config/tessera_sha256_masked_core.vf" }
-  - { sha256: "bd2a936ee9d0727f3d12b5960759f694918a7651b43345a68562eaf3615a3b25", path: "src/sha256_masked/rtl/tessera_sha256_masked_core.sv" }
-  - { sha256: "014329a1ce47d761da6088fd6f21d5df4b9d6002110a94e1b7d53ba130a08034", path: "src/sha256_masked/rtl/tessera_sha256_masked_defines_pkg.sv" }
-  - { sha256: "951bed12701eacc7f15df278aab08d943338027ef731216a1e4283f4c5c1e5a3", path: "src/sha256_masked/rtl/tessera_sha256_masked_w_mem.sv" }
-  - { sha256: "b64df6be95b667b38aed2102979788dc6973543a0087882e6f107601dc0034c0", path: "src/sha256_masked/tb/sha256_masked_core_tb.sv" }
+content:  # engine-level summary; per-file detail is in the manifest above
+  source_files: 4
+  renamed_files: 5
+  manifest_sha256: "efefd6a2ef4e7ccf8c10d4393a3ad14174f558e2ca2e87dc4f706c570cf6d856"
